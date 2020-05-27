@@ -1,8 +1,12 @@
-import React from "react";
-
+import React, { FC } from "react";
 import styles from "./Accordion.module.css";
 
-function Accordion({ summary, children }) {
+type Props = {
+  summary: string;
+  children: unknown;
+};
+
+function Accordion({ summary, children }: Props): FC {
   return (
     <div className={styles.accordion}>
       <details>

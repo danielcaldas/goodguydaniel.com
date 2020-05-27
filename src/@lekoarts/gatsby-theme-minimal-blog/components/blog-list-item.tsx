@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React from "react";
+import React, { FC } from "react";
 import { jsx, Link as TLink } from "theme-ui";
 import { Box } from "@theme-ui/components";
 import { Link } from "gatsby";
@@ -21,7 +21,7 @@ type BlogListItemProps = {
   showTags?: boolean;
 };
 
-const BlogListItem = ({ post, showTags = true }: BlogListItemProps) => (
+const BlogListItem = ({ post, showTags = true }: BlogListItemProps): FC => (
   <Box mb={4}>
     <TLink as={Link} to={post.slug} sx={{ fontSize: [1, 2, 3], color: `text` }}>
       {post.title}

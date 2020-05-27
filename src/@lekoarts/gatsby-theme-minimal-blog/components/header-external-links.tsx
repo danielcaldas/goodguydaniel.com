@@ -1,9 +1,9 @@
 /** @jsx jsx */
-import React from "react";
+import React, { FC } from "react";
 import { jsx, Link as TLink } from "theme-ui";
 import useMinimalBlogConfig from "@lekoarts/gatsby-theme-minimal-blog/src/hooks/use-minimal-blog-config";
 
-const HeaderExternalLinks = () => {
+const HeaderExternalLinks = (): FC => {
   const { externalLinks } = useMinimalBlogConfig();
   return (
     <React.Fragment>

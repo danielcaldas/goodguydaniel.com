@@ -1,7 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, FC } from "react";
 import styles from "./ScrollToTopButton.module.css";
 
-function ScrollToTopButton() {
+type Props = {
+  threshold: number;
+};
+
+function ScrollToTopButton({ threshold = 200 }: Props): FC {
   const isSSR = typeof window === "undefined";
   const [visible, setVisible] = useState(false);
   const scrollToTop = useCallback(() => {
@@ -13,7 +17,7 @@ function ScrollToTopButton() {
     const toggleVisible = () => {
       timer && clearTimeout(timer);
       timer = setTimeout(() => {
-        setVisible(window && window.scrollY > 200);
+        setVisible(window && window.scrollY > threshold);
       }, 25);
     };
     window && window.addEventListener("scroll", toggleVisible);

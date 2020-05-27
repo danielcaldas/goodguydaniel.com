@@ -1,10 +1,16 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, FC } from "react";
 import exampleFinalResult from "../call-react-hooks-inside-conditions/example-final-result.gif";
 import gifStyles from "./GIF.module.css";
 
 const Player = React.lazy(() => import("react-gif-player"));
 
-function GIF({ name, width = "100%", height = "100%" }) {
+type Props = {
+  name: string;
+  width: string;
+  height: string;
+};
+
+function GIF({ name, width = "100%", height = "100%" }: Props): FC {
   const isSSR = typeof window === "undefined";
   const [playing, setPlaying] = useState(false);
   const src = useMemo(() => {
@@ -25,7 +31,7 @@ function GIF({ name, width = "100%", height = "100%" }) {
             {
               <Player
                 width={width}
-                height={width}
+                height={height}
                 gif={src}
                 onTogglePlay={() => setPlaying(!playing)}
               />

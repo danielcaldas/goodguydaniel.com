@@ -14,6 +14,9 @@ module.exports = {
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
+    module: "readonly",
+    require: "readonly",
+    process: "readonly",
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -26,5 +29,10 @@ module.exports = {
   plugins: ["react", "@typescript-eslint"],
   rules: {
     "prettier/prettier": "error",
+  },
+  settings: {
+    react: {
+      version: "detect",
+    },
   },
 };
