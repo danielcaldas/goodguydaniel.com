@@ -5,11 +5,12 @@
   "starter-name": "gatsby-starter-minimal-blog",
   "scripts": {
     "build": "npm run clean && gatsby build",
+    "clean": "gatsby clean",
     "dev": "gatsby develop",
+    "e2e": "cp e2e/babel.config.js . && jest --config e2e/jest.config.js && echo \"ok\" && rm babel.config.js || rm babel.config.js",
     "lint": "eslint --config=.eslintrc.js \"src/**/*.{js,jsx,ts,tsx}\" \"content/**/*.{js,jsx,ts,tsx}\"",
-    "start": "gatsby develop",
     "serve": "gatsby serve",
-    "clean": "gatsby clean"
+    "start": "gatsby develop"
   },
   "dependencies": {
     "@lekoarts/gatsby-theme-minimal-blog": "^2.3.5",
@@ -26,14 +27,19 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.0.1",
     "@typescript-eslint/parser": "^3.0.1",
+    "babel-jest": "^26.0.1",
     "cross-env": "^5.2.0",
     "eslint": "^7.1.0",
     "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jest": "^23.13.2",
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-react": "^7.20.0",
     "husky": "^4.2.5",
+    "jest": "^26.0.1",
     "lint-staged": "^10.2.6",
     "prettier": "^2.0.5",
+    "puppeteer": "^3.1.0",
+    "puppeteer-core": "^3.1.0",
     "typescript": "^3.9.3"
   },
   "repository": {

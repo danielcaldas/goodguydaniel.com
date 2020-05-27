@@ -87,7 +87,7 @@ const Post = ({ data: { post } }: PostProps): FC => {
       >
         <MDXRenderer>{post.body}</MDXRenderer>
       </section>
-      {!isSSR && (
+      {!isSSR && DISQUS_SHORTNAME && (
         <>
           <React.Suspense fallback={<div></div>}>
             <DiscussionEmbed
