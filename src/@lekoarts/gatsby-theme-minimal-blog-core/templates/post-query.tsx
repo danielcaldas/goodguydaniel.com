@@ -1,7 +1,7 @@
-import { graphql } from "gatsby"
-import PostComponent from "@lekoarts/gatsby-theme-minimal-blog/src/components/post"
+import { graphql } from "gatsby";
+import PostComponent from "@lekoarts/gatsby-theme-minimal-blog/src/components/post";
 
-export default PostComponent
+export default PostComponent;
 
 export const query = graphql`
   query($slug: String!, $formatString: String!) {
@@ -25,14 +25,14 @@ export const query = graphql`
         }
       }
       ... on MdxPost {
-                parent {
-                    ... on Mdx {
-                        frontmatter {
-                            subtitle
-                        }
-                    }
-                }
+        parent {
+          ... on Mdx {
+            frontmatter {
+              subtitle
             }
+          }
+        }
+      }
     }
   }
-`
+`;
