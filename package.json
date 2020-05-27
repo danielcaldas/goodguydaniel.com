@@ -25,7 +25,18 @@
     "react-gif-player": "^0.4.2"
   },
   "devDependencies": {
-    "cross-env": "^5.2.0"
+    "@typescript-eslint/eslint-plugin": "^3.0.1",
+    "@typescript-eslint/parser": "^3.0.1",
+    "cross-env": "^5.2.0",
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-react": "^7.20.0",
+    "gatsby-plugin-prettier-eslint": "^1.0.4",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.6",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.3"
   },
   "repository": {
     "type": "git",
@@ -39,5 +50,16 @@
   "bugs": {
     "url": "https://github.com/danielcaldas/goodguydaniel.com/issues"
   },
-  "homepage": "https://github.com/danielcaldas/goodguydaniel.com#readme"
+  "homepage": "https://github.com/danielcaldas/goodguydaniel.com#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
 }

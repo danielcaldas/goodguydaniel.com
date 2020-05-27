@@ -11,7 +11,7 @@
   height: 32px;
   bottom: 12px;
   right: 12px;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .8);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.8);
 }
 
 .arrow {

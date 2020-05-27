@@ -1,6 +1,6 @@
-import React from "react"
+import React from "react";
 
-import styles from './Accordion.module.css';
+import styles from "./Accordion.module.css";
 
 function Accordion({ summary, children }) {
   return (
