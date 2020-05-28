@@ -10,22 +10,23 @@ tags:
   - React
 ---
 
-import GIF from '../components/GIF'
-import ScrollToTopButton from '../components/ScrollToTopButton'
-import Accordion from '../components/Accordion'
-import Source from '../components/Source'
+import GIF from "../components/GIF";
+import ScrollToTopButton from "../components/ScrollToTopButton";
+import Accordion from "../components/Accordion";
+import Caption from "../components/Caption";
 
 <ScrollToTopButton />
 
 # tl;dr
 
-* Calling hooks conditionally breaks the rules, yes.
-* Wrap the hook with a component and render that component optionally to toggle the usage of the hook.
-* The rules of hooks are somewhat reflections of the constraints of this React API.
-* Example final full code [here](#example-full-code).
+- Calling hooks conditionally breaks the rules, yes.
+- Wrap the hook with a component and render that component optionally to toggle the usage of the hook.
+- The rules of hooks are somewhat reflections of the constraints of this React API.
+- Example final full code [here](#example-full-code).
 
 !["forbidden seagul bending the rules"](./forbidden-seagull.png)
-<Source url={'https://www.flickr.com/photos/sameli/1898511953'} />
+
+<Caption url={"https://www.flickr.com/photos/sameli/1898511953"} />
 
 # Bending the Rules
 
@@ -68,10 +69,15 @@ Before I start, I would like you to take a moment to reflect on the following qu
 . <br />
 
 When I first tried to answer the question myself, I settled that it would be my fault If I had written the code since the very beginning.
-If you pick React hooks API, you should structure the code accordingly not to end up falling into such scenarios where your better option might be breaking the rules. On the other end, if you have hundreds of components combined in a large shared codebase, you might hit a dead end where the most optimal option for the time being it's not beautiful. Still, it gets the job done and buys you and your team time to get things out faster, ideally you would come back and remove the hack later. Still, most of the time in the real world, we know that's not going to happen, so you better documenting it properly to alleviate the unavoidable spike on *WTFs/minute*.
+If you pick React hooks API, you should structure the code accordingly not to end up falling into such scenarios where your better option might be breaking the rules. On the other end, if you have hundreds of components combined in a large shared codebase, you might hit a dead end where the most optimal option for the time being it's not beautiful. Still, it gets the job done and buys you and your team time to get things out faster, ideally you would come back and remove the hack later. Still, most of the time in the real world, we know that's not going to happen, so you better documenting it properly to alleviate the unavoidable spike on _WTFs/minute_.
 
 !["code review cartoon"](./wtfs-per-minute-code-review.png)
-<Source url={'https://me.me/i/the-ouy-vcile-41-wtf-cocle-review-wtf-review-bad-20268515'} />
+
+<Caption
+  url={
+    "https://me.me/i/the-ouy-vcile-41-wtf-cocle-review-wtf-review-bad-20268515"
+  }
+/>
 
 As always, I think there's nothing better than an example to explain a concept, let's look into one.
 
@@ -81,7 +87,7 @@ We want only to call on `useRandomNumberEverySecond` and use its result, if and 
 
 My suggested approach is to wrap our hook `useRandomNumberEverySecond` in a second component, `RandomNumberWrapper`, that mediates the relationship between our target component and the hook `useRandomNumberEverySecond`. Let's see how that looks.
 
-<GIF src="example-final-result" />
+<GIF name="example-final-result" />
 
 As proof of concept, the goal is to have the button in the interface toggle the usage of our custom React hook.
 
@@ -148,6 +154,7 @@ function RandomNumberWrapper({ setState }) {
 ```
 
 And that's it! `RandomNumberWrapper` blindly proxies whatever data comes from `useRandomNumberEverySecond` via the callback `setState`, which then updates the `number` state property in our main component. You can go ahead and apply this pattern to any hook in your codebase, wrapping up, you need to:
+
 1. Create a new component to **wrap the usage of the hook** you intent to use conditionally.
 2. Pass into this new component, a `setter` that **allows you to forward the data** back to the parent component.
 3. **Conditionally mount the new component** in your target component and pass in the `setter` as a prop to the new component, that's how you're going to receive the state updates coming from your custom React hook.
@@ -209,4 +216,3 @@ export default function App() {
 ```
 
 </Accordion>
-
