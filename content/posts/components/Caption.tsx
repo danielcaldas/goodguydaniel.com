@@ -4,11 +4,12 @@ import styles from "./Caption.module.css";
 type Props = {
   source: string;
   text: string;
+  gif: boolean;
 };
 
-function Caption({ source, text = "" }: Props): FC {
+function Caption({ source, text = "", gif = false }: Props): FC {
   return (
-    <div className={styles.container}>
+    <div className={gif ? styles.containerGif : styles.container}>
       <span className={styles.sourceText}>source: {source}</span>
       {text && <br />}
       {text && <span className={styles.captionText}>{text}</span>}
