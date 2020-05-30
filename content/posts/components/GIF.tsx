@@ -1,7 +1,7 @@
 import React, { useMemo, useState, FC } from "react";
 import exampleFinalResult from "../call-react-hooks-inside-conditions/example-final-result.gif";
-import travolta from "../about-css-conf-eu-berlin-2018/2.gif";
-import cssVariablesDemo from "../about-css-conf-eu-berlin-2018/css-custom-properties.gif";
+import travolta from "../about-css-conf-eu-berlin-2018/images/2.gif";
+import cssVariablesDemo from "../about-css-conf-eu-berlin-2018/images/css-custom-properties.gif";
 import gifStyles from "./GIF.module.css";
 
 // https://github.com/benwiley4000/react-gif-player#options
