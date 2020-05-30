@@ -596,3 +596,92 @@ Good idea, but very complex. 😎
 **Some** of them **take years**, but **at least a year to 18 months** it's a more realistic estimation.
 
 ---
+
+[<span id="d2t3">(3)</span>](#day-2) A vital part of the Javascript runtimes are engines. <a href="https://github.com/v8/v8" target="_blank" title="The official mirror of the V8 Git repository">V8</a> is the Javascript engine for Chrome, Electron and Node.js. In the next talk we'll look into fundamental parts that are common to V8 and all other major Javascript engines:
+
+- <a
+    href="https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey"
+    target="_blank"
+    title="SpiderMonkey"
+  >
+    SpiderMonkey
+  </a> powers Firefox.
+- <a
+    href="https://github.com/Microsoft/ChakraCore"
+    target="_blank"
+    title="ChakraCore is the core part of the Chakra Javascript engine that powers Microsoft Edge
+"
+  >
+    Chakra
+  </a> for Microsoft Edge.
+- <a
+    href="https://developer.apple.com/documentation/javascriptcore"
+    target="_blank"
+    title="JavaScriptCore
+"
+  >
+    **J**ava**S**cript**C**ore (JSC)
+  </a> powers Safari and also React Native applications.
+
+(Aside note, if you want to run Javascript directly in several engines you can install <a href="https://github.com/GoogleChromeLabs/jsvu" target="_blank" title="JavaScript (engine) Version Updater">jsvu</a>.)
+
+All engines have this similar base architecture.
+
+![engines common abstract pipeline](./images/engines-pipeline.png "engines common abstract pipeline")
+
+<Caption source="https://www.youtube.com/watch?v=5nmpokoRaZI" />
+
+Regarding the important part (yellow square in the middle with interpreter and optimizing compiler) below are the main differences pointed for every Javascript engine:
+
+- V8 is represented in the above diagram with one optimizer compiler.
+- SpiderMonkey has 2 optimizer compilers, so this is like a 2 staged optimization.
+- ChakraCore it's somehow similar to SpiderMonkey with 2 optimizer compilers.
+- JSC has 3 optimized compilers taking the number of optimization layers to the space.
+
+So we can already see the that the base architectural components for a Javascript engines are: **parser**, **interpreter** and **compiler pipeline**.
+
+Now, the most interesting part is around Objects and how they are represented within engines. So Objects are basically dictionaries like in the following image.
+
+![simple shape illustration](./images/engines-shapes-1.png "simple shape illustration")
+
+<Caption source="https://www.youtube.com/watch?v=5nmpokoRaZI" />
+
+So an object has this string attributes that map to the value and metainformation of that property the **property attributes** according to the ECMAScript language specification. What do they mean this property attributes:
+
+- **Value** of the property, nothing much to say here.
+- **Writable** determines whether if the property can be reassigned to.
+- **Enumerable** means that the property can appear in `for in` loops.
+- **Configurable** means that is a _deletable_ property.
+
+You can access this them in Javascript with:
+
+```javascript
+Object.getOwnPropertyDescriptors(someObject);
+```
+
+So another interesting fact around Objects is that they store they metainformation on a separate data structure so that the actual object only contains the values and a pointer to that data structure. The data structure that contains all the metainformation is called **Shape** (in SpiderMonkey, other engines have other names but hey are misleading. The computer science term for this is _hidden class_).
+
+Know let's check how object declaration and property access are optimized in engines. Basically they build a doubled linked tree like structure that defines all possible shapes and each new added property only stores metainformation regarding itself. The `Offset` just tells you where you will find the property within the JSON object.
+
+![shape extended](./images/engines-shapes-2.png "shape extended")
+
+<Caption source="https://www.youtube.com/watch?v=5nmpokoRaZI" />
+
+But! This isn't always the case it turns out that for cases where you have already a shape that derives from a base object, but then you go and initialize some object in a different way (e.g. with some properties already), the engine will create a new shape as it is more efficient for engines to keep the shape's structures the smallest as possible. As you can see in the next picture a new shape will be created despite property `x` being already in the first shape chain.
+
+![shape extended exception](./images/engines-shapes-3.png "shape extended exception")
+
+<Caption source="https://www.youtube.com/watch?v=5nmpokoRaZI" />
+
+Then the main motivation for engines to have shapes is <a href="https://github.com/v8/v8/wiki/Design-Elements#fast-property-access" target="_blank" title="v8 design elements fast property access">inline cache (IC)</a>. This mechanism stores information about where to find properties within an object so that we can optimize the property look up. Basically for a given retrieved property it stores the offset where the property was found inside the shape, that way you can skip the fetch of the property metainformation to get the offset, you just access it right away!
+
+![inline cache illustration](./images/engines-shapes-4.png "inline cache illustration")
+
+<Caption source="https://www.youtube.com/watch?v=5nmpokoRaZI" />
+
+At the end two important notes:
+
+- **Always initialize objects in the same way** so that engines can maximize the reuse of shapes.
+- **Don't mess with the property attributes of array elements** so that they can be stored and operated upon efficiently.
+
+(**Note**: I skipped arrays in the above talk as they are handled in similar ways and with similar mechanisms compared to objects.)
