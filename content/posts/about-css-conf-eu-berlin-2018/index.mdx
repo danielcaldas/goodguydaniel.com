@@ -16,13 +16,13 @@ import Caption from "../components/Caption";
 
 <ScrollToTopButton />
 
-![CSS conf EU banner](./1.jpg "CSS conf EU banner 2018")
+![CSS conf EU banner](./images/1.jpg "CSS conf EU banner 2018")
 
 <Caption source="https://2018.cssconf.eu/" />
 
 Hello all!! I decided to write this blog post to share with you the new things I learned attending this year's edition of <a href="https://2018.cssconf.eu" target="_blank" title="cssconf.eu official web page">CSSconf EU</a> in Berlin (Friday, June 1st). In this post I will focus more on the talks, I will cover other venue details in <a href="https://goodguydaniel.com/blog/about-js-conf-eu-berlin-2018/" target="_blank" title="JSconf EU 2018 | Blog">another blog post</a> on <a href="https://goodguydaniel.com/blog/about-js-conf-eu-berlin-2018/" target="_blank" title="JSconf EU 2018 | Blog">JSConf EU</a> that had a similar organization.
 
-# For starters
+### For starters
 
 If you were there as I was, you were probably wondering whether you were at the right conference, since at the beginning you would ask yourself **where is the CSS**?
 
@@ -31,14 +31,14 @@ If you were there as I was, you were probably wondering whether you were at the 
 
 But don't give up already! It started poorly on the CSS field, but it evolved throughout the day with some top-notch talks, some of them include Razvan Caliman on _We have DevTools. What about DesignTools?_ and Mike Riethmuller with _Strategy Guide for CSS Custom Properties_.
 
-# The talks
+### The talks
 
 <!-- Preprocessors, Components, and CSS in JS or: How I Learned to Stop Worrying and Love the Website -->
 <!-- It’s Dangerous To Go Alone! Take This Team -->
 
 As I mentioned earlier the first talk wasn't so much into CSS, what Trent [(1)](#list-of-talks-speakers-and-other-resources) gave to us was more of a carrier advice on how we should behave as individuals so that we are seen as part of a team, for Trent going solo in some project should never even be considered, we should always ask for feedback if we want to achieve accurate and quality results. Trent shared some personal techniques that help him grow as a developer in a controlled way avoiding things such as _burnout_. The term _mindfulness_ came along somewhere in the talk as Trent was trying to explain the audience how he's able to keep a balanced mental health. Next we had Jackie Balzer [(2)](#list-of-talks-speakers-and-other-resources) who told us a bit of the history behind <a title="Behance is a network of sites and services specializing in self-promotion" href="https://www.behance.net/" target="_blank">Behance’s</a> codebase, how major redesigns left _Jurassic_ footprints in the codebase, some of them in the form of very descriptive "_TODOs_", that today would probably require a herculean effort to remove. At the end Jackie just commented on how she was able to achieve peace with the reality of a fragmented codebase.
 
-![this is fine dog on fire](./5.jpeg "this is fine dog on fire meme")
+![this is fine dog on fire](./images/5.jpeg "this is fine dog on fire meme")
 
 <Caption source="https://twitter.com/GOP/status/757687865471963137" />
 
@@ -50,7 +50,7 @@ The next talk was truly eye-opening. Chen Hui Jing [(3)](#list-of-talks-speakers
 
 Following we had Ollie Williams [(4)](#list-of-talks-sp eakers-and-other-resources) who shared the experience of using <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/grid" target="_blank" title="mdn css grid">grid</a> in production. For the first time I had the opportunity to see some real life examples on <a href="https://developer.mozilla.org/en-US/docs/Glossary/Graceful_degradation" target="_blank" title="graceful degradation mdn description">graceful degradation</a> and <a href="https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement" target="_blank" title="progressive enhancement description">progressive enhancement</a>, if you're wondering what's the difference between this two terms as I was, think of it the following way, <a href="https://developer.mozilla.org/en-US/docs/Glossary/Graceful_degradation" target="_blank" title="graceful degradation mdn description">graceful degradation</a> it's where you worry about providing the best experience possible, you use the latest bleeding edge web technologies to achieve that, for older browsers you will _degrade_ user experience but always assuring some base line level of functionality. On the other hand, <a href="https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement" target="_blank" title="progressive enhancement description">progressive enhancement</a> philosophy aims to provide the best possible experience in all browsers keeping the same levels of user experience, one will where possible use newest features to _progressively_ improve the user experience.
 
-![progressive enhancement vs graceful degradation](./3.jpg "visualization of progressive enhancement vs graceful degradation")
+![progressive enhancement vs graceful degradation](./images/3.jpg "visualization of progressive enhancement vs graceful degradation")
 
 <Caption source="https://www.youtube.com/watch?v=tmQuGgtq5SI" />
 
@@ -140,12 +140,9 @@ The talk ended with a kind of "_cry for help_" request, Razvan mentioned that no
 From this talk onwards things start focusing a lot around the **accessibility** topic, Shwetank Dixit shows some of his projects on this matter [(6)](#list-of-talks-speakers-and-other-resources).
 When we hear “low vision” what do we think about? Well, Shwetank explained that these days low-vision it's just an umbrella term that aggregates a bunch of eyesight conditions that affect people in many different ways. Shwetank made very clear that not conditioned people don't know the real extent of these problems unless we talk with someone who experiences them every day. Following, Shwetank just drop this one "_What if we could make tools to make people see what people with low vision actually see?_" And that was exactly what he did, with CSS, SVG and <a href="https://webrtc.org/" target="_blank" title="what is webrtc">WebRTC</a> he was able to emulate different low vision conditions that were perceptible through a camera (with AR), this is a really noble thing to do, it certainly will make people more aware and comprehensive of this problems, specially those not affected by these problems, at the same time I guess it makes conditioned people less frustrated because I imagine it can be pretty hard to explain one's condition to another, so why not showing it instead? You can consult a list of low vision tools in <a href="https://lowvisiontools.barrierbreak.com/" target="_blank" title="barrierbreak low vision tools">lowvisiontools.barrierbreak.com</a>.
 
-![low vision tool color blindness](./6.png "low vision tool color blindness")
+![low vision tool color blindness](./images/6.png "low vision tool color blindness")
 
-<Caption
-  source="&copy; goodguydaniel.com"
-  text="Some guy with a black shirt and red stripes"
-/>
+<Caption text="Some guy with a black shirt and red stripes" />
 
 <!--Strategy Guide for CSS Custom Properties-->
 
@@ -159,7 +156,7 @@ Here a small example to get you started, let's use CSS custom properties to dyna
   name="css-variables-demo"
   alt="using CSS custom properties to color geometric shapes"
 />
-<Caption source="&copy; goodguydaniel.com" gif={true} />
+<Caption gif={true} />
 
 ```html
 <h2 id="title">
@@ -212,7 +209,6 @@ function update(color) {
 Mike shared his experience with custom properties and gave us some **lessons to use them efficiently**, here they are:
 
 > 1. **All global variables should be static**.
-
 2. **Don't be too cleaver**.
 3. **Change the value, not the variable**.
 4. **If it changes, it's a variable**.
@@ -225,7 +221,7 @@ Check out <a href="https://www.youtube.com/watch?v=pF0pSwbZV9Y" target="_blank" 
 
 Is also relevant to mention that CSS variables are today implemented in all the major browsers (excluding IE of course).
 
-![can i use this CSS variables](./4.png "can i use this CSS variables")
+![can i use this CSS variables](./images/4.png "can i use this CSS variables")
 
 <Caption source={"https://caniuse.com/#feat=css-variables"} />
 
@@ -246,7 +242,7 @@ Following with Philip Walton who gave us a look into the future of CSS introduci
 
 The last talk [(11)](#list-of-talks-speakers-and-other-resources) was about design systems and how they should make the software development process easier by serving as a mean of communication (yes, a facilitator). A design system is a collection of components (ideally reusable) that follow the same standards and that by assembling them you can build applications. In this talk, Claudina Sarahe just went around this topic on how advantageous design systems are but if you really are interested in design systems I really recommend you to take a look at this <a href="https://www.invisionapp.com/inside-design/guide-to-design-systems/" target="_blank" title="invisionapp the guide to design systems">invisionapp blog post instead</a>.
 
-## Hot topics
+### Hot topics
 
 - <a
     href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables"
@@ -277,18 +273,18 @@ The last talk [(11)](#list-of-talks-speakers-and-other-resources) was about desi
     Container queries
   </a>
 
-![so hot right now](./44.jpeg "so hot right now meme")
+![so hot right now](./images/7.jpeg "so hot right now meme")
 
 <Caption source="https://imgflip.com/memegenerator/Mugatu-So-Hot-Right-Now" />
 
-## List of talks, speakers and other resources
+### List of talks, speakers and other resources
 
 Here the list of the talks with links to videos (at this point the majority of the talks are not available, so I'll link to other talks of the same speakers on the same topic), author twitter and or github as well if available. Note that I marked with a star the talks that I consider to be a must see, people always ask for that. The list has the same order as the <a href="https://2018.cssconf.eu/schedule/" target="_blank" title="css conf.eu 2018 schedule">conference schedule</a>.
 
-1. **Trent Willis** <sub><sup>twitter:<a href="https://github.com/trentmwillis" target="_blank" title="tren willis twitter">trentmwillis</a> github:<a href="https://github.com/trentmwillis" target="_blank" title="tren willis github">trentmwillis</a></sup></sub> - _It's Dangerous To Go Alone! Take This Team_ - <a href="https://www.youtube.com/watch?v=2aPjsb-kIks" target="_blank" title="CSSconf EU 2018 | Trent Willis: It’s Dangerous To Go Alone! Take This Team">video</a>
+<!-- 1. **Trent Willis** <sub><sup>twitter:<a href="https://github.com/trentmwillis" target="_blank" title="tren willis twitter">trentmwillis</a> github:<a href="https://github.com/trentmwillis" target="_blank" title="tren willis github">trentmwillis</a></sup></sub> - _It's Dangerous To Go Alone! Take This Team_ - <a href="https://www.youtube.com/watch?v=2aPjsb-kIks" target="_blank" title="CSSconf EU 2018 | Trent Willis: It’s Dangerous To Go Alone! Take This Team">video</a>
 2. **Jackie Balzer** <sub><sup>twitter:<a href="https://twitter.com/jackiebackwards" target="_blank" title="jackie twitter">&#64;jackiebackwards</a> github:<a href="https://github.com/jackie" target="_blank" title="jackie github">jackie</a></sup></sub> - _Preprocessors, Components, and CSS in JS or: How I Learned to Stop Worrying and Love the Website_ - <a href="https://www.youtube.com/watch?v=vLBBq6oizEI" target="_blank" title="CSSconf EU 2018 | Jackie Balzer: Preprocessors, Components, and CSS in JS">video</a>
-3. **Chen Hui Jing** <sub><sup>twitter:<a href="https://twitter.com/hj_chen" target="_blank" title="huijing twitter">&#64;hj_chen</a> github:<a href="https://github.com/huijing" target="_blank" title="huijing github">huijing</a></sup></sub> - _The Web Is Not Just Left-to-Right_ - <a href="https://www.chenhuijing.com/slides/32-cssconf-2018/#/" target="_blank" title="the web is not just left-to-right slides">slides</a> | <a href="https://www.youtube.com/watch?v=YpqKrVcth34" target="_blank" title="CSSconf EU 2018 Chen Hui Jing The Web Is Not Just Left-to-Right">video</a>
+3. **Chen Hui Jing** <sub><sup>twitter:<a href="https://twitter.com/hj_chen" target="_blank" title="huijing twitter">&#64;hj_chen</a> github:<a href="https://github.com/huijing" target="_blank" title="huijing github">huijing</a></sup></sub> - _The Web Is Not Just Left-to-Right_ - <a href="https://www.chenhuijing.com/slides/32-cssconf-2018/#/" target="_blank" title="the web is not just left-to-right slides">slides</a> | <a href="https://www.youtube.com/watch?v=YpqKrVcth34" target="_blank" title="CSSconf EU 2018 Chen Hui Jing The Web Is Not Just Left-to-Right">video</a> -->
 
-## And then...
+### And then...
 
 I will also write <a href="https://goodguydaniel.com/blog/about-js-conf-eu-berlin-2018/" target="_blank" title="JSconf EU 2018 blogpost">a blog post about the JSConf</a> that happened in the following two days where I'll also talk about Berlin and the venue to give you a real insider perspective on the conference so that you can properly decide whether or not you will attend it next year.
