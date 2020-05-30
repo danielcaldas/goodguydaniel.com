@@ -266,3 +266,33 @@ I think a very strong point was a little too much implicit during this talk, per
 If you want to look more into the benefits or what actually could be achieved with WASM I highly recommend the two following talks <a href="https://www.youtube.com/watch?v=PpuAqLCraAQ" target="_blank" title="real world webassembly chrome dev summit 2017">Real World WebAssembly (Chrome Dev Summit 2017)</a> and <a href="https://www.youtube.com/watch?v=bac0dGQbUto" target="_blank" title="dan callahan: practical webassembly jsconf budapest 2017">Dan Callahan: Practical WebAssembly | JSConf Budapest 2017</a>.
 
 ---
+
+I couldn't have imagined a better talk to end day 1 [<span id="d1t5">(5)</span>](#day-1). On stage we had <a href="https://en.wikipedia.org/wiki/Ryan_Dahl" target="_blank" title="ryan dahl wiki page">Ryan Dahl</a> inventor of Node.js.
+First Ryan gives us a bit of context on the talk, like how we wanted to build better servers with event-driven non-blocking I/O, and why dynamic languages are great (for certain kind of tasks), being Javascript the best dynamic language.
+
+The talk had the following introduction:
+
+> _"(...) using Node now looks like nails on chalkboard to me, I see the bugs that I introduced, I mean at this point they are not really bugs it's just how it works, but they are bugs. They were design mistakes made that just cannot be corrected now because there's so much software that uses it (...) It offends my sensibilities (...)"_
+
+![ryan dahl thug life](./images/ryan-dahl-thug-life.png "ryan dahl thug life")
+
+<Caption source="https://www.youtube.com/watch?v=M3BM9TB-8yA" />
+
+So let's take look at the mentioned regrets:
+
+- **Not sticking with Promises** - promises were added very earlier, but Ryan decided to remove then because Node.js aim was to be minimalist;
+- **Security** - Javascript is a very secure sandbox, unfortunately in Node we just bound to everything, not safe. Networking access for instance is given by default.
+- **The build system (GYP)** - probably the biggest regret. Chrome used to use GYP, now it uses GN. There are several wrappers around this (e.g. node-gyp) which brings layers of unnecessary complexity and terrible experience for users.
+- **package.json** - allowing `require()` in Node semantics to look into `package.json` and look through files, this made `package.json` necessary to node applications, so we ended up with a centralized repository for modules. Ultimately NPM was included in the Node distribution.
+- **node_modules** - if you have multiple projects it tends to have multiple `node_modules` folders... It gets big.
+  ![node_modules heaviest object in the universe](./images/node-modules-meme.jpg "node_modules heaviest object in the universe")
+  <Caption source="https://www.youtube.com/watch?v=M3BM9TB-8yA" />
+- **require("module") without the extension .js** - at some point someone thought that requiring files without the extension would be cleaner, so you just end up trying to look up the extension in the filesystem, it is `.js`? `.jsx`? `.ts`? Well in this one I agree with Ryan just write down the f\*\*\* extension!
+- **index.js** - Ryan thought it was cute. There was `index.html` and in the same wave of thinking it should be cute to have an `index.js` why not? Well it ends up that this raised complexity of the module loading system unnecessarily.
+- **How user code is managed by the module system** - As Ryan was developing Node he focuses mainly on _evented_ I/O leaving some things behind, one of them was the module system and how it manages user code.
+
+And then a plot twist. At the end of complaining about Node.js Ryan presented a possible alternative to Node.js and how it could be better.
+
+The alternative? <a href="https://github.com/denoland/deno" target="_blank" title="A secure TypeScript runtime on V8">deno</a>, a a secure TypeScript runtime on V8. The main goals of deno are **security**, **simplicity of the module system** and **support typescript out of the box**.
+
+### Day 2
