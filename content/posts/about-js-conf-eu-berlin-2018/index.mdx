@@ -685,3 +685,54 @@ At the end two important notes:
 - **Don't mess with the property attributes of array elements** so that they can be stored and operated upon efficiently.
 
 (**Note**: I skipped arrays in the above talk as they are handled in similar ways and with similar mechanisms compared to objects.)
+
+---
+
+On this second day I would also like to mention two more talks, _A Web Without Servers_ [<span id="d2t4">(4)</span>](#day-2) because Beaker browser a peer-to-peer browser was presented here with a decentralized web in mind. Also _Deep Learning in JS_ [<span id="d2t5">(5)</span>](#day-2) because machine learning is a pretty hot topic and we should stand out the fact that is <a href="https://js.tensorflow.org/" target="_blank" title="A JavaScript library for training and deploying ML models in the browser and on Node.js">TensorFlow.js</a> already available this makes Javascript even more broad in terms of its applications.
+
+---
+
+#### Other things I've learned
+
+<small>(⚠️ randomly presented)</small>
+
+> _"Whenever you are designing a program, there are things that you think it might be cute to add in... **You always regret those**. If they are unnecessary and simply cute, don't do them!"_ (_Ryan Dahl_)
+
+- There is this new thing out there called <a href="https://github.com/denoland/deno" target="_blank" title="A secure TypeScript runtime on V8">deno</a>.
+- If you throw an error inside a nested throw clause the outside catch will not be executed. In a similar fashion if you reject a promise passing in a throw statement the catch will not evaluate as in:
+
+```javascript
+function justThrowAnErr() {
+  throw new Error("some error message");
+}
+
+function fetchSomeRainbows(nRainbows) {
+  if (!nRainbows) {
+    return Promise.reject(justThrowAnErr());
+  }
+  return Promise.resolve("here u go");
+}
+
+fetchSomeRainbows().catch((rainbowError) =>
+  console.log("unable to fetch rainbows")
+);
+
+// this will output: "Error: some error message"
+// instead of "unable to fetch rainbows"
+```
+
+- Facebook has built an ultra fast javascript bundler for React Native, if you are into this stuff you have
+  probably heard about <a href="https://facebook.github.io/metro" target="_blank" title="metro The JavaScript bundler for React Native">metro</a>.
+- When using:
+
+```html
+<a href="" target="_blank" title=""><main></a>
+```
+
+you will want to set a `role="main"` attribute if you want to support IE11.
+
+- One should add `role="banner"` on your main header not to be confused with other headers that you might
+  have.
+- Do you develop your features for accessibility? I mean can a disable person you only uses the keyboard use your web site/app? This question made me think.
+- You can practically do everything with Javascript today and people are serious about this.
+- I didn't know much about the browsers internals (e.g. event loop task queues), but after this conference at least I'm aware of how much I don't know about it 😎.
