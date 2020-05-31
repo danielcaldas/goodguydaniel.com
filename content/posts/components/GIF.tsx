@@ -3,6 +3,8 @@ import exampleFinalResult from "../call-react-hooks-inside-conditions/example-fi
 import travolta from "../about-css-conf-eu-berlin-2018/images/2.gif";
 import cssVariablesDemo from "../about-css-conf-eu-berlin-2018/images/css-custom-properties.gif";
 import itsATrap from "../my-two-cents-on-tech-job-interviews/images/its-a-trap.gif";
+import debugVSCodeAnimation1 from "../debugging-javascript-with-vscode/images/debug-animation-1.gif";
+import debugVSCodeAnimation2 from "../debugging-javascript-with-vscode/images/debug-animation-2.gif";
 import gifStyles from "./GIF.module.css";
 
 // https://github.com/benwiley4000/react-gif-player#options
@@ -35,6 +37,10 @@ function GIF({
         return cssVariablesDemo;
       case "its-a-trap":
         return itsATrap;
+      case "vscode-debug-1":
+        return debugVSCodeAnimation1;
+      case "vscode-debug-2":
+        return debugVSCodeAnimation2;
       default:
         return "";
     }
