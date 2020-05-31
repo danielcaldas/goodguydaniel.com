@@ -1,5 +1,5 @@
 import React, { useMemo, useState, FC } from "react";
-import exampleFinalResult from "../call-react-hooks-inside-conditions/example-final-result.gif";
+import exampleFinalResult from "../call-react-hooks-inside-conditions/images/example-final-result.gif";
 import travolta from "../about-css-conf-eu-berlin-2018/images/2.gif";
 import cssVariablesDemo from "../about-css-conf-eu-berlin-2018/images/css-custom-properties.gif";
 import itsATrap from "../my-two-cents-on-tech-job-interviews/images/its-a-trap.gif";
