@@ -5,6 +5,8 @@ import cssVariablesDemo from "../about-css-conf-eu-berlin-2018/images/css-custom
 import itsATrap from "../my-two-cents-on-tech-job-interviews/images/its-a-trap.gif";
 import debugVSCodeAnimation1 from "../debugging-javascript-with-vscode/images/debug-animation-1.gif";
 import debugVSCodeAnimation2 from "../debugging-javascript-with-vscode/images/debug-animation-2.gif";
+import itsTimeToStop from "../unit-testing-with-fixtures-unleashed/images/its-time-to-stop.gif";
+import fixturesWatchMode from "../unit-testing-with-fixtures-unleashed/images/fixtures-watch-mode.gif";
 import gifStyles from "./GIF.module.css";
 
 // https://github.com/benwiley4000/react-gif-player#options
@@ -18,6 +20,29 @@ type Props = {
   width: string;
 };
 
+function getFromRegistry(name) {
+  switch (name) {
+    case "example-final-result":
+      return exampleFinalResult;
+    case "travolta":
+      return travolta;
+    case "css-variables-demo":
+      return cssVariablesDemo;
+    case "its-a-trap":
+      return itsATrap;
+    case "vscode-debug-1":
+      return debugVSCodeAnimation1;
+    case "vscode-debug-2":
+      return debugVSCodeAnimation2;
+    case "time-to-stop":
+      return itsTimeToStop;
+    case "fixtures-watch-mode":
+      return fixturesWatchMode;
+    default:
+      return "";
+  }
+}
+
 function GIF({
   alt = "",
   height = "100%",
@@ -27,24 +52,7 @@ function GIF({
 }: Props): FC {
   const isSSR = typeof window === "undefined";
   const [isPlaying, setPlaying] = useState(playing);
-  const src = useMemo(() => {
-    switch (name) {
-      case "example-final-result":
-        return exampleFinalResult;
-      case "travolta":
-        return travolta;
-      case "css-variables-demo":
-        return cssVariablesDemo;
-      case "its-a-trap":
-        return itsATrap;
-      case "vscode-debug-1":
-        return debugVSCodeAnimation1;
-      case "vscode-debug-2":
-        return debugVSCodeAnimation2;
-      default:
-        return "";
-    }
-  }, [name]);
+  const src = useMemo(() => getFromRegistry(name), [name]);
 
   return (
     <>
