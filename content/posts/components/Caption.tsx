@@ -8,7 +8,7 @@ type Props = {
 };
 
 function Caption({
-  source = `© ${new Date().getFullYear()} by goodguydaniel.com. All rights reserved.`,
+  source = `© ${new Date().getFullYear()} by goodguydaniel.com`,
   text = "",
   gif = false,
 }: Props): FC {

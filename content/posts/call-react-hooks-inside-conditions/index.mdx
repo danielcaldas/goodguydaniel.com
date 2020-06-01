@@ -17,7 +17,7 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 
 <ScrollToTopButton />
 
-# tl;dr
+### tl;dr
 
 - Calling hooks conditionally breaks the rules, yes.
 - Wrap the hook with a component and render that component optionally to toggle the usage of the hook.
@@ -26,9 +26,9 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 
 !["forbidden seagul bending the rules"](./images/forbidden-seagull.png)
 
-<Caption url={"https://www.flickr.com/photos/sameli/1898511953"} />
+<Caption source={"https://www.flickr.com/photos/sameli/1898511953"} />
 
-# Bending the Rules
+### Bending the Rules
 
 There's a <a href="https://reactjs.org/docs/hooks-rules.html" target="_blank" title="Rules of Hooks - React">bunch of reasons why you can't use a React hook conditionally</a> under a particular condition.
 
@@ -74,7 +74,7 @@ If you pick React hooks API, you should structure the code accordingly not to en
 !["code review cartoon"](./images/wtfs-per-minute-code-review.png)
 
 <Caption
-  url={
+  source={
     "https://me.me/i/the-ouy-vcile-41-wtf-cocle-review-wtf-review-bad-20268515"
   }
 />
@@ -88,10 +88,11 @@ We want only to call on `useRandomNumberEverySecond` and use its result, if and 
 My suggested approach is to wrap our hook `useRandomNumberEverySecond` in a second component, `RandomNumberWrapper`, that mediates the relationship between our target component and the hook `useRandomNumberEverySecond`. Let's see how that looks.
 
 <GIF name="example-final-result" />
+<Caption gif={true} />
 
 As proof of concept, the goal is to have the button in the interface toggle the usage of our custom React hook.
 
-## Custom React Hook
+#### Custom React Hook
 
 Our custom hook `useRandomNumberEverySecond` generates a random number every second.
 
@@ -112,7 +113,9 @@ function useRandomNumberEverySecond(max = 1000) {
 }
 ```
 
-## The Main Component
+<br />
+
+#### The Main Component
 
 Our main component looks like this, where `number` is provided by our custom hook (when active).
 
@@ -139,7 +142,7 @@ Notice that the component `RandomNumberWrapper` only renders when `isHookActive`
 
 Now let's see how our main component consumes the custom hook `useRandomNumberEverySecond`.
 
-## The Wrapper Component
+#### The Wrapper Component
 
 ```javascript
 function RandomNumberWrapper({ setState }) {
@@ -159,13 +162,13 @@ And that's it! `RandomNumberWrapper` blindly proxies whatever data comes from `u
 2. Pass into this new component, a `setter` that **allows you to forward the data** back to the parent component.
 3. **Conditionally mount the new component** in your target component and pass in the `setter` as a prop to the new component, that's how you're going to receive the state updates coming from your custom React hook.
 
-## Closing Notes
+#### Closing Notes
 
 I hope you found this pattern helpful! If you're curious to read more on the subject, I advise checking this excellent blog post entitled "[How to Break the Rules of React Hooks](https://inventingwithmonster.io/20190207-break-the-rules-of-react-hooks/ "How to break the rules of React Hooks | Inventing With Monster")".
 
 After working some time with [reactivity blocks in Svelte](https://en.wikipedia.org/wiki/Observer_pattern "Reactivity/Statements - Svelte Tutorial"). It feels like the conceptual and productivity jump in terms of evolution.
 
-#### Example Full Code
+**Example Full Code**
 
 <Accordion summary='Expand to see example full code'>
 
