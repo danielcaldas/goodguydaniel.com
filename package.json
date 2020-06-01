@@ -10,7 +10,8 @@
     "dev": "npm run clean && gatsby develop",
     "e2e": "cp e2e/babel.config.js . && jest --config e2e/jest.config.js && echo \"ok\" && rm babel.config.js || rm babel.config.js",
     "lint": "eslint --config=.eslintrc.js \"src/**/*.{js,jsx,ts,tsx}\" \"content/**/*.{js,jsx,ts,tsx}\"",
-    "serve": "gatsby serve"
+    "serve": "gatsby serve",
+    "start": "http-server ./public/ -p 9000 -c-1"
   },
   "dependencies": {
     "@lekoarts/gatsby-theme-minimal-blog": "^2.3.5",
@@ -38,6 +39,7 @@
     "eslint-plugin-jest": "^23.13.2",
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-react": "^7.20.0",
+    "http-server": "^0.12.3",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
     "lint-staged": "^10.2.6",

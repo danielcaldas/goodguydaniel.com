@@ -3,6 +3,7 @@ import HomepageComponent from "@lekoarts/gatsby-theme-minimal-blog/src/component
 
 export default HomepageComponent;
 
+// https://www.gatsbyjs.org/docs/graphql-reference/#filter
 export const query = graphql`
   query($formatString: String!) {
     posts: allPost(sort: { fields: date, order: DESC }, limit: 3) {
