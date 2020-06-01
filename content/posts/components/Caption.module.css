@@ -1,0 +1,19 @@
+.container {
+  text-align: center;
+  margin-top: -62px;
+}
+
+.container-gif {
+  text-align: center;
+  margin-top: -8px;
+}
+
+.source-text {
+  color: #808080;
+  font-size: 11px;
+}
+
+.caption-text {
+  color: #9f7aea;
+  font-size: 12px;
+}
