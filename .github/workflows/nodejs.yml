@@ -24,8 +24,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      - run: npm build
-      - run: npm serve -- --silent &
       - run: npm run lint
+      - run: npm run build
+      - run: npm run serve -- --silent &
       - run: npm run e2e
       - run: npm run blc

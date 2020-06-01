@@ -6,7 +6,7 @@ describe("smoke tests", () => {
   let baseURL;
 
   beforeAll(async () => {
-    const context = await boot({ devtools: true, headless: false, slowMo: 25 });
+    const context = await boot();
 
     page = context.page;
     browser = context.browser;
@@ -19,7 +19,7 @@ describe("smoke tests", () => {
       "goodguydaniel.com - Here is where Daniel writes about his experiences."
     );
 
-    const tmp = await page.$$("header a");
+    let tmp = await page.$$("header a");
     const headerLinks = await Promise.all(
       tmp.map(async (a) => await a.evaluate((e) => e.href))
     );
@@ -33,11 +33,11 @@ describe("smoke tests", () => {
       "mailto:caldasjdaniel@gmail.com",
     ]);
 
-    const latesth2 = await (await page.$("h2")).evaluate((e) => e.innerText);
-    const projectsh4 = await (await page.$("h4")).evaluate((e) => e.innerText);
-
-    expect(latesth2).toEqual("Latest Posts");
-    expect(projectsh4).toEqual("Projects");
+    tmp = await page.$$("h2");
+    const headings = await Promise.all(
+      tmp.map(async (h) => await h.evaluate((e) => e.innerText))
+    );
+    expect(headings).toEqual(["Featured Posts", "Latest Posts"]);
 
     const projects = [
       [
@@ -48,7 +48,7 @@ describe("smoke tests", () => {
         "babel-plugin-cloudinary | ",
         "https://github.com/trivago/babel-plugin-cloudinary",
       ],
-      ["tweak · browser extension", "https://tweak-extension.com"],
+      ["tweak · browser extension", "https://tweak-extension.com/"],
     ];
 
     for (let i = 0; i < 3; i++) {
