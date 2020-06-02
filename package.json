@@ -2,7 +2,6 @@
   "name": "goodguydaniel.com",
   "version": "1.0.0",
   "description": "Blog and Home of Daniel Caldas",
-  "starter-name": "gatsby-starter-minimal-blog",
   "scripts": {
     "blc": "./blc.sh",
     "build": "npm run clean && gatsby build",
