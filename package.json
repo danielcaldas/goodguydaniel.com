@@ -2,15 +2,14 @@
   "name": "goodguydaniel.com",
   "version": "1.0.0",
   "description": "Blog and Home of Daniel Caldas",
-  "starter-name": "gatsby-starter-minimal-blog",
   "scripts": {
     "blc": "./blc.sh",
     "build": "npm run clean && gatsby build",
     "clean": "gatsby clean",
-    "dev": "npm run clean && gatsby develop",
+    "dev": "npm run clean && gatsby develop -H 0.0.0.0",
     "e2e": "cp e2e/babel.config.js . && jest --config e2e/jest.config.js && echo \"ok\" && rm babel.config.js || rm babel.config.js",
     "lint": "eslint --config=.eslintrc.js \"src/**/*.{js,jsx,ts,tsx}\" \"content/**/*.{js,jsx,ts,tsx}\"",
-    "serve": "gatsby serve",
+    "serve": "gatsby serve -H 0.0.0.0",
     "start": "http-server ./public/ -p 9000 -c-1"
   },
   "dependencies": {

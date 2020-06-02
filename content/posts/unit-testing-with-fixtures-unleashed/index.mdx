@@ -4,10 +4,9 @@ date: 2019-10-15
 slug: "/blog/unit-testing-with-fixtures-unleashed/"
 tags:
   - JavaScript
-  - SoftwareTesting
+  - Software Testing
 ---
 
-import Accordion from "../components/Accordion";
 import Caption from "../components/Caption";
 import GIF from "../components/GIF";
 import ScrollToTopButton from "../components/ScrollToTopButton";
@@ -358,6 +357,8 @@ The output or running the above test is just a simple Jest report.
 
 <Caption />
 
+In the above implementation we have created a generic mechanism that resembles the <a href="https://addyosmani.com/resources/essentialjsdesignpatterns/book/#commandpatternjavascript" target="_blank" title="Learning JavaScript Design Patterns">Command Pattern</a> (<a href="https://www.amazon.com/gp/product/B008VJSPZE/ref=as_li_tl?ie=UTF8&tag=goodguydaniel-20&camp=1789&creative=9325&linkCode=as2&creativeASIN=B008VJSPZE&linkId=206ece1eb69ef4d857cd753290c995ce" target="_blank" title="Learning JavaScript Design Patterns">original reference</a>) where the _spec_ name itself is the _command_ we wish to execute.
+
 My goal here is to give you the idea that, in some projects, you might be able to drop a lot of boilerplate by wisely choosing your testing architecture; The pattern you go for it's just a tool for you to organize your thoughts, **it doesn't mean that** if you don't choose the right architecture you are doomed to a poorly tested codebase, you can still certainly achieve that, it just won't be as easy.
 
 #### 🎰 Bonus section: development watch mode for fixtures
@@ -387,9 +388,9 @@ As you can see from the above snippet, we _glue_ and chain everything together i
 <GIF name="fixtures-watch-mode" />
 <Caption gif={true} />
 
-![satisfying face, meme](./images//satisfying.jpg "satisfying face, meme")
-
-<Caption source="https://knowyourmeme.com/memes/feels-good" />
+I found such a setup to be the ideal driver for you to advocate for <a href="https://en.wikipedia.org/wiki/Test-driven_development" target="_blank" title="Test-driven development - Wikipedia">Test Driven Development (TDD)</a> within your team. Creating fixtures to replicate tricky edge cases
+becomes trivial leading you to create the fixture that breaks your implementation in the first place, followed by fixing whatever's wrong with the actual implementation.
+But I don't want to elaborate on TDD, for that I would rather point you good resources such as <a href="https://www.amazon.com/gp/product/0321146530/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0321146530&linkCode=as2&tag=goodguydaniel-20&linkId=5a7f5dcbff56444b471f750f0dcb0e02" target="_blank" title="Test Driven Development: By Example">Test Driven Development: By Example</a>
 
 <br />
 
@@ -426,7 +427,7 @@ If you read the article up to this point, you may now have an idea of how a fixt
     webpack/webpack
   </a>
 
-Not a known project, but the babel plugin where I first implemented such architecture is <a href="https://goodguydaniel.com/blog/presenting-babel-plugin-cloudinary/" target="_blank" title="goodguydaniel.com, blog post, Presenting babel-plugin-cloudinary">babel-plugin-cloudinary</a>, if you check the test setup, you might quickly identify the patterns explored in this article.
+Not a known project, but the babel plugin where I first implemented such architecture in <a href="https://goodguydaniel.com/blog/presenting-babel-plugin-cloudinary/" target="_blank" title="goodguydaniel.com, blog post, Presenting babel-plugin-cloudinary">babel-plugin-cloudinary</a>, if you check the test setup, you might quickly identify the patterns explored in this article.
 
 Do you see any similarities between all the listed projects? I do! We could say that they are all compilers, in their own ways. They often have a **vast spectrum of inputs and narrow APIs, often exposed via a `compile` function**.
 

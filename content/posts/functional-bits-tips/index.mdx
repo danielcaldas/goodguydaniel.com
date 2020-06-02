@@ -4,13 +4,11 @@ subtitle: "Towards a Functional Programming Style"
 date: 2020-03-30
 slug: "/blog/functional-bits-tips/"
 tags:
+  - Functional Programming
   - JavaScript
-  - FunctionalProgramming
 ---
 
 import Accordion from "../components/Accordion";
-import Caption from "../components/Caption";
-import GIF from "../components/GIF";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 
 <ScrollToTopButton />
@@ -307,7 +305,7 @@ const pipe = (...fns) => (...args) =>
 
 Web applications are complex, meaning your code becomes inherently more complicated. Functional constructs do the trick for me when it comes to rearranging my logic into a compact implementation that may read like plain English. But besides a potential big win on **readability** there are other advantageous things in the package:
 
-- **Functions are more natural to reason** - "divide and conquer" one of the most underrated statements that put you on the road to clean code. Your functions will execute one task and one task only, and do it well. You name the smaller functions of your program with intent.
+- **Functions are more natural to reason** - "divide and conquer" one of the most underrated statements that put you on the road to <a href="https://www.amazon.com/gp/product/0132350882/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0132350882&linkCode=as2&tag=goodguydaniel-20&linkId=7d43375b6b0cd381f5ce0e61779b6fc5" target="_blank" title="Clean Code: A Handbook of Agile Software Craftsmanship">clean code</a>. Your functions will execute one task and one task only, and do it well. You name the smaller functions of your program with intent.
 - **Code resilience** - you'll notice that your code becomes more **bulletproof**. Splitting your code into smaller functions and compose them at a higher level of your implementation will make your system more **robust**, more **comfortable to test**, **achieving the same with less LOC**.
 - **Composability** - your code becomes more composable, allowing you to **plug&play functions to promptly tweak your implementation**. You'll pull existing functions together to compose them into more intricate ones that will get the job done and still read comfortably.
 - **Performance? <a href="https://www.youtube.com/watch?v=BN1WwnEDWAM" target="_blank" title="The Clash - Should I Stay or Should I Go (Official Audio)">"Should I stay or Should I Go"</a>?** - From the example above, when implementing the `and` utility, we saw that the functional approach is not able to return earlier as the imperative approach did. There's no way to early break from functional constructs such as `.map` or `.reduce` (which is a good thing! no, side-effects allowed!). Don't trick yourself in thinking that such detail dictates overall better performance for an imperative approach. Sometimes the benefits of making it **readable** and composable through more trivial functions will bring you, your team, and your product far more significant advantages than speeding up the JavaScript execution by a few fractions of a millisecond.
@@ -315,6 +313,8 @@ Web applications are complex, meaning your code becomes inherently more complica
 On the "not so good side" of things, **the biggest challenge this coding style faces today is debugability**. _"Oh, but they say also debugging becomes easier!"_ I don't think so, but let me clarify what I mean by _"debugability"_. One on hand **code is more natural to track because there's much structure to it, yes**. **But** on the other hand, **diving into specific detail of the implementation becomes hard** because you kind of need to perform **"reverse engineering" of the compact code** to perform a log in the console or other adding a breakpoint (use `tap`, he's your friend there!).
 
 I think these tools are good ones to spark your interest in a more functional coding style and maybe if you see fit dive into libraries like <a href="https://github.com/lodash/lodash/wiki/FP-Guide" target="_blank" title="lodash FP guide on GitHub">lodash/fp</a>.
+
+Another tip that I would like to drop is that when adopting a functional architecture **it's good to keep in mind some good practices when it comes to design functions**. I found <a href="https://www.amazon.com/gp/product/0132350882/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0132350882&linkCode=as2&tag=goodguydaniel-20&linkId=7d43375b6b0cd381f5ce0e61779b6fc5" target="_blank" title="Clean Code: A Handbook of Agile Software Craftsmanship">Clean Code</a> (by <a href="http://www.cleancoder.com/products" target="_blank" title="Uncle Bob Martin | cleancoder.com">Uncle Bob Martin</a>) to be an awesome resource that helped me laying down some ground rules when it comes to designing function APIs that are clean and scalable.
 
 Do you find these few bits of the functional world beneficial? Give them a try!
 
