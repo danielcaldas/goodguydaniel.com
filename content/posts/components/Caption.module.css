@@ -1,19 +1,21 @@
 .container {
   text-align: center;
-  margin-top: -62px;
+  margin-top: -6%;
 }
 
 .container-gif {
   text-align: center;
-  margin-top: -8px;
+  margin-top: 0.1%;
 }
 
 .source-text {
   color: #808080;
-  font-size: 11px;
+  font-size: 0.6rem;
 }
 
 .caption-text {
   color: #9f7aea;
-  font-size: 12px;
+  font-size: 0.8rem;
+  margin: 0;
+  margin-bottom: 4px;
 }

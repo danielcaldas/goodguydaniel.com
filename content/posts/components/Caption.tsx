@@ -15,8 +15,7 @@ function Caption({
   return (
     <div className={gif ? styles.containerGif : styles.container}>
       <span className={styles.sourceText}>source: {source}</span>
-      {text && <br />}
-      {text && <span className={styles.captionText}>{text}</span>}
+      {text && <p className={styles.captionText}>{text}</p>}
     </div>
   );
 }
