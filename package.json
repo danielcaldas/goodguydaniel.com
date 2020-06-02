@@ -7,7 +7,7 @@
     "blc": "./blc.sh",
     "build": "npm run clean && gatsby build",
     "clean": "gatsby clean",
-    "dev": "npm run clean && gatsby develop",
+    "dev": "npm run clean && gatsby develop -H 0.0.0.0",
     "e2e": "cp e2e/babel.config.js . && jest --config e2e/jest.config.js && echo \"ok\" && rm babel.config.js || rm babel.config.js",
     "lint": "eslint --config=.eslintrc.js \"src/**/*.{js,jsx,ts,tsx}\" \"content/**/*.{js,jsx,ts,tsx}\"",
     "serve": "gatsby serve",
