@@ -191,7 +191,7 @@ You might have noticed some previous warning sings (⚠️) in some of the liste
 2. **Don't use nested destructuring on function arguments that have long or complicated signatures**. It makes it super hard to understand what the actually API of the function is, and you might get breaking behavior because someone decided to use your function, but in some edge case they do not provide you the valid input for you to destruct upon.
 3. **Don't use destructuring to retrieve a value if you rely on order.** I listed the possibility of skipping elements with destructuring, it might sound tempting, but you might end up again breaking your website because your simple routine relies on the access of the _Nth_ element of some inputted array. Also, you can still retrieve data out of the array, but it might be that in that position you don't get what you were expecting. If you choose this path, at this point, it should also be arguable that there's something very wrong either with your code or with the data model from where you're your reading data, use this one with care.
 
-#### Sources
+#### References
 
 - <a
     href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment"
@@ -214,4 +214,11 @@ You might have noticed some previous warning sings (⚠️) in some of the liste
   >
     JAVASCRIPT.INFO: Destructuring assignment
   </a>
-- And of course my personal experience on using it 😎
+- <a
+    href="https://www.amazon.com/gp/product/1491904240/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=1491904240&linkCode=as2&tag=goodguydaniel-20&linkId=4f042fc71ae02c88f9ea2992a12d7535"
+    target="_blank"
+    title="You Don't Know JS: ES6 & Beyond"
+  >
+    You Don't Know JS: ES6 & Beyond
+  </a>
+- And of course my personal experience 😎
