@@ -93,8 +93,8 @@ const Post = ({ data: { post } }: PostProps): FC => {
             <DiscussionEmbed
               shortname={DISQUS_SHORTNAME}
               config={{
-                url: `${window.location.href}/${post.slug}`,
-                identifier: post.slug,
+                url: `${window.location.origin}${window.location.pathname}`,
+                identifier: `${window.location.origin}${window.location.pathname}`,
                 title: post.title,
               }}
             />
