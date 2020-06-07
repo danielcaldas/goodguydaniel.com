@@ -40,7 +40,6 @@ To launch different browser instances to run your test suite, you'll rely on you
 ##### Be aware of the global timeout value
 
 You want to increase the value of the test timeout. End to end tests might take up several seconds to run. If you're using Jest, you can configure the timeout value with the property <a href="https://jestjs.io/docs/en/configuration#testtimeout-number" target="_blank" title="testTimeout Jest Documentation">testTimeout</a>, which for Jest 26.0 defaults to 5 seconds.
-Another example, if you're using <a href="https://jestjs.io/docs/en/configuration#testtimeout-number" target="_blank" title="Mocha - the fun, simple, flexible JavaScript test framework">mocha</a> you can use `this.timeout(VALUE_IN_SECONDS);` at the top level of your `describe` block.
 
 Here's an example of my `jest.config.js` with the mentioned configurations.
 
@@ -52,6 +51,8 @@ module.exports = {
   maxWorkers: 3,
 };
 ```
+
+If you're using <a href="https://jestjs.io/docs/en/configuration#testtimeout-number" target="_blank" title="Mocha - the fun, simple, flexible JavaScript test framework">mocha</a>, you can add `this.timeout(VALUE_IN_SECONDS);` at the top level of your `describe` block.
 
 <br />
 <br />
