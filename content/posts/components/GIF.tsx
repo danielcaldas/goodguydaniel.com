@@ -43,13 +43,7 @@ function getFromRegistry(name) {
   }
 }
 
-function GIF({
-  alt = "",
-  height = "100%",
-  name,
-  playing = false,
-  width = "100%",
-}: Props): FC {
+function GIF({ alt = "", height = "100%", name, playing = false, width = "100%" }: Props): FC {
   const isSSR = typeof window === "undefined";
   const [isPlaying, setPlaying] = useState(playing);
   const src = useMemo(() => getFromRegistry(name), [name]);

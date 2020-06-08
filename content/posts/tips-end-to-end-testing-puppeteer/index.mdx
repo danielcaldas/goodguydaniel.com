@@ -23,7 +23,7 @@ I want to share a pragmatic list of tips and resources that can help you get a f
 
 **Topics I'll Cover**
 
-1. Getting things running
+1. [Getting things running](#getting-things-running)
 2. Writing Tests
 3. Debugging
 4. Performance Automation
@@ -52,9 +52,8 @@ module.exports = {
 };
 ```
 
-If you're using <a href="https://jestjs.io/docs/en/configuration#testtimeout-number" target="_blank" title="Mocha - the fun, simple, flexible JavaScript test framework">mocha</a>, you can add `this.timeout(VALUE_IN_SECONDS);` at the top level of your `describe` block.
+Another example is if you're using <a href="https://jestjs.io/docs/en/configuration#testtimeout-number" target="_blank" title="Mocha - the fun, simple, flexible JavaScript test framework">mocha</a>, you can add `this.timeout(VALUE_IN_SECONDS);` at the top level of your `describe` block.
 
-<br />
 <br />
 
 ##### Abstracting puppeteer.launch
@@ -62,7 +61,7 @@ If you're using <a href="https://jestjs.io/docs/en/configuration#testtimeout-num
 To bootstrap your test, you have to run <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-puppeteerlaunchoptions" target="_blank" title="puppeteer.launch Documentation">puppeteer.lauch</a>. I recommend you to be abstract this call within a custom function. Doing so allows you to customize everything about how the environment each different test window/session individually. I'm referring to making the following things **configurable**:
 
 - Allow the client to specify what page the browser should navigate first
-- Allow the client to decide under what **network conditions** the test runs. I'll also cover this in this article.
+- Allow the client to decide under what **network conditions** the test runs. I'll [also cover this in this article](#throttling-network-connection-speed).
 - Allow the client to specify things like whether the <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-puppeteerlaunchoptions" target="_blank" title="puppeteer.launch Documentation">DevTools</a> are open or the **slowMo** (also included in this article). It could be quite handy to narrow down these configurations to a particular test in your test suite.
 
 ```javascript:title=boot.js
@@ -72,12 +71,7 @@ export default async function boot(options = {}) {
   let page = null;
   let browser = null;
 
-  const {
-    goToTargetApp = true,
-    headless = true,
-    devtools = false,
-    slowMo = false,
-  } = options;
+  const { goToTargetApp = true, headless = true, devtools = false, slowMo = false } = options;
 
   browser = await puppeteer.launch({
     headless,
@@ -96,26 +90,31 @@ export default async function boot(options = {}) {
 }
 ```
 
+I like to have my launch function just dealing with the bootstrap configuration aspects of my test environment and launch the application. I try to keep it as slimmer as possible, but sometimes I feel the urge to add more stuff here. There's a saying:
+
 <br />
+
+> "Functions should do one thing. They should do it well. They should do it only."
+
+_source_: <a href="https://www.amazon.com/gp/product/0132350882/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0132350882&linkCode=as2&tag=goodguydaniel-20&linkId=7d43375b6b0cd381f5ce0e61779b6fc5" target="_blank" title="Clean Code: A Handbook of Agile Software Craftsmanship">Clean Code by Robert C. Martin</a>
+
 <br />
 
 ##### Throttling Network Connection Speed
 
+If you want to run your tests under different network speed conditions, I got your back. Let me share the pattern I use <a href="https://gist.github.com/trungpv1601/2ccd3cc998149a84ba80ed7a4c9ef562" target="_blank" title="Network throttling in Puppeteer GitHub Gist">based on this gist that I luckily found</a>.
+
+If you [abstract puppeteer.launch](#abstracting-puppeteerlaunch), your test could switch between network presets just by doing the following.
+
 ```javascript:title=boot.js
 import puppeteer from "puppeteer";
-
 import NETWORK_PRESETS from "./network-presets";
 
 export default async function boot(options = {}) {
   let page = null;
   let browser = null;
 
-  const {
-    goToTargetApp = true,
-    headless = true,
-    devtools = false,
-    slowMo = false,
-  } = options;
+  const { goToTargetApp = true, headless = true, devtools = false, slowMo = false } = options;
 
   browser = await puppeteer.launch({
     headless,
@@ -132,10 +131,7 @@ export default async function boot(options = {}) {
     if (network && NETWORK_PRESETS[network]) {
       // setup custom network speed
       const client = await page.target().createCDPSession();
-      await client.send(
-        "Network.emulateNetworkConditions",
-        NETWORK_PRESETS[network]
-      );
+      await client.send("Network.emulateNetworkConditions", NETWORK_PRESETS[network]);
     }
   }
 
@@ -202,3 +198,63 @@ export default {
 ```
 
 </Accordion>
+
+<br />
+<br />
+
+##### Loading a Browser Extension
+
+Here's how to load a browser extension in the browser instance against whom your tests run.
+
+```javascript
+// launch puppeeter pass along the extension path within your project
+// a relative path that points to the directory you output your extension assets
+browser = await puppeteer.launch({
+  // extension are allowed only in head-full mode
+  headless: false,
+  devtools,
+  args: [`--disable-extensions-except=${process.env.EXTENSION_PATH}`, `--load-extension=${process.env.EXTENSION_PATH}`],
+  ...(slowMo && { slowMo }),
+});
+
+// 1. find the extension by the title
+// you might want to tackle this differently
+// depending on your use case
+const targets = await browser.targets();
+const extensionTarget = targets.find(({ _targetInfo }) => {
+  return _targetInfo.title === "my extension page title";
+});
+
+// 2. getting the extensionId from the URL
+// if you have a fixed extensionId you can just pass in an
+// environment variable with that value, otherwise this works fine
+const partialExtensionUrl = extensionTarget._targetInfo.url || "";
+const [, , extensionID] = partialExtensionUrl.split("/");
+// here the entry point of the extension is an html file called "popup.html"
+const extensionPopupHtml = "popup.html";
+
+// 3. open the chrome extension in a new tab
+// notice that to properly build the extension URL you need the
+// extensionId and the entrypoint resource
+extensionPage = await browser.newPage();
+extensionUrl = `chrome-extension://${extensionID}/${extensionPopupHtml}`;
+
+await extensionPage.goto(extensionUrl);
+```
+
+<br />
+
+If you want to read through about testing chrome extensions with Puppeteer, I recommend this article: <a href="https://gokatz.me/blog/automate-chrome-extension-testing/" target="_blank" title="Automate the UI Testing of your chrome extension - Gokul Kathirvel">Automate the UI Testing of your chrome extension</a> by <a href="https://gokatz.me/" target="_blank" title="Gokul Kathirvel">Gokul Kathirvel</a>.
+
+<br />
+
+#### Writing Tests
+
+Apart from the last subsection, what I discuss next, you can read it in the official documentation. I'm just going to step on those that I consider to be essential bits of the Puppeteer API.
+
+##### Working with page.evaluate
+
+You'll need to get used to the detail that when using the page.evaluate API,you run on the page context,
+meaning even if you're using arrow functions as an argument to page.evaluate, you can't refer
+to things out of the scope of that function. You need to provide all the data you'll need as the
+third argument of page.evaluate. Keep this in mind.
