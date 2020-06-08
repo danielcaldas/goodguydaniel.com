@@ -45,9 +45,7 @@ const Homepage = ({ data: { posts, pinned } }: HomePageProps): FC => {
       <Title text="Featured Posts" />
       <Listing posts={pinned.nodes} showTags={false} />
       <Title text="Latest Posts">
-        <Link to={replaceSlashes(`/${basePath}/${blogPath}`)}>
-          Read all posts
-        </Link>
+        <Link to={replaceSlashes(`/${basePath}/${blogPath}`)}>Read all posts</Link>
       </Title>
       <Listing posts={posts.nodes} showTags={false} />
       <List>

@@ -8,14 +8,14 @@
   margin-top: 0.1%;
 }
 
-.source-text {
-  color: #808080;
-  font-size: 0.6rem;
-}
-
-.caption-text {
+.container-gif > p {
   color: #9f7aea;
   font-size: 0.8rem;
   margin: 0;
   margin-bottom: 4px;
+}
+
+.source-text {
+  color: #808080;
+  font-size: 0.6rem;
 }
