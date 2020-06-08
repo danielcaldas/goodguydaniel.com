@@ -8,12 +8,11 @@ module.exports = {
     // Used for the title template on pages other than the index site
     siteTitle: "goodguydaniel.com",
     // Default title of the page
-    siteTitleAlt:
-      "goodguydaniel.com - Here is where Daniel writes about his experiences.",
+    siteTitleAlt: "goodguydaniel.com - Here is where Daniel writes about his experiences.",
     // Can be used for e.g. JSONLD
     siteHeadline: "goodguydaniel.com",
     // Will be used to generate absolute URLs for og:image etc.
-    siteUrl: "https://www.github.com/danielcaldas",
+    siteUrl: "https://goodguydaniel.com",
     // Used for SEO
     siteDescription: "Here is where Daniel writes about his experiences.",
     // Will be set on the <html /> tag
