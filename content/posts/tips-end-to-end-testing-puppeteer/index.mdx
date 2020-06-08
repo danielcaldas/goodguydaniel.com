@@ -15,11 +15,13 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 
 <ScrollToTopButton />
 
-These are exciting times for End to End in the JavaScript world. In the last couple of years, tools such as <a href="https://www.cypress.io/" target="_blank" title="JavaScript End to End Testing Framework | cypress.io">cypress</a> and <a href="https://pptr.dev/" target="_blank" title="Puppeteer Official Home">Puppeteer</a> have flooded the JavaScript community and gain a fast adoption.
+These are exciting times for _End to End (E2E)_ testing in the JavaScript world. In the last couple of years,
+tools such as <a href="https://www.cypress.io/" target="_blank" title="JavaScript End to End Testing Framework | cypress.io">cypress</a> and <a href="https://pptr.dev/" target="_blank" title="Puppeteer Official Home">Puppeteer</a> have flooded the JavaScript community and gain a fast adoption.
 
 Today I'm writing about Puppeteer.
 
-I want to share a pragmatic list of tips and resources that can help you get a fast overall understanding of things to consider when using Puppeteer.
+I want to share a pragmatic list of tips and resources that can help you get a fast overall understanding of things to
+consider when using Puppeteer, and what it has to offer.
 
 ###### Topics I'll Cover
 
@@ -33,15 +35,16 @@ I want to share a pragmatic list of tips and resources that can help you get a f
 
 #### Getting things running
 
-In this section, I discuss the main aspects of running a test with Puppeteer, including some interoperability aspects that we should consider, such as the eventual usage of an underlying testing library such as Jest.
+In this section, I discuss the main aspects of running a test with Puppeteer, including some interoperability
+aspects that we should consider, such as the usage of an underlying testing library/framework such as Jest.
 
 ##### Running tests in parallel
 
-To launch different browser instances to run your test suite, you'll rely on your chosen test runner. For example, with <a href="https://jestjs.io/" target="_blank" title="Jest · 🃏 Delightful JavaScript Testing">Jest</a>, I leverage the config <a href="https://jestjs.io/docs/en/cli.html#--maxworkersnumstring" target="_blank" title="Max Workers Jest Documentation">maxWorkers</a> to define how many browser sessions I allow to run concurrently.
+To launch different browser instances to run your test suite, you can rely on your chosen test runner. For example, with <a href="https://jestjs.io/" target="_blank" title="Jest · 🃏 Delightful JavaScript Testing">Jest</a>, I leverage the config <a href="https://jestjs.io/docs/en/cli.html#--maxworkersnumstring" target="_blank" title="Max Workers Jest Documentation">maxWorkers</a> to define how many browser sessions I allow to run concurrently.
 
 ##### Be aware of the global timeout value
 
-You want to increase the value of the test timeout. End to end tests might take up several seconds to run. If you're using Jest, you can configure the timeout value with the property <a href="https://jestjs.io/docs/en/configuration#testtimeout-number" target="_blank" title="testTimeout Jest Documentation">testTimeout</a>, which for Jest 26.0 defaults to 5 seconds.
+You want to increase the default global value for a test to timeout. E2E tests might take up several seconds to run. If you're using Jest, you can configure the timeout value with the property <a href="https://jestjs.io/docs/en/configuration#testtimeout-number" target="_blank" title="testTimeout Jest Documentation">testTimeout</a>, which for Jest 26.0 defaults to 5 seconds.
 
 Here's an example of my `jest.config.js` with the mentioned configurations.
 
@@ -60,11 +63,13 @@ If you're using (for example) <a href="https://jestjs.io/docs/en/configuration#t
 
 ##### Abstracting puppeteer.launch
 
-To bootstrap your test, you have to run <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-puppeteerlaunchoptions" target="_blank" title="puppeteer.launch Documentation">puppeteer.lauch</a>. I recommend you to be abstract this call within a custom function. Doing so allows you to customize everything about how the environment each different test window/session individually. I'm referring to making the following things **configurable**:
+To bootstrap your test, you have to run <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-puppeteerlaunchoptions" target="_blank" title="puppeteer.launch Documentation">puppeteer.lauch</a>. I recommend
+you to be abstract this call within a wrapper function. Doing so allows you to centralize
+all your test environment customizations easily. I'm referring to making the following things **configurable**:
 
-- Allow the client to specify what page the browser should navigate first
+- Allow the client to specify what page the browser should open on.
 - Allow the client to decide under what **network conditions** the test runs. I'll [also cover this in this article](#throttling-network-connection-speed).
-- Allow the client to specify things like whether the <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-puppeteerlaunchoptions" target="_blank" title="puppeteer.launch Documentation">DevTools</a> are open or the **slowMo** (also included in this article). It could be quite handy to narrow down these configurations to a particular test in your test suite.
+- Allow the client to specify things like whether the <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-puppeteerlaunchoptions" target="_blank" title="puppeteer.launch Documentation">DevTools</a> are open etc.
 
 ```javascript:title=boot.js
 import puppeteer from "puppeteer";
@@ -104,7 +109,7 @@ _source_: <a href="https://www.amazon.com/gp/product/0132350882/ref=as_li_tl?ie=
 
 ##### Throttling Network Connection Speed
 
-If you want to run your tests under different network speed conditions, I got your back. Let me share the pattern I use <a href="https://gist.github.com/trungpv1601/2ccd3cc998149a84ba80ed7a4c9ef562" target="_blank" title="Network throttling in Puppeteer GitHub Gist">based on this gist that I luckily found</a>.
+You can run your tests under different network speed conditions. Let me share the pattern I use <a href="https://gist.github.com/trungpv1601/2ccd3cc998149a84ba80ed7a4c9ef562" target="_blank" title="Network throttling in Puppeteer GitHub Gist">based on this gist that I luckily found</a>.
 
 If you [abstract puppeteer.launch](#abstracting-puppeteerlaunch), your test could switch between network presets just by doing the following.
 
@@ -206,10 +211,10 @@ export default {
 
 ##### Loading a Browser Extension
 
-Here's how to load a browser extension in the browser instance against whom your tests run.
+Here's how you can load a browser extension.
 
 ```javascript
-// launch puppeeter pass along the extension path within your project
+// 1. launch puppeeter pass along the EXTENSION_PATH within your project
 // a relative path that points to the directory you output your extension assets
 browser = await puppeteer.launch({
   // extension are allowed only in head-full mode
@@ -219,7 +224,7 @@ browser = await puppeteer.launch({
   ...(slowMo && { slowMo }),
 });
 
-// 1. find the extension by the title
+// 2. find the extension by the title
 // you might want to tackle this differently
 // depending on your use case
 const targets = await browser.targets();
@@ -227,7 +232,7 @@ const extensionTarget = targets.find(({ _targetInfo }) => {
   return _targetInfo.title === "my extension page title";
 });
 
-// 2. getting the extensionId from the URL
+// 3. getting the extensionId from the URL
 // if you have a fixed extensionId you can just pass in an
 // environment variable with that value, otherwise this works fine
 const partialExtensionUrl = extensionTarget._targetInfo.url || "";
@@ -235,28 +240,34 @@ const [, , extensionID] = partialExtensionUrl.split("/");
 // here the entry point of the extension is an html file called "popup.html"
 const extensionPopupHtml = "popup.html";
 
-// 3. open the chrome extension in a new tab
+// 4. open the chrome extension in a new tab
 // notice that to properly build the extension URL you need the
 // extensionId and the entrypoint resource
 extensionPage = await browser.newPage();
 extensionUrl = `chrome-extension://${extensionID}/${extensionPopupHtml}`;
 
 await extensionPage.goto(extensionUrl);
+
+// ... now use extensionPage to interact with the extension
 ```
 
 <br />
 
-If you want to read through about testing chrome extensions with Puppeteer, I recommend this article: <a href="https://gokatz.me/blog/automate-chrome-extension-testing/" target="_blank" title="Automate the UI Testing of your chrome extension - Gokul Kathirvel">Automate the UI Testing of your chrome extension</a> by <a href="https://gokatz.me/" target="_blank" title="Gokul Kathirvel">Gokul Kathirvel</a>.
+If you want to read through about testing chrome extensions with Puppeteer, I
+recommend this article: <a href="https://gokatz.me/blog/automate-chrome-extension-testing/" target="_blank" title="Automate the UI Testing of your chrome extension - Gokul Kathirvel">Automate the UI
+Testing of your chrome extension</a> by <a href="https://gokatz.me/" target="_blank" title="Gokul Kathirvel">Gokul Kathirvel</a>.
 
 <br />
 
 #### Writing Tests
 
-Apart from the [last subsection](#clearing-text-from-an-input-field), what I discuss next, you can read it in the official documentation. I'm just going to step on those that I consider to be essential bits of the Puppeteer API.
+Apart from the [last subsection](#clearing-text-from-an-input-field), what I discuss next,
+can be easily found in the official documentation. I'm just going to step on those topics that
+I consider to be essential parts of the Puppeteer API.
 
 ##### Working with page.evaluate
 
-You'll need to get used to the detail that when using the <a href="https://pptr.dev/#?product=Puppeteer&version=v3.0.3&show=api-pageevaluatepagefunction-args" target="_blank" title="Puppeteer Docs page.evaluate">page.evaluate API</a>,you run on the page context,
+You'll need to get used to the detail that when using <a href="https://pptr.dev/#?product=Puppeteer&version=v3.0.3&show=api-pageevaluatepagefunction-args" target="_blank" title="Puppeteer Docs page.evaluate">page.evaluate</a>, you run on the page context,
 meaning even if you're using arrow functions as an argument to `page.evaluate`, you can't refer
 to things out of the scope of that function. You need to provide all the data you'll need as the
 third argument of `page.evaluate`. Keep this in mind.
@@ -293,7 +304,8 @@ await extensionPage.waitForFunction(
 );
 ```
 
-There's a decision you need to make. The choice is whereas you should have a higher or lower timeout. I usually try to advocate for lower as possible, because we want to keep our tests fast. Running End to End tests against systems where you need to perform (not mocked) network requests, means that you need to account for network uncertainty for test stability.
+There's a decision you need to make. The choice is whereas you should have a higher or lower timeout. I usually try to advocate for lower as possible, because we want to keep our tests fast. Running E2E tests against systems where you need to perform (not mocked) network requests, means that you need to account for network instability, altough
+usually you'll run under _perfect_ network conditions, you might want to cut some slack to the timeout value.
 
 ##### element.select
 
@@ -306,15 +318,15 @@ const selectEl = await page.$("#custom-http-method");
 await selectEl.select("POST");
 ```
 
-While `element.select` it's convenient. You'll probably have to approach this
-differently for custom select fields built with a `div > ul > li` structure and
-hidden input field, for instance, things like <a href="https://material-ui.com/components/selects/#select" target="_blank" title="Select React component - Material-UI">select Material UI components</a>.
+While `element.select` it's convenient, you'll probably have to approach this
+differently for custom select fields built on a `div > ul > li` structure with a
+hidden input field, for instance <a href="https://material-ui.com/components/selects/#select" target="_blank" title="Select React component - Material-UI">select Material UI components</a>.
 
 ##### Screenshots
 
 For specific test cases, I like to output a collection of screenshots that build a
 timeline of how my application looks throughout the test. Screenshotting in between
-your test cases becomes particularly useful to get an initial pointer to what you
+your test helps you get an initial pointer to what you
 should be debugging in a failing test. Here's my small utility that wraps <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-pagescreenshotoptions" target="_blank" title="page.screenshot Puppeteer Documentation">page.screenshot</a>
 API.
 
@@ -350,7 +362,8 @@ await utils.prtScn(page);
 
 ##### Page Reloads
 
-With the <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-pagereloadoptions" target="_blank" title="page.reload Puppeteer Documentation">page.reload</a> API. You can specify a set of options that allow you to wait for certain underlying browser tasks to idle before proceeding.
+With the <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-pagereloadoptions" target="_blank" title="page.reload Puppeteer Documentation">page.reload</a> API. You can
+specify a set of options that allow you to wait for specific underlying browser tasks to idle before proceeding.
 
 ```javascript
 await page.reload({ waitUntil: ["networkidle0"] });
@@ -383,7 +396,7 @@ I want to highlight some debugging techniques. Especially the `slowMo` option.
 
 ##### Debugging with slowMo
 
-You'll want to use <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-puppeteerlaunchoptions" target="_blank" title="puppeteer.launch Documentation">slowMo</a> to debug individual tests. The option allows you to slow down the interactions (the steps) of your end to end test so that you can see what's going on, almost like seeing an actual human interacting with your application. I can't emphasize enough how valuable this is.
+You'll want to use <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-puppeteerlaunchoptions" target="_blank" title="puppeteer.launch Documentation">slowMo</a> to debug individual tests. The option allows you to slow down the interactions (the steps) of your E2E test so that you can see what's going on, almost like seeing an actual human interacting with your application. I can't emphasize enough how valuable this is.
 
 ```javascript
 page.launch({ slowMo: 50 });
@@ -407,8 +420,8 @@ In the following GIFs you can see the difference of running without and with the
 <Caption
   text={() => (
     <p>
-      E2E test on the tweak chrome extension <b>with slowMo</b>. You can see the typing in the 'URL' at a human
-      perceptible speed
+      E2E test on the tweak chrome extension <b>with slowMo</b>. You can see the characters appearing in the 'URL' as if
+      a human would be typing.
     </p>
   )}
   gif={true}
@@ -420,7 +433,9 @@ For more awesome tips for debugging, I highly recommend this short article on De
 
 ##### Using debugger
 
-I got this one from <a href="https://developers.google.com/web/tools/puppeteer/debugging" target="_blank" title="Debugging  |  Tools for Web Developers  |  Google Developers">Google debugging tips</a>. I had the habit of throwing a `sleep` statement to stop my tests and inspect the application to see why my tests are breaking. But now I completely shifted to this.
+I got this one from <a href="https://developers.google.com/web/tools/puppeteer/debugging" target="_blank" title="Debugging  |  Tools for Web Developers  |  Google Developers">Google debugging tips</a>. I had the habit of
+throwing a `sleep` statement to stop my tests for _X_ seconds and inspect the application
+to see why the tests were breaking. But now I completely shifted to this.
 
 ```javascript
 await page.evaluate(() => {
@@ -434,9 +449,9 @@ For more great debugging tips, I highly recommend <a href="https://developers.go
 
 #### Performance Automation
 
-There's quite a buzz going on to use Puppeteer to automate web performance
-testing. I couldn't write this article without shouting out to <a href="https://addyosmani.com/" target="_blank" title="AddyOsmani.com">Addy Osmani</a> on
-the work he developed on <a href="https://github.com/addyosmani/puppeteer-webperf" target="_blank" title="Automating Web Performance testing with Puppeteer">addyosmani/puppeteer-webperf</a>, which I couldn't
+There's quite a _buzz_ going on about using Puppeteer to automate web performance
+testing. I couldn't write this article without giving a shout out to <a href="https://addyosmani.com/" target="_blank" title="AddyOsmani.com">Addy Osmani</a> on the
+work developed on <a href="https://github.com/addyosmani/puppeteer-webperf" target="_blank" title="Automating Web Performance testing with Puppeteer">addyosmani/puppeteer-webperf</a>, which I couldn't
 recommend more. Within the project `README.md` you'll find the most organized
 set of examples to tune your performance automation.
 
