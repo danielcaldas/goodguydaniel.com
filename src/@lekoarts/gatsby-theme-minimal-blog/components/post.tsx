@@ -53,11 +53,7 @@ const Post = ({ data: { post } }: PostProps): FC => {
         pathname={post.slug}
       />
       <Heading variant="styles.h2">{post.title}</Heading>
-      {post.parent.frontmatter.subtitle && (
-        <Heading variant="styles.h4">
-          {post.parent.frontmatter.subtitle}
-        </Heading>
-      )}
+      {post.parent.frontmatter.subtitle && <Heading variant="styles.h4">{post.parent.frontmatter.subtitle}</Heading>}
       <p
         sx={{
           color: `secondary`,

@@ -39,10 +39,7 @@ const Footer = (): FC => {
         {` `}
         by
         {` `}
-        <Link
-          aria-label="Link to the theme author's website"
-          href="https://www.lekoarts.de/en"
-        >
+        <Link aria-label="Link to the theme author's website" href="https://www.lekoarts.de/en">
           LekoArts
         </Link>
       </div>
