@@ -21,13 +21,15 @@ Today I'm writing about Puppeteer.
 
 I want to share a pragmatic list of tips and resources that can help you get a fast overall understanding of things to consider when using Puppeteer.
 
-**Topics I'll Cover**
+###### Topics I'll Cover
 
 1. [Getting things running](#getting-things-running)
-2. Writing Tests
-3. Debugging
-4. Performance Automation
-5. Browser Support
+2. [Writing Tests](#writing-tests)
+3. [Debugging](#debugging)
+4. [Performance Automation](#performance-automation)
+5. [Browser Support](#browser-support)
+
+<br />
 
 #### Getting things running
 
@@ -52,7 +54,7 @@ module.exports = {
 };
 ```
 
-Another example is if you're using <a href="https://jestjs.io/docs/en/configuration#testtimeout-number" target="_blank" title="Mocha - the fun, simple, flexible JavaScript test framework">mocha</a>, you can add `this.timeout(VALUE_IN_SECONDS);` at the top level of your `describe` block.
+If you're using (for example) <a href="https://jestjs.io/docs/en/configuration#testtimeout-number" target="_blank" title="Mocha - the fun, simple, flexible JavaScript test framework">mocha</a>, you can add `this.timeout(VALUE_IN_SECONDS);` at the top level of your `describe` block.
 
 <br />
 
@@ -250,11 +252,198 @@ If you want to read through about testing chrome extensions with Puppeteer, I re
 
 #### Writing Tests
 
-Apart from the last subsection, what I discuss next, you can read it in the official documentation. I'm just going to step on those that I consider to be essential bits of the Puppeteer API.
+Apart from the [last subsection](#clearing-text-from-an-input-field), what I discuss next, you can read it in the official documentation. I'm just going to step on those that I consider to be essential bits of the Puppeteer API.
 
 ##### Working with page.evaluate
 
-You'll need to get used to the detail that when using the page.evaluate API,you run on the page context,
-meaning even if you're using arrow functions as an argument to page.evaluate, you can't refer
+You'll need to get used to the detail that when using the <a href="https://pptr.dev/#?product=Puppeteer&version=v3.0.3&show=api-pageevaluatepagefunction-args" target="_blank" title="Puppeteer Docs page.evaluate">page.evaluate API</a>,you run on the page context,
+meaning even if you're using arrow functions as an argument to `page.evaluate`, you can't refer
 to things out of the scope of that function. You need to provide all the data you'll need as the
-third argument of page.evaluate. Keep this in mind.
+third argument of `page.evaluate`. Keep this in mind.
+
+```javascript
+// extracting the "value" from an input element
+const inputValue = await inputEl.evaluate((e) => e.value);
+```
+
+<br />
+
+##### page.waitForSelector & page.waitForFunction
+
+Quickly getting familiar with the APIs <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-pagewaitforselectorselector-options" target="_blank" title="page.waitForSelector Puppeteer Documentation">page.waitForSelector</a> and <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-pagewaitforfunctionpagefunction-options-args" target="_blank" title="page.waitForFunction Puppeteer Documentation">page.waitForFunction</a> can reveal itself very productive. If you have a couple of tests to write changes that you'll need to wait for some condition to be met in the UI before you allowing your test to proceed, are high. Suspend the test flow and wait for the UI is a common practice, not exclusive to Puppeteer. See the below examples for some basic usages.
+
+```javascript
+// this function waits for the menu to appear before
+// proceeding, this way we can ensure that  we can interact
+// with the list items in the menu
+const getSmuiSelectOptions = async () => {
+  const selector = ".mdc-menu-surface li";
+  await page.waitForSelector(selector, { timeout: 1000 });
+  return await page.$$(selector);
+};
+```
+
+```javascript
+// wait for a snackbar to appear when some item is deleted in the application
+await extensionPage.waitForFunction(
+  () => !!document.querySelector('*[data-testid="global-snackbar"]').innerText.includes("deleted"),
+  {
+    timeout: 2000,
+  }
+);
+```
+
+There's a decision you need to make. The choice is whereas you should have a higher or lower timeout. I usually try to advocate for lower as possible, because we want to keep our tests fast. Running End to End tests against systems where you need to perform (not mocked) network requests, means that you need to account for network uncertainty for test stability.
+
+##### element.select
+
+I like the way it's possible to select options <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select" target="_blank" title="<select> - HTML: Hypertext Markup Language | MDN">on a native HTML select element</a>. It works both for single and multiple selections, and it feels natural.
+
+```javascript
+// selecting an HTTP method in a select element with id "custom-http-method"
+const selectEl = await page.$("#custom-http-method");
+
+await selectEl.select("POST");
+```
+
+While `element.select` it's convenient. You'll probably have to approach this
+differently for custom select fields built with a `div > ul > li` structure and
+hidden input field, for instance, things like <a href="https://material-ui.com/components/selects/#select" target="_blank" title="Select React component - Material-UI">select Material UI components</a>.
+
+##### Screenshots
+
+For specific test cases, I like to output a collection of screenshots that build a
+timeline of how my application looks throughout the test. Screenshotting in between
+your test cases becomes particularly useful to get an initial pointer to what you
+should be debugging in a failing test. Here's my small utility that wraps <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-pagescreenshotoptions" target="_blank" title="page.screenshot Puppeteer Documentation">page.screenshot</a>
+API.
+
+```javascript:test-utils.js
+// wrapping the call to `page.screenshot` just to avoid it
+// breaking my test in case the screenshot fails
+export async function prtScn(page, path = `Screenshot ${new Date().toString()}`) {
+  try {
+    await page.screenshot({ path, type: "png", fullPage: true });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    // eslint-disable-next-line no-console
+    console.info("Failed to take screenshot but test will proceed...");
+    return Promise.resolve();
+  }
+}
+```
+
+```javascript
+import * as utils from "test-utils";
+
+// (...)
+
+// Note: you can make this utility a Class and pass along the page
+// as context so that you don't need to pass it in everytime you
+// need to take a screenshot
+await utils.prtScn(page);
+```
+
+<br />
+<br />
+
+##### Page Reloads
+
+With the <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-pagereloadoptions" target="_blank" title="page.reload Puppeteer Documentation">page.reload</a> API. You can specify a set of options that allow you to wait for certain underlying browser tasks to idle before proceeding.
+
+```javascript
+await page.reload({ waitUntil: ["networkidle0"] });
+```
+
+In this above example, we reload the page with `networkidle0`, which does not allow the test to proceed unless there are no HTTP requests within a half a second period.
+
+##### Clearing Text from an Input Field
+
+I was stunned not to find a very out-of-the-box way to clear an input field. A few developers <a href="https://github.com/puppeteer/puppeteer/issues/3094" target="_blank" title="Feature request: Add 'clear' option to the .type() function · Issue #3094 · puppeteer/puppeteer">have expressed interest in this feature</a>, but it seems there's no interest on the other end. I've found a way to do it:
+
+```javascript:test-utils.js
+/**
+ * Clears an element
+ * @param {ElementHandle} el
+ */
+export async function clear(el) {
+  await el.click({ clickCount: 3 });
+  await el.press("Backspace");
+}
+```
+
+**It only works on Chrome** as it takes advantage of the functionality where three consecutive clicks in a text area/input field select the whole text. After that, you need to trigger a keyboard event to clear the entire field.
+
+<br />
+
+#### Debugging
+
+I want to highlight some debugging techniques. Especially the `slowMo` option.
+
+##### Debugging with slowMo
+
+You'll want to use <a href="https://pptr.dev/#?product=Puppeteer&version=v3.1.0&show=api-puppeteerlaunchoptions" target="_blank" title="puppeteer.launch Documentation">slowMo</a> to debug individual tests. The option allows you to slow down the interactions (the steps) of your end to end test so that you can see what's going on, almost like seeing an actual human interacting with your application. I can't emphasize enough how valuable this is.
+
+```javascript
+page.launch({ slowMo: 50 });
+```
+
+In the following GIFs you can see the difference of running without and with the `slowMo` option respectivelly.
+
+<GIF name="tweak-no-slowmo" />
+<Caption
+  text={{
+    __html:
+      "E2E test on the tweak chrome extension <b>without slowMo</b>. You can't possibly understand what's going on.",
+  }}
+  gif={true}
+/>
+
+<br />
+
+<GIF name="tweak-slowmo" />
+<Caption
+  text={{
+    __html:
+      "E2E test on the tweak chrome extension <b>with slowMo</b>. You can see the typing in the 'URL' at a human perceptible speed",
+  }}
+  gif={true}
+/>
+
+In these examples I'm using the <a href="https://tweak-extension.com/" target="_blank" title="tweak browser extension, intercept and mock HTTP requests">tweak browser extension</a> to demo the different use cases.
+
+For more awesome tips for debugging, I highly recommend this short article on Debugging Tips from Google.
+
+##### Using debugger
+
+I got this one from <a href="https://developers.google.com/web/tools/puppeteer/debugging" target="_blank" title="Debugging  |  Tools for Web Developers  |  Google Developers">Google debugging tips</a>. I had the habit of throwing a `sleep` statement to stop my tests and inspect the application to see why my tests are breaking. But now I completely shifted to this.
+
+```javascript
+await page.evaluate(() => {
+  debugger;
+});
+```
+
+For more great debugging tips, I highly recommend <a href="https://developers.google.com/web/tools/puppeteer/debugging" target="_blank" title="Debugging  |  Tools for Web Developers  |  Google Developers">this short article on Debugging Tips</a> from Google.
+
+<br />
+
+#### Performance Automation
+
+There's quite a buzz going on to use Puppeteer to automate web performance
+testing. I couldn't write this article without shouting out to <a href="https://addyosmani.com/" target="_blank" title="AddyOsmani.com">Addy Osmani</a> on
+the work he developed on <a href="https://github.com/addyosmani/puppeteer-webperf" target="_blank" title="Automating Web Performance testing with Puppeteer">addyosmani/puppeteer-webperf</a>, which I couldn't
+recommend more. Within the project `README.md` you'll find the most organized
+set of examples to tune your performance automation.
+
+<br />
+
+#### Browser Support
+
+According to the <a href="https://pptr.dev/" target="_blank" title="Puppeteer Official Home">official documentation</a>, you can use Puppeteer with Firefox, with the caveat that you might encounter some issues since this capability is experimental at the time of this writing. You can specify which browser to run via `puppeteer.launch` options API that I've covered [in this section](#abstracting-puppeteerlaunch).
+
+<br />
+<br />
+
+**What are your favorite bits of Puppeteer? What would you recommend me to learn next?**

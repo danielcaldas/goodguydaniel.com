@@ -7,6 +7,8 @@ import debugVSCodeAnimation1 from "../debugging-javascript-with-vscode/images/de
 import debugVSCodeAnimation2 from "../debugging-javascript-with-vscode/images/debug-animation-2.gif";
 import itsTimeToStop from "../unit-testing-with-fixtures-unleashed/images/its-time-to-stop.gif";
 import fixturesWatchMode from "../unit-testing-with-fixtures-unleashed/images/fixtures-watch-mode.gif";
+import tweakNoSlowMo from "../tips-end-to-end-testing-puppeteer/images/no-slowmo.gif";
+import tweakSlowMo from "../tips-end-to-end-testing-puppeteer/images/slowmo.gif";
 import gifStyles from "./GIF.module.css";
 
 // https://github.com/benwiley4000/react-gif-player#options
@@ -38,6 +40,10 @@ function getFromRegistry(name) {
       return itsTimeToStop;
     case "fixtures-watch-mode":
       return fixturesWatchMode;
+    case "tweak-no-slowmo":
+      return tweakNoSlowMo;
+    case "tweak-slowmo":
+      return tweakSlowMo;
     default:
       return "";
   }
