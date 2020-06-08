@@ -11,11 +11,7 @@ function Caption({ source = `© ${new Date().getFullYear()} by goodguydaniel.com
   return (
     <div className={gif ? styles.containerGif : styles.container}>
       <span className={styles.sourceText}>source: {source}</span>
-      {text && typeof text === "string" ? (
-        <p className={styles.captionText}>{text}</p>
-      ) : (
-        <p className={styles.captionText} dangerouslySetInnerHTML={text} />
-      )}
+      {text && typeof text === "function" ? text() : <p>{text}</p>}
     </div>
   );
 }

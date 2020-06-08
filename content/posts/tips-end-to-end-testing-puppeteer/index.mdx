@@ -393,10 +393,11 @@ In the following GIFs you can see the difference of running without and with the
 
 <GIF name="tweak-no-slowmo" />
 <Caption
-  text={{
-    __html:
-      "E2E test on the tweak chrome extension <b>without slowMo</b>. You can't possibly understand what's going on.",
-  }}
+  text={() => (
+    <p>
+      E2E test on the tweak chrome extension <b>without slowMo</b>. You can't possibly understand what's going on.
+    </p>
+  )}
   gif={true}
 />
 
@@ -404,10 +405,12 @@ In the following GIFs you can see the difference of running without and with the
 
 <GIF name="tweak-slowmo" />
 <Caption
-  text={{
-    __html:
-      "E2E test on the tweak chrome extension <b>with slowMo</b>. You can see the typing in the 'URL' at a human perceptible speed",
-  }}
+  text={() => (
+    <p>
+      E2E test on the tweak chrome extension <b>with slowMo</b>. You can see the typing in the 'URL' at a human
+      perceptible speed
+    </p>
+  )}
   gif={true}
 />
 
