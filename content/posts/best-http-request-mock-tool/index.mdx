@@ -1,0 +1,103 @@
+---
+title: "A Pragmatic Mocking Tool"
+subtitle: "A browser extension to the rescue"
+date: 2020-06-07
+slug: "/blog/best-http-request-mock-tool/"
+tags:
+  - JavaScript
+  - Productivity
+  - Software Testing
+---
+
+import ScrollToTopButton from "../components/ScrollToTopButton";
+
+<ScrollToTopButton />
+
+#### tl;dr
+
+Do you need to mock <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP" target="_blank" title="HTTP | MDN">HTTP requests</a> quickly? Use <a href="https://tweak-extension.com" target="_blank" title="tweak browser extension mock API simulator">tweak browser extension</a>.
+
+<a
+  href="https://www.youtube.com/watch?v=M7rMuNBw1xQ"
+  target="_blank"
+  title="How to intercept HTTP requests with tweak extension on youtube"
+>
+  This 2-minute video
+</a> video has everything else you need to know.
+
+<br />
+<br />
+
+#### Why?
+
+When I first started my career in the software industry, I began to get familiar with <a href="https://en.wikipedia.org/wiki/Single-page_application" target="_blank" title="Single-page application - Wikipedia">Single-page applications</a> and how
+they interact with servers, mainly through HTTP requests to retrieve or send data to the
+end-user. If you're working with the front end, there's a very high
+chance you found yourself in one (or multiple) of the following scenarios.
+
+#### The backend is not ready yet!
+
+While the backend team is working on the endpoint X you need, you start working
+on the UI change. You're using some static mocks hardcoded in the frontend or
+something like <a href="https://storybook.js.org/" target="_blank" title="Storybook: UI component explorer for frontend developers">Storybook</a> to focus on the UI part of the task, and you'll
+postpone the data integration.
+
+#### The almighty irreproducible bug
+
+All you get from the QA engineer is a JSON payload, without steps to reproduce the bug.
+You take the backend response to figure out how it can affect the app. You want
+to find a way to make that HTTP request to return your JSON payload.
+
+#### Demo-day: the backend is down
+
+On demo-day the backend service which your feature depends upon, it's down. What now?
+
+#### What options we have?
+
+Having experienced these scenarios multiple times, I thought about simple
+alternatives such as proxying tools that would allow me to mock
+HTTP responses. The solutions I found either didn't work or were overwhelmingly complex.
+
+#### What if...
+
+You had a **tool** that offers a consistent and pleasant experience, **enabling you to bypass the HTTP requests and**:
+
+- **make them return whatever data you need**
+- **right in the browser tab**
+- **without writing any code**
+
+#### That's why we built tweak!
+
+The <a href="https://chrome.google.com/webstore/detail/tweak/feahianecghpnipmhphmfgmpdodhcapi" target="_blank" title="tweak mock HTTP requests on chrome store">tweak is a browser extension</a> that
+**allows you to change your HTTP requests to test, develop, and demo your web application**. Think
+of it as your **customizable static API mock server in a chrome extension** that allows
+you to change your HTTP requests on the fly!
+
+<br />
+
+<div style="display:flex;align-items:center;justify-content:center;height: 340px;width: 100%;">
+  <iframe
+    src="https://www.youtube.com/embed/M7rMuNBw1xQ"
+    style="min-height: 340px; width: 100%; margin: 4%; max-width: 720px; border: 0;"
+    allowfullscreen
+  ></iframe>
+</div>
+
+<br />
+
+You can mock any HTTP request. You only need to provide **three simple things**:
+
+1. **URL** that you wish to match,
+2. **HTTP method** of the request you're targeting,
+3. The **response payload** you would like to get instead of the actual server response.
+
+There are plenty of other features bundled in the extension, and
+the <a href="https://tweak-extension.com" target="_blank" title="tweak browser extension team">team</a> prepared
+a <a href="https://www.youtube.com/channel/UCRCdRZzz6TTsNx67m9JFVxg" target="_blank" title="tweak youtube channel">few short videos</a> to guide you through some
+of the most common use cases, give it a try!
+
+I hope <a href="https://chrome.google.com/webstore/detail/tweak/feahianecghpnipmhphmfgmpdodhcapi" target="_blank" title="tweak mock HTTP requests on chrome store">tweak</a> increases your productivity.
+
+Do you identify yourself with the problems I mentioned
+throughout the blog post? Are there any other scenarios
+where you would use such a tool?
