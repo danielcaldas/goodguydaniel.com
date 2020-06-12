@@ -9,6 +9,7 @@ import itsTimeToStop from "../unit-testing-with-fixtures-unleashed/images/its-ti
 import fixturesWatchMode from "../unit-testing-with-fixtures-unleashed/images/fixtures-watch-mode.gif";
 import tweakNoSlowMo from "../tips-end-to-end-testing-puppeteer/images/no-slowmo.gif";
 import tweakSlowMo from "../tips-end-to-end-testing-puppeteer/images/slowmo.gif";
+import tweakDelay from "../how-to-simulate-delay-http-request/images/tweak-delay.gif";
 import gifStyles from "./GIF.module.css";
 
 // https://github.com/benwiley4000/react-gif-player#options
@@ -44,6 +45,8 @@ function getFromRegistry(name) {
       return tweakNoSlowMo;
     case "tweak-slowmo":
       return tweakSlowMo;
+    case "tweak-delay":
+      return tweakDelay;
     default:
       return "";
   }
