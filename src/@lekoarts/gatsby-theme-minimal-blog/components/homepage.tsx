@@ -2,6 +2,7 @@
 /** @jsx jsx */
 import { FC } from "react";
 import { jsx } from "theme-ui";
+import { Box } from "@theme-ui/components";
 import { Link } from "gatsby";
 import Layout from "@lekoarts/gatsby-theme-minimal-blog/src/components/layout";
 import Title from "@lekoarts/gatsby-theme-minimal-blog/src/components/title";
@@ -35,6 +36,45 @@ type HomePageProps = {
   };
 };
 
+const PODCASTS = [
+  {
+    date: "24.03.2020",
+    href: "https://devchat.tv/my-javascript-story/mjs-142-daniel-caldas/",
+    text: "Devchat.tv - My JavaScript Story Ep. 142",
+    title: "MJS 142: Daniel Caldas",
+  },
+  {
+    date: "10.12.2019",
+    href: "https://dev.to/jsjabber/jsj-411-unit-testing-jest-with-daniel-caldas",
+    text: "JavaScript Jabber Ep. 411: Unit Testing Jest with Daniel Caldas",
+    title: "JSJ 411: Unit Testing Jest with Daniel Caldas - DEV",
+  },
+];
+
+const Podcasts = (): FC => {
+  return (
+    <section sx={{ mb: [5, 6, 7] }}>
+      {PODCASTS.map((podcast) => (
+        <Box key={podcast.href} mb={4}>
+          <a
+            href={podcast.href}
+            title={podcast.title}
+            target="_blank"
+            rel="noreferrer"
+            sx={{ fontSize: [1, 2, 3], color: `text` }}
+            style={{ textDecoration: "none" }}
+          >
+            {podcast.text}
+          </a>
+          <p sx={{ color: `secondary`, mt: 1, a: { color: `secondary` }, fontSize: [1, 1, 2] }}>
+            <time>{podcast.date}</time>
+          </p>
+        </Box>
+      ))}
+    </section>
+  );
+};
+
 const Homepage = ({ data: { posts, pinned } }: HomePageProps): FC => {
   const { basePath, blogPath } = useMinimalBlogConfig();
   return (
@@ -48,6 +88,8 @@ const Homepage = ({ data: { posts, pinned } }: HomePageProps): FC => {
         <Link to={replaceSlashes(`/${basePath}/${blogPath}`)}>Read all posts</Link>
       </Title>
       <Listing posts={posts.nodes} showTags={false} />
+      <Title text="Podcasts" />
+      <Podcasts />
       <List>
         <Bottom />
       </List>
