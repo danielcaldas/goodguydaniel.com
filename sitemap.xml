@@ -3,6 +3,7 @@
 <url> <loc>https://goodguydaniel.com/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://goodguydaniel.com/blog/how-to-simulate-delay-http-request/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/best-http-request-mock-tool/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/tips-end-to-end-testing-puppeteer/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/call-react-hooks-inside-condition/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
