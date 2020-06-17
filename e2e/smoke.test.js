@@ -15,14 +15,10 @@ describe("smoke tests", () => {
 
   it("blog home page content check", async () => {
     const title = await page.evaluate(() => document.title);
-    expect(title).toEqual(
-      "goodguydaniel.com - Here is where Daniel writes about his experiences."
-    );
+    expect(title).toEqual("goodguydaniel.com - Here is where Daniel writes about his experiences.");
 
     let tmp = await page.$$("header a");
-    const headerLinks = await Promise.all(
-      tmp.map(async (a) => await a.evaluate((e) => e.href))
-    );
+    const headerLinks = await Promise.all(tmp.map(async (a) => await a.evaluate((e) => e.href)));
     expect(headerLinks).toEqual([
       `${baseURL}`,
       `${baseURL}blog`,
@@ -34,20 +30,12 @@ describe("smoke tests", () => {
     ]);
 
     tmp = await page.$$("h2");
-    const headings = await Promise.all(
-      tmp.map(async (h) => await h.evaluate((e) => e.innerText))
-    );
-    expect(headings).toEqual(["Featured Posts", "Latest Posts"]);
+    const headings = await Promise.all(tmp.map(async (h) => await h.evaluate((e) => e.innerText)));
+    expect(headings).toEqual(["Featured Posts", "Latest Posts", "Podcasts"]);
 
     const projects = [
-      [
-        "react-d3-graph | ",
-        "https://www.github.com/danielcaldas/react-d3-graph",
-      ],
-      [
-        "babel-plugin-cloudinary | ",
-        "https://github.com/trivago/babel-plugin-cloudinary",
-      ],
+      ["react-d3-graph | ", "https://www.github.com/danielcaldas/react-d3-graph"],
+      ["babel-plugin-cloudinary | ", "https://github.com/trivago/babel-plugin-cloudinary"],
       ["tweak · browser extension", "https://tweak-extension.com/"],
     ];
 

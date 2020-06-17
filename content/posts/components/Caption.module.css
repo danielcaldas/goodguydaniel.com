@@ -3,6 +3,13 @@
   margin-top: -6%;
 }
 
+.container > p {
+  color: #9f7aea;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+  margin: 0;
+}
+
 .container-gif {
   text-align: center;
   margin-top: 0.1%;
@@ -11,8 +18,8 @@
 .container-gif > p {
   color: #9f7aea;
   font-size: 0.8rem;
-  margin: 0;
   margin-bottom: 4px;
+  margin: 0;
 }
 
 .source-text {
