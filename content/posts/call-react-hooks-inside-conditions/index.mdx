@@ -72,11 +72,7 @@ If you pick React hooks API, you should structure the code accordingly not to en
 
 !["code review cartoon"](./images/wtfs-per-minute-code-review.png)
 
-<Caption
-  source={
-    "https://me.me/i/the-ouy-vcile-41-wtf-cocle-review-wtf-review-bad-20268515"
-  }
-/>
+<Caption source={"https://me.me/i/the-ouy-vcile-41-wtf-cocle-review-wtf-review-bad-20268515"} />
 
 As always, I think there's nothing better than an example to explain a concept, let's look into one.
 
@@ -125,12 +121,8 @@ export default function App() {
   return (
     <div className="App">
       <h1>Bending the Rules of Hooks</h1>
-      <button onClick={() => setIsHookActive(!isHookActive)}>
-        Click to toggle custom hook usage
-      </button>
-      <h4>
-        {isHookActive ? `hook output is: ${number}` : "hook is not active"}
-      </h4>
+      <button onClick={() => setIsHookActive(!isHookActive)}>Click to toggle custom hook usage</button>
+      <h4>{isHookActive ? `hook output is: ${number}` : "hook is not active"}</h4>
       {isHookActive && <RandomNumberWrapper setState={setNumber} />}
     </div>
   );
@@ -167,7 +159,7 @@ I hope you found this pattern helpful! If you're curious to read more on the sub
 
 After working some time with [reactivity blocks in Svelte](https://en.wikipedia.org/wiki/Observer_pattern "Reactivity/Statements - Svelte Tutorial"). It feels like the conceptual and productivity jump in terms of evolution.
 
-**Example Full Code**
+##### Example Full Code
 
 <Accordion summary='Expand to see example full code'>
 
@@ -205,12 +197,8 @@ export default function App() {
   return (
     <div className="App">
       <h1>Bending the Rules of Hooks</h1>
-      <button onClick={() => setIsHookActive(!isHookActive)}>
-        Click to toggle custom hook usage
-      </button>
-      <h4>
-        {isHookActive ? `hook output is: ${number}` : "hook is not active"}
-      </h4>
+      <button onClick={() => setIsHookActive(!isHookActive)}>Click to toggle custom hook usage</button>
+      <h4>{isHookActive ? `hook output is: ${number}` : "hook is not active"}</h4>
       {isHookActive && <RandomNumberWrapper setState={setNumber} />}
     </div>
   );
