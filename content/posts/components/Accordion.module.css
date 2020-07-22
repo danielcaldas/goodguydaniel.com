@@ -1,3 +1,7 @@
 .accordion {
   cursor: pointer;
 }
+
+.accordion summary {
+  user-select: none;
+}
