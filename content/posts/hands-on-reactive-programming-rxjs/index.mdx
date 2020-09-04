@@ -1,0 +1,42 @@
+---
+title: "Hands-on Reactive Programming with RxJS"
+subtitle: "Reactive Series - Part 2"
+date: 2020-09-04
+slug: "/blog/hands-on-reactive-programming-rxjs/"
+tags:
+  - JavaScript
+  - Reactive Programming
+---
+
+import Accordion from "../components/Accordion";
+import Caption from "../components/Caption";
+import GIF from "../components/GIF";
+import ScrollToTopButton from "../components/ScrollToTopButton";
+
+<ScrollToTopButton />
+
+```html
+<button id="btn">+1</button>
+```
+
+```javascript
+const btn = document.getElementById("btn");
+let counter = 0;
+btn.addEventListener("click", (event) => {
+  counter++;
+  console.log(`Incremented ${counter}`);
+});
+```
+
+```javascript
+let counter = 0;
+const click$ = fromEvent(btn, "click");
+click$.pipe(tap((event) => counter++)).subscribe(() => console.log(`Incremented ${counter}`));
+```
+
+```javascript
+const click$ = fromEvent(btn, "click");
+const counter$ = new BehaviorSubject(0);
+click$.pipe(withLatestFrom(counter$)).subscribe(([event, counter]) => counter$.next(counter + 1));
+counter$.subscribe((counter) => console.log(`Incremented ${counter}`));
+```
