@@ -35,10 +35,10 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
   - [A naive use case for the Observer pattern in JavaScript](#a-naive-use-case-for-the-observer-pattern-in-javascript)
   - [Observable as a first-class citizen](#observable-as-a-first-class-citizen)
 - [Reactive Programming](#reactive-programming)
+  - [Core Properties of Observables](#core-properties-of-observables)
   - [Stream](#stream)
   - [Operators](#operators)
   - [Hot Observable VS Cold Observable](#hot-observable-vs-cold-observable)
-  - [Properties of Observables](#properties-of-observables)
   - [Brief History of Reactive Programming](#brief-history-of-reactive-programming)
   - [Quotes](#quotes)
 
@@ -219,10 +219,18 @@ I would like to highlight the <a href="https://tc39.es/proposal-observable/" tar
 
 **To make the above clearer**, let's go over a few essential concepts, those you'll hear all the time.
 
+##### Core Properties of Observables
+
+There are **3 very important aspects about Observables** in reactive programming. Maybe now some of them don't make sense now, but they will, once you have some hands-on experience with some reactive library. **Observables are**:
+
+- **Primitive type** with 0 to many values, pushed over any amount of time (yes, mentioned quite a few times already).
+- **Cancellable**, you can cancel a subscription by sending stuff to these observables: "I don't' want you to send me those values anymore."
+- **Lazy. Observables don't do anything until you subscribe.** This is the complete opposite of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" title="Promise - JavaScript | MDN">Promises</a>. Promises are eager, that's why we often wrap them in a function, making them lazy, so they only execute when we call them.
+
 ##### Stream
 
 An overused term these days, but I'll try to make it simple.
-First of all, **a stream is an Observable**; you'll find that these two concepts are interchangeable many times. Simply put, a stream is a collection of values pushed over time. Let's think of _"live streaming"_ in the video industry for a moment; on one end, there's your laptop observing the stream; on the other end, something is pushing several bits of data over the wire. Simple right? But **how to think about streams in the conceptual world**? That's where diagrams (more precisely marble diagrams) come in handy. At the most basic level, a stream is simply represented by a horizontal line, representative of time, with geometric figures. Each figure represents an emitted value on the stream. What's an emitted value? If a stream emits a value, it means that everyone looking into the stream will get notified of that value. Hopefully, the following figure makes it crystal clear.
+First of all, **a stream is an Observable**; you'll find that these two concepts are often interchangeable. Simply put, a stream is a collection of values pushed over time. Let's think of _"live streaming"_ in the video industry for a moment; on one end, there's your laptop observing the stream; on the other end, something is pushing several bits of data over the wire. Simple right? But **how to think about streams in the conceptual world**? That's where diagrams (more precisely marble diagrams) come in handy. At the most basic level, a stream is simply represented by a horizontal line, representative of time, with geometric figures. Each figure represents an emitted value on the stream. What's an emitted value? If a stream emits a value, it means that everyone looking into the stream will get notified of that value. Hopefully, the following figure makes it crystal clear.
 
 <br />
 <br />
@@ -263,14 +271,6 @@ In a real use case, a Hot Observable can be a stream of click events on the page
 
 A **Cold Observable** only starts emitting values upon subscription. **Think of it as a movie on Netflix**. The film only starts playing once you press play on your laptop. You won't miss pieces of the movie since you can start playing from the very start. If someone else watches the same movie on Netflix, they won't share your timeline; each user has its own individual timeline (values are not shared among subscribers).
 In a real use case, a cold Observable can be a countdown clock where each subscriber has its own clock.
-
-##### Properties of Observables
-
-I leave here a short summary of the properties of Observables (streams). Maybe now some of them don't make sense now, but they will, once you have some hands-on experience with some reactive library (jump to the next article to get some practice). **Observables in a reactive library are**:
-
-- **Primitive type** with 0 to many values, pushed over any amount of time (yes, mentioned quite a few times already).
-- **Cancellable**, you can cancel a subscription by sending stuff to these observables: "I don't' want you to send me those values anymore."
-- **Lazy. Observables don't do anything until you subscribe.** Promises are eager. That's why we often wrap them in a function, making them lazy, so they only execute when we call them.
 
 ##### Brief History of Reactive Programming
 
@@ -315,7 +315,8 @@ Today reactive is not only used to manage animated user interfaces. **It's on ev
     title="ReactiveX/rxjs: A reactive programming library for JavaScript"
   >
     RxJS
-  </a>, and others)
+  </a>
+  , and others)
 - <a
     href="https://kefirjs.github.io/kefir/"
     target="_blank"
