@@ -203,7 +203,13 @@ As a side note, if you're keen on learning more about the Observer pattern (or a
 - <a href="https://sourcemaking.com/design_patterns/observer" target="_blank" title="Observer Design Pattern">
     sourcemaking.com
   </a>
-- Design Patterns: Elements of Reusable Object-Oriented Software (**TODO: LINK**)
+- <a
+    href="https://www.amazon.com/gp/product/0201633612/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0201633612&linkCode=as2&tag=goodguydaniel-20&linkId=6c4041c4343de0a8eb76776bf7a94445"
+    target="_blank"
+    title="Design Patterns: Elements of Reusable Object-Oriented Software"
+  >
+    Design Patterns: Elements of Reusable Object-Oriented Software
+  </a>
 
 ##### Observable as a first-class citizen
 
@@ -221,11 +227,13 @@ I would like to highlight the <a href="https://tc39.es/proposal-observable/" tar
 
 ##### Core Properties of Observables
 
-There are **3 very important aspects about Observables** in reactive programming. Maybe now some of them don't make sense now, but they will, once you have some hands-on experience with some reactive library. **Observables are**:
+There are **3 very important aspects about Observables** in reactive programming. Maybe some of them don't make sense now, but they will, once you have some hands-on experience with some reactive library.
 
-- **Primitive type** with 0 to many values, pushed over any amount of time (yes, mentioned quite a few times already).
-- **Cancellable**, you can cancel a subscription by sending stuff to these observables: "I don't' want you to send me those values anymore."
-- **Lazy. Observables don't do anything until you subscribe.** This is the complete opposite of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" title="Promise - JavaScript | MDN">Promises</a>. Promises are eager, that's why we often wrap them in a function, making them lazy, so they only execute when we call them.
+**Observables are**...
+
+- **a primitive type** with 0 to many values, pushed over any amount of time (yes, mentioned quite a few times already).
+- **cancellable**, you can cancel a subscription by sending stuff to these observables: "I don't' want you to send me those values anymore."
+- **lazy. Observables don't do anything until you subscribe.** This is the complete opposite of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" title="Promise - JavaScript | MDN">Promises</a>. Promises are eager, that's why we often wrap them in a function, making them lazy, so they only execute when we call them.
 
 ##### Stream
 
