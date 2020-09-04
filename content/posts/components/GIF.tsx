@@ -10,6 +10,8 @@ import fixturesWatchMode from "../unit-testing-with-fixtures-unleashed/images/fi
 import tweakNoSlowMo from "../tips-end-to-end-testing-puppeteer/images/no-slowmo.gif";
 import tweakSlowMo from "../tips-end-to-end-testing-puppeteer/images/slowmo.gif";
 import tweakDelay from "../how-to-simulate-delay-http-request/images/tweak-delay.gif";
+import streamBasicFourValues from "../reactive-programming-fundamentals/images/stream-basic-four-values.gif";
+import mapFilterStream from "../reactive-programming-fundamentals/images/map-filter-stream.gif";
 import gifStyles from "./GIF.module.css";
 
 // https://github.com/benwiley4000/react-gif-player#options
@@ -47,6 +49,10 @@ function getFromRegistry(name) {
       return tweakSlowMo;
     case "tweak-delay":
       return tweakDelay;
+    case "stream-basic-four-values":
+      return streamBasicFourValues;
+    case "map-filter-stream":
+      return mapFilterStream;
     default:
       return "";
   }
