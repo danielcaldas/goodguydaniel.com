@@ -127,7 +127,7 @@ class User {
     this.email = email;
   }
 
-  // just logs a notificaiton update
+  // just logs a notification update
   notify(update) {
     console.log(update);
   }
@@ -192,8 +192,8 @@ main();
 
 Let's map the entities of the above example:
 
-- The `User` is our `Observable`.
-- The `Channel` is our `Observer`.
+- The `User` is our `Observer`.
+- The `Channel` is our `Observable`.
 - The `Video` is just really the contract for the payload we sent out to subscribers, it **can really be anything**.
 
 I hope this example clarifies that you can leverage the Observer pattern with no additional libraries in any programming language. I found this knowledge of paramount importance to understand more complex use cases in reactive programming, specially when using libraries, we sit as a client, we go one layer of abstraction above what you've seen in the previous example. With reactive programming libraries, you can juggle with Observables in fantastic ways effortlessly.
