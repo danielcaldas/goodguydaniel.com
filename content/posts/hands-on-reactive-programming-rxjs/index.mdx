@@ -31,7 +31,13 @@ btn.addEventListener("click", (event) => {
 ```javascript
 let counter = 0;
 const click$ = fromEvent(btn, "click");
-click$.pipe(tap((event) => counter++)).subscribe(() => console.log(`Incremented ${counter}`));
+click$
+  .pipe(
+    tap((event) => {
+      counter++;
+    })
+  )
+  .subscribe(() => console.log(`Incremented ${counter}`));
 ```
 
 ```javascript
@@ -39,4 +45,22 @@ const click$ = fromEvent(btn, "click");
 const counter$ = new BehaviorSubject(0);
 click$.pipe(withLatestFrom(counter$)).subscribe(([event, counter]) => counter$.next(counter + 1));
 counter$.subscribe((counter) => console.log(`Incremented ${counter}`));
+```
+
+```javascript
+function countdown(seconds) {
+  let secondsLeft = seconds;
+  let intervalId;
+
+  intervalId = setInterval(() => {
+    if (secondsLeft === 0) {
+      console.log("time's up!");
+      clearInterval(intervalId);
+    } else {
+      console.log(secondsLeft);
+      secondsLeft--;
+    }
+  }, 1000);
+}
+countdown(5);
 ```
