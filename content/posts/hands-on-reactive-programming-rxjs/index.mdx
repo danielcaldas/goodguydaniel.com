@@ -31,20 +31,10 @@ btn.addEventListener("click", (event) => {
 ```javascript
 let counter = 0;
 const click$ = fromEvent(btn, "click");
-click$
-  .pipe(
-    tap((event) => {
-      counter++;
-    })
-  )
-  .subscribe(() => console.log(`Incremented ${counter}`));
-```
-
-```javascript
-const click$ = fromEvent(btn, "click");
-const counter$ = new BehaviorSubject(0);
-click$.pipe(withLatestFrom(counter$)).subscribe(([event, counter]) => counter$.next(counter + 1));
-counter$.subscribe((counter) => console.log(`Incremented ${counter}`));
+click$.subscribe(() => {
+  counter++;
+  console.log(`Incremented ${counter}`);
+});
 ```
 
 ```javascript
