@@ -12,7 +12,7 @@ module.exports = {
     // Can be used for e.g. JSONLD
     siteHeadline: "goodguydaniel.com",
     // Will be used to generate absolute URLs for og:image etc.
-    siteUrl: "https://goodguydaniel.com",
+    siteUrl: process.env.NODE_ENV === "development" ? "http://localhost:8000" : "https://goodguydaniel.com",
     // Used for SEO
     siteDescription: "Here is where Daniel writes about his experiences.",
     // Will be set on the <html /> tag
