@@ -12,6 +12,7 @@ import tweakSlowMo from "../tips-end-to-end-testing-puppeteer/images/slowmo.gif"
 import tweakDelay from "../how-to-simulate-delay-http-request/images/tweak-delay.gif";
 import streamBasicFourValues from "../reactive-programming-fundamentals/images/stream-basic-four-values.gif";
 import mapFilterStream from "../reactive-programming-fundamentals/images/map-filter-stream.gif";
+import takeCatToParty from "../hands-on-reactive-programming-rxjs/images/take-cat-to-party.gif";
 import gifStyles from "./GIF.module.css";
 
 // https://github.com/benwiley4000/react-gif-player#options
@@ -53,6 +54,8 @@ function getFromRegistry(name) {
       return streamBasicFourValues;
     case "map-filter-stream":
       return mapFilterStream;
+    case "take-cat-to-party":
+      return takeCatToParty;
     default:
       return "";
   }
