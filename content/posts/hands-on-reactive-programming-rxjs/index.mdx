@@ -15,23 +15,29 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 
 <ScrollToTopButton />
 
-- <a
+**TODOS**
+
+- [ ] Compress all the images in the article
+- [ ] Check all the images in mobile, all good?
+- [ ] Check all the captions in the images for typos and meaning, grammarly fails to check that
+
+* <a
     href="https://goodguydaniel.com/blog/why-reactive-programming"
     target="_blank"
     title="Why You Should Consider Reactive Programming | goodguydaniel.com"
   >
     Part 1 - Why You Should Consider Reactive Programming
   </a>
-- <a
+* <a
     href="https://goodguydaniel.com/blog/reactive-programming-fundamentals"
     target="_blank"
     title="Fundamentals of Reactive Programming | goodguydaniel.com"
   >
     Part 2 - Fundamentals of Reactive Programming
   </a>
-- **Part 3 - Hands-on Reactive Programming with RxJS**
-- 🔜 Part 4 - Reactive Programming: The Good and the Bad
-- 🔜 Part 5 - List of Awesome RxJS and Reactive Programming Resources
+* **Part 3 - Hands-on Reactive Programming with RxJS**
+* 🔜 Part 4 - Reactive Programming: The Good and the Bad
+* 🔜 Part 5 - List of Awesome RxJS and Reactive Programming Resources
 
 ---
 
@@ -217,7 +223,7 @@ Let's start by answering the following: how do we know an HTML element has been 
 const partyDrop$ = drop$.pipe(filter((event) => event.target === party));
 ```
 
-![marbles diagram filter event target on drop event](./images/marbles-level1-1.png "marbles diagram filter event target on drop event")
+![marbles diagram filter event target on drop event](./images/marbles-level-1-1.png "marbles diagram filter event target on drop event")
 
 <Caption
   text={() => (
@@ -241,7 +247,7 @@ const catAtParty$ = partyDrop$.pipe(
 
 Alright, a few things are going on here. We're familiar with <a href="https://www.learnrxjs.io/learn-rxjs/operators/combination/withlatestfrom" target="_blank" title="withLatestFrom - Learn RxJS">withLatestFrom</a>, but this time, it's a bit more complex to perceive. We're looking into a stream of `dragstart` events `ds$` and asking it for the last value (DOM element) emitted in that stream; this is the same as saying that we want the last draggable element in the page that emitted a `dragstart` event! Next, we have `filter`. We're going to use `filter` to narrow down our stream to allow `dragstart` events to pass through only if their target element is `cat`! And that's it! We have a stream that will emit an event every time we drop the cat at the party.
 
-![marbles diagram filter event target on drop event](./images/marbles-level1-2.png "marbles diagram filter event target on drop event")
+![marbles diagram filter event target on drop event](./images/marbles-level-1-2.png "marbles diagram filter event target on drop event")
 
 <Caption text={() => <p>TODO: BIGGER MARBLES!!!!!!!!! TODO: name the streams...</p>} />
 
@@ -359,7 +365,7 @@ We already have two streams: `catDragStart$` and `catDragEnd$` . We need to comb
 
 Here's out two separate streams of drag events.
 
-![level3_1](./images/marbles-level1-2.png "level3_1")
+![level3_1](./images/marbles-level-1-2.png "level3_1")
 
 <Caption text={"TODO: level3_1"} />
 
@@ -377,7 +383,7 @@ Let's try to build a stream to feed to this function a value for `display` that 
 
 First, let's look back at our streams `catDragStart$` and `catDragEnd$`. When `catDragStart$` emits a value, we want to set the `display` to `""`. So this means we need to somehow transform our stream of events into a stream of empty strings. Each time a string is emitted, we shall pass that value onto the function that will set the `display` property on the `loading` element.
 
-![level3_2](./images/marbles-level1-2.png "level3_2")
+![level3_2](./images/marbles-level-1-2.png "level3_2")
 
 <Caption text={"TODO: level3_2"} />
 
@@ -385,7 +391,7 @@ Now forget the stream with the blue marbles. After you apply an operator, you tr
 
 The same thing should happen to `catDragEnd$`.
 
-![level3_22](./images/marbles-level1-2.png "level3_22")
+![level3_22](./images/marbles-level-1-2.png "level3_22")
 
 <Caption text={"TODO: missed image in the middle level3_22"} />
 
@@ -400,7 +406,7 @@ catDragStart$.pipe(map((event) => "")).subscribe((v) => loading.style.setPropert
 
 Although this works, we could further refine our streams and **merge** them into a single one to achieve the following:
 
-![level3_3](./images/marbles-level1-2.png "level3_3")
+![level3_3](./images/marbles-level-1-2.png "level3_3")
 
 <Caption text={"TODO: missed image in the middle level3_3"} />
 
@@ -486,7 +492,7 @@ Let's examine the above code 🤯. This time we're not creating a stream from an
 
 Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to reverse that to display an actual countdown to the user. To reverse the numerical value on the stream, we simply use `map`. We should only give the user 5 seconds to drag the `cat` to the `party`. This translates to only pushing `5 + 1` (`+1` because we start at `0`, this way, we'll get to 5, which will display the `0` in the countdown for the user) values to the stream! That's quite simple with RxjS, just literally say that you want to `take(5 + 1)` values; once the stream emits the 6th value, it will complete automatically and stop emitting values!
 
-![level4_1](./images/marbles-level1-2.png "level4_1")
+![level4_1](./images/marbles-level-1-2.png "level4_1")
 
 <Caption text={"TODO: missed image in the middle level4_1"} />
 
@@ -519,7 +525,7 @@ Notice the return value of `switchMap` is `countdown$`, this means that when a `
 
 Here's how this looks like conceptually:
 
-![level4_2](./images/marbles-level1-2.png "level4_2")
+![level4_2](./images/marbles-level-1-2.png "level4_2")
 
 <Caption text={"TODO: missed image in the middle level4_2"} />
 
@@ -586,7 +592,7 @@ Now, what is that **argument** of the `takeUntil` operator? `takeUntil` receives
 
 But we have two streams, `catDragEnd$` and `catAtParty$`, can we make it one? Yes, we can! We've already met `merge`! This operator can take multiple streams and combine into a single one, think of it as a funnel.
 
-![level4_3](./images/marbles-level1-2.png "level4_3")
+![level4_3](./images/marbles-level-1-2.png "level4_3")
 
 <Caption text={"TODO: missed image in the middle level4_3"} />
 
