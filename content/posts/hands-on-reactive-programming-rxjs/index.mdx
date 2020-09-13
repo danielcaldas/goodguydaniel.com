@@ -75,7 +75,7 @@ Here's how you should visualize a stream of click events.
 
 <!-- NOTE: For better screen size fitting all marble diagrams shall have 400px -->
 
-![marbles diagram of a click event stream](./images/marbles-level0-1.png "marbles diagram of a click event stream")
+![marbles diagram of a click event stream](./images/marbles-level-0-1.png "marbles diagram of a click event stream")
 
 <Caption
   text={() => (
@@ -94,7 +94,7 @@ Let's take a look at how this looks like in the reactive world, with RxJS.
 ```javascript
 let counter = 0;
 const click$ = fromEvent(btn, "click");
-click$.subscribe(() => {
+click$.subscribe((event) => {
   counter++;
   console.log(`Incremented ${counter}`);
 });
@@ -195,8 +195,8 @@ const countdown = document.getElementById("countdown");
 Finally, we reach the beginning of our first level, introduced by three streams that we'll use quite often while going through the challenge.
 
 ```javascript
-const ds$ = fromEvent(document, "dragstart");
-const de$ = fromEvent(document, "dragend");
+const dragStart$ = fromEvent(document, "dragstart");
+const dragEnd$ = fromEvent(document, "dragend");
 const drop$ = fromEvent(document, "drop");
 ```
 
@@ -234,8 +234,8 @@ Let's take a moment to understand the how to visualize `partyDrop$` with the hel
 
 ```javascript
 const catAtParty$ = partyDrop$.pipe(
-  withLatestFrom(ds$),
-  filter(([, ds]) => ds.target === cat)
+  withLatestFrom(dragStart$),
+  filter(([dropEvent, dragStartEvent]) => dragStartEvent.target === cat)
 );
 ```
 
@@ -271,7 +271,29 @@ catDragEnd$.subscribe(() => {
 });
 ```
 
-And done with Level 1!
+And done with Level 1! I want to leave a challenge for the reader. Looking at how we're setting the opacity value of the `cat` element, could we somehow handle everything in one single subscription instead of two? I would suggest you to read the whole article and come back to this one later, you should be then able to nail it then.
+
+<Accordion summary="Hint">
+  Check the operator <code>merge</code>.
+</Accordion>
+
+<br />
+
+<Accordion summary='Solution'>
+
+```javascript
+const catDragStart$ = ds$.pipe(filter((e) => e.target === cat));
+const catDragEnd$ = de$.pipe(filter((e) => e.target === cat));
+const opacity$ = merge(catDragStart$.pipe(mapTo(0)), catDragEnd$.pipe(mapTo(1)));
+
+opacity$.subscribe((value) => {
+  cat.style.opacity = value;
+});
+```
+
+</Accordion>
+
+<br />
 
 ##### Level 2 - CHANGE TITLE Hacking race conditions (things to avoid)
 
