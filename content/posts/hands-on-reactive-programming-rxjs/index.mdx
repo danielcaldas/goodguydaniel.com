@@ -48,7 +48,7 @@ This part of the series it's all about getting your hands dirty!
 - [Let's build something!](#lets-build-something)
   - [Take the cat to the party](#take-the-cat-to-the-party)
   - [Level 1 - Combining streams of DOM events](#level-1---combining-streams-of-dom-events)
-  - [Level 2 - CHANGE TITLE Hacking race conditions (things to avoid)](#level-2---change-title-hacking-race-conditions-things-to-avoid)
+  - [Level 2 -Hacking race conditions with artificial delays (something to avoid)](#level-2--hacking-race-conditions-with-artificial-delays-something-to-avoid)
   - [Level 3 - Merging streams into one stream](#level-3---merging-streams-into-one-stream)
     - [Bonus for Level 3](#bonus-for-level-3)
   - [Level 4 - CHANGE TITLE Flatten Observables & Cancellation](#level-4---change-title-flatten-observables--cancellation)
@@ -201,7 +201,7 @@ const countdown = document.getElementById("countdown");
 Finally, **we introduce three streams that we'll use quite often while going through the challenge, these are the most basic building blocks of our solutions.**
 
 ```javascript
-const dragStart$ = fromEvent(document, "dragstart");
+const dragstart$ = fromEvent(document, "dragstart");
 const dragEnd$ = fromEvent(document, "dragend");
 const drop$ = fromEvent(document, "drop");
 ```
@@ -245,18 +245,18 @@ Next, let's see how we can detect that the `cat` is dropped at the `party`.
 
 ```javascript
 const catAtParty$ = partyDrop$.pipe(
-  withLatestFrom(dragStart$),
+  withLatestFrom(dragstart$),
   filter(([dropEvent, dragStartEvent]) => dragStartEvent.target === cat)
 );
 ```
 
-Alright, a few things are going on here. We're familiar with <a href="https://www.learnrxjs.io/learn-rxjs/operators/combination/withlatestfrom" target="_blank" title="withLatestFrom - Learn RxJS">withLatestFrom</a>, but this time, it's a bit more complex to perceive. We're looking into a stream of `dragstart` events `ds$` and asking it for the last value (DOM element) emitted in that stream; this is the same as saying that we want the last draggable element in the page that emitted a `dragstart` event! Next, we have `filter`. We're going to use `filter` to narrow down our stream to allow `dragstart` events to pass through only if their target element is `cat`! And that's it! We have a stream that will emit an event every time we drop the cat at the party.
+Alright, a few things are going on here. We're familiar with <a href="https://www.learnrxjs.io/learn-rxjs/operators/combination/withlatestfrom" target="_blank" title="withLatestFrom - Learn RxJS">withLatestFrom</a>, but this time, it's a bit more complex to perceive. We're looking into a stream of `dragstart` events `dragstart$` and asking it for the last value (DOM element) emitted in that stream; this is the same as saying that we want the last draggable element in the page that emitted a `dragstart` event! Next, we have `filter`. We're going to use `filter` to narrow down our stream to allow `dragstart` events to pass through only if their target element is `cat`! And that's it! We have a stream that will emit an event every time we drop the cat at the party.
 
 ![marbles diagram filter event target on drop event](./images/marbles-level-1-2.png "marbles diagram filter event target on drop event")
 
-<Caption text={() => <p>TODO</p>} />
+<Caption text={"TODO"} />
 
-In the above diagram, `e1`, `e2` and `e3` are `dragstart` events (`ds$` stream) that might come from anywhere in the page. `de` represents a `drop` event at the `party`. Notice how `withLatestFrom` operates by bringing together the last element on `ds$` which is `e3` and puts it together with the `party` element which is published onto the `de$` stream. Now because `e3` event target is actually the `cat` you'll get `e3` pushed onto our final stream `catAtParty$`!
+In the above diagram, `e1`, `e2` and `e3` are `dragstart` events (`dragstart$` stream) that might come from anywhere in the page. `de` represents a `drop` event at the `party`. Notice how `withLatestFrom` operates by bringing together the last element on `dragstart$` which is `e3` and puts it together with the `party` element which is published onto the `dragend$` stream. Now because `e3` event target is actually the `cat` you'll get `e3` pushed onto our final stream `catAtParty$`!
 
 But we're not finished just yet; we need to leverage the work we've constructed so far to actually render the `cat` in the `party`. For that, we just need to subscribe to our `catAtParty$` stream and do some DOM manipulations.
 
@@ -281,11 +281,26 @@ catAtParty$.subscribe(([partyDropEvent, dragStartEvent]) => {
   )}
 />
 
-If you're following this point, you'll notice that although we can drag the cat perfectly, we still see the original `cat` element while carrying it. To achieve the same behavior we have in the above GIF, we want to toggle the `cat` element's opacity while being dragged. Yes, another side effect, we can actually simply create another subscription to take care of this. Let's see how it works.
+If you're following this point, you'll notice that although we can drag the cat perfectly, we still see the original `cat` element while carrying it.
+
+<GIF name="game-level-1-opacity-before" alt="dragging the cat without manipulating the opacity value" playing={false} />
+<Caption gif={true} text={"We still see the original cat element while dragging it."} />
+
+<GIF name="game-level-1-opacity-after" alt="dragging the cat with opacity manipulation" playing={false} />
+<Caption
+  gif={true}
+  text={() => (
+    <p>
+      Setting the cat's element opacity to <b>0</b> yields a more natural user experiences.
+    </p>
+  )}
+/>
+
+To achieve the same behavior we have in the above GIF, we want to toggle the `cat` element's opacity while dragging. Yes, another side effect, we can actually simply create another subscription to take care of this.
 
 ```javascript
-const catDragStart$ = ds$.pipe(filter((e) => e.target === cat));
-const catDragEnd$ = de$.pipe(filter((e) => e.target === cat));
+const catDragStart$ = dragstart$.pipe(filter((e) => e.target === cat));
+const catDragEnd$ = dragend$.pipe(filter((e) => e.target === cat));
 catDragStart$.subscribe((event) => {
   cat.style.opacity = 0;
 });
@@ -294,7 +309,9 @@ catDragEnd$.subscribe(() => {
 });
 ```
 
-And done with Level 1! I want to leave a challenge for the reader. Looking at how we're setting the opacity value of the `cat` element, could we somehow handle everything in one single subscription instead of two? I would suggest you to read the whole article and come back to this one later, you should be then able to nail it then.
+And done with Level 1!
+
+I want to leave a challenge for the reader. Looking at how we're setting the opacity value of the `cat` element, could we somehow handle everything in one single subscription instead of two? I would suggest you to read the whole article and come back to this one later, you should be then able to nail it then.
 
 <Accordion summary="Hint">
   Check the operator <code>merge</code>.
@@ -305,8 +322,8 @@ And done with Level 1! I want to leave a challenge for the reader. Looking at ho
 <Accordion summary='Solution'>
 
 ```javascript
-const catDragStart$ = ds$.pipe(filter((e) => e.target === cat));
-const catDragEnd$ = de$.pipe(filter((e) => e.target === cat));
+const catDragStart$ = dragstart$.pipe(filter((e) => e.target === cat));
+const catDragEnd$ = dragend$.pipe(filter((e) => e.target === cat));
 const opacity$ = merge(catDragStart$.pipe(mapTo(0)), catDragEnd$.pipe(mapTo(1)));
 
 opacity$.subscribe((value) => {
@@ -318,7 +335,7 @@ opacity$.subscribe((value) => {
 
 <br />
 
-##### Level 2 - CHANGE TITLE Hacking race conditions (things to avoid)
+##### Level 2 -Hacking race conditions with artificial delays (something to avoid)
 
 - We should announce the cats' arrival with a `window.alert` message.
   - Before triggering the `window.alert` we'll want to make sure the `cat` is actually rendered at the `party`.
@@ -332,20 +349,23 @@ catAtParty$.subscribe(() => {
 });
 ```
 
-<GIF name="take-cat-to-party" alt="take the cat to the party game demonstration" playing={false} />
+<br />
+<br />
+
+<GIF name="game-level-2-no-cat" alt="demonstration asynchronous rendering cat DOM element" playing={false} />
 <Caption
   gif={true}
   text={() => (
     <p>
-      <code>window.alert</code> is triggered when we drop the cat at the <code>party</code>, but the <code>cat</code> is
-      nowhere to be seen!
+      <b>window.alert</b> is triggered when we drop the cat at the <b>party</b>, but the <b>cat</b> is not rendered at
+      the <b>party</b>!
     </p>
   )}
 />
 
 Hmm.. strange, we did everything right but the `window.alert` triggers before we get to actually render the `cat` at the `party`, what a bummer.
 
-It seems that the DOM changes don't kick in before we trigger the alert; that's because the rendering is asynchronous, and the value on the screen only gets updated later on after we're done with executing this function. I don't want to spend much time fixing this since we don't have any mechanism to tell me whether the DOM note has been rendered successfully. I'm going to code a hack and trigger the alert inside a `setTimeout` that should buy us some time to correctly render the cat element.
+It seems that the DOM changes don't kick in before we trigger the alert; that's because the rendering is asynchronous, and the value on the screen only gets updated later on after we're done with executing this function. I don't want to spend much time fixing this since I don't have any mechanism to tell me whether the DOM node has been rendered successfully. I'm going to code a hack and trigger the alert inside a `setTimeout` that should buy us some time to correctly render the cat element.
 
 ```javascript
 catAtParty$.subscribe(() => {
@@ -356,10 +376,24 @@ catAtParty$.subscribe(() => {
 });
 ```
 
-<GIF name="take-cat-to-party" alt="take the cat to the party game demonstration" playing={false} />
-<Caption gif={true} text={"It works!"} />
+<br />
+<br />
 
-Works, we can achieve a similar **hack** with RxJS without having a solution based on callbacks that keep our subscription handler clean (**but still a hack!**).
+<GIF
+  name="take-cat-to-party"
+  alt="take the cat to the party game demonstration after applying delay on render"
+  playing={false}
+/>
+<Caption
+  gif={true}
+  text={() => (
+    <p>
+      Great! The <b>window.alert</b> is triggered after the <b>cat</b> element is rendered at the <b>party</b>!
+    </p>
+  )}
+/>
+
+It works. We can achieve a similar **hack** with RxJS without having a solution based on callbacks that keep our subscription handler clean (**but still a hack!**).
 
 ```javascript
 catAtParty$.pipe(delay(100)).subscribe(() => {
@@ -368,9 +402,7 @@ catAtParty$.pipe(delay(100)).subscribe(() => {
 });
 ```
 
-See that `delay` there? That's yet another operator. It allows you to basically hold the value in the stream for a determined amount of time before pushing it to the subscribers. So what's happening here is that instead of the Observer (subscription) being aware that we have to code a hack to trigger the alert after the cat enters the party, we shift that responsibility to the Observable, the stream is now the _hacky_ code that is delaying the whole thing. This is super powerful, the way you can shift responsibilities and broadcast your changes to all the subscribers. **Yes, all the subscribers will receive a delayed update! So this can simultaneously be a wrecking footgun!**
-
-So with that side note, we finish level 2.
+See that `delay` there? That's another operator. It **allows you to hold the value in the stream for a determined amount of time before pushing it to the subscribers**. So what's happening here is that instead of the Observer (subscription) being aware that we have to code a hack to trigger the alert after the cat enters the party, we shift that responsibility to the Observable, the stream is now the _hacky_ code that is delaying the whole thing. This is super powerful, the way you can shift responsibilities and broadcast your changes to all the subscribers. Yes, all the subscribers will receive a delayed update! **This can simultaneously be a gift and a wrecking footgun!**
 
 ##### Level 3 - Merging streams into one stream
 
