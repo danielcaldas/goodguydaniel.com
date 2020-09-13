@@ -119,7 +119,7 @@ A few things to notice here:
 - `subscribe` well, without subscribing to our stream, would just be dead code. The code path that we're setting up inside our `pipe` will never be visited if you don't subscribe to it, since no values are emitted.
 - The `$` is just a common (non-standard) notation to identify streams in your code - totally optionally, no need to follow - if you're curious, you can read more about it <a href="https://medium.com/@benlesh/observables-and-finnish-notation-df8356ed1c9b" target="_blank" title="Observables and Finnish Notation. Once in a while I’m asked what I think… | by Ben Lesh | Medium">Observables and Finnish Notation</a>.
 
-A cool thing here is that opposite to the click event handler, you can subscribe to the stream of clicks as many times as you want and split all kinds of different tasks into separate subscriptions; in a way, things are opening up for you, you get a more flexible model to organize your code. Compared to an event handler callback, you now have the power to subscribe to the `click$` stream as many times as you want. You can even split whatever logic you need to perform into different subscriptions! How about that? There's a lot more flexible compared to the classic callback.
+A cool thing here is that opposite to the click event handler, you can subscribe to the stream of clicks as many times as you want and split all kinds of different tasks into separate subscriptions that share the same event listener! In a way, things are opening up, you get a more flexible model to organize your code, compared to an event handler callback. How about that? There's a lot more flexibility compared to the classic callbacks.
 
 **Anything can be a stream, remember that**. This should get you warmed up for the real challenge later in the article. Before that, let's take a look at how the overall structure of RxJS looks like.
 
@@ -198,7 +198,7 @@ const loading = document.getElementById("loader");
 const countdown = document.getElementById("countdown");
 ```
 
-Finally, we reach the beginning of our first level, introduced by three streams that we'll use quite often while going through the challenge.
+Finally, **we introduce three streams that we'll use quite often while going through the challenge, these are the most basic building blocks of our solutions.**
 
 ```javascript
 const dragStart$ = fromEvent(document, "dragstart");
@@ -215,9 +215,9 @@ const drop$ = fromEvent(document, "drop");
   - Place the cat inside the party together with other cats.
   - We also want to hide/remove the original cat element when we're dropping the cat at the party.
 
-Let's follow a bottom-up approach. We'll start by building some specific streams to assemble to create more complex behaviors as we move along.
+Let's follow a bottom-up approach. We'll start by building some specific streams that will allow us to assemble more complex behaviors as we move along.
 
-Let's start by answering the following: how do we know an HTML element has been dropped at the `party`? We'll need to detect any `drop` event that occurs in the `party` element.
+Let's start by answering the following: how do we know that an HTML element has been dropped at the `party`? We'll need to detect any `drop` event that occurs in the `party` element.
 
 ```javascript
 const partyDrop$ = drop$.pipe(filter((event) => event.target === party));
@@ -228,15 +228,20 @@ const partyDrop$ = drop$.pipe(filter((event) => event.target === party));
 <Caption
   text={() => (
     <p>
-      <b>e</b> stands for <b>event</b> and its the value that is pushed to the stream at each drop event in the whole
-      document! <b>e1</b>, <b>e2</b> and <b>e3</b> are different, they have different <code>event.target</code>.
+      <b>e</b> stands for <b>event</b> and it's the value pushed to the stream at each drop event in the whole document!{" "}
+      <b>e1</b>, <b>e2</b> and <b>e3</b> have different <code>event.target</code> (target DOM elements).
     </p>
   )}
 />
 
-Cool, we now have a stream that emits a `drop` event every time something is dropped in `party`. Let's see how we can detect that the `cat` is dropped at the `party`. I would like to pause and add further detail on this marble diagram. Notice that we read from top to bottom, meaning the last timeline is the only one that really matters. The **other streams in the diagram don't exist in practice**; they are just auxiliary conceptual timelines that help us understand what transformations are applied to the stream to emit its values.
+Cool, we now have a stream that emits a `drop` event every time something is dropped in `party`. I would like to pause and add further detail on this marble diagram. Notice that we read from top to bottom, meaning the last timeline is the only one that really matters, because in practice we'll just subscribe to `partyDrop$`. In this case since we won't subscribe to `drop$` directly, think of it as an auxiliary conceptual timeline which is a step towards shaping the ideal stream to tackle our task: `partyDrop$`.
 
-Let's take a moment to understand the how to visualize `partyDrop$` with the help of the marbles diagram. First a reminder that the bottom timeline is the actual stream. Second notice that `e1` and `e2` marbles don't make it to the bottom timeline, that's because for these events the user did not drop the cat at the `party` element, thus `e.target` being different than our DOM element `party`. Let's move forward.
+Another relevant detail on the marbles diagram: `e1` and `e2` marbles don't make it to `partyDrop$` (bottom stream). For those events,
+`event.target` it's not `party`, this means the user did not drop the HTML element in the `party`.
+
+**At this point we can already notice the exceptional compositional capabilities of streams and how easy it is to plug & play the smaller blocks (such as `drop$`) to build higher level streams.**
+
+Next, let's see how we can detect that the `cat` is dropped at the `party`.
 
 ```javascript
 const catAtParty$ = partyDrop$.pipe(
@@ -249,9 +254,11 @@ Alright, a few things are going on here. We're familiar with <a href="https://ww
 
 ![marbles diagram filter event target on drop event](./images/marbles-level-1-2.png "marbles diagram filter event target on drop event")
 
-<Caption text={() => <p>TODO: BIGGER MARBLES!!!!!!!!! TODO: name the streams...</p>} />
+<Caption text={() => <p>TODO: FOLLOW WITH A GIF WITH a console.log of the DOM events being logged</p>} />
 
 **What do you get if you subscribe to `catAtParty$`?**
+
+**TODO: FOLLOW WITH A GIF WITH a console.log of the DOM events being logged**
 
 In the above diagram, `e1`, `e2` and `e3` are `dragstart` events (`ds$` stream) that might come from anywhere in the page. `de` represents a `drop` event at the `party`. Notice how `withLatestFrom` operates by bringing together the last element on `ds$` which is `e3` and puts it together with the `party` element which is published onto the `de$` stream. Now because `e3` event target is actually the `cat` you'll get `e3` pushed onto our final stream `catAtParty$`!
 
