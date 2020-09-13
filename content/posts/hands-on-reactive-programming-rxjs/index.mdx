@@ -1,6 +1,6 @@
 ---
 title: "Hands-on Reactive Programming with RxJS"
-subtitle: "Reactive Series - Part 2"
+subtitle: "Reactive Series - Part 3"
 date: 2020-09-04
 slug: "/blog/hands-on-reactive-programming-rxjs/"
 tags:
@@ -17,7 +17,7 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 
 **TODOS**
 
-- [ ] Compress all the images in the article
+- [ ] Compress all the images & GIFs in the article
 - [ ] Check all the images in mobile, all good?
 - [ ] Check all the captions in the images for typos and meaning, grammarly fails to check that
 
@@ -254,22 +254,32 @@ Alright, a few things are going on here. We're familiar with <a href="https://ww
 
 ![marbles diagram filter event target on drop event](./images/marbles-level-1-2.png "marbles diagram filter event target on drop event")
 
-<Caption text={() => <p>TODO: FOLLOW WITH A GIF WITH a console.log of the DOM events being logged</p>} />
-
-**What do you get if you subscribe to `catAtParty$`?**
-
-**TODO: FOLLOW WITH A GIF WITH a console.log of the DOM events being logged**
+<Caption text={() => <p>TODO</p>} />
 
 In the above diagram, `e1`, `e2` and `e3` are `dragstart` events (`ds$` stream) that might come from anywhere in the page. `de` represents a `drop` event at the `party`. Notice how `withLatestFrom` operates by bringing together the last element on `ds$` which is `e3` and puts it together with the `party` element which is published onto the `de$` stream. Now because `e3` event target is actually the `cat` you'll get `e3` pushed onto our final stream `catAtParty$`!
 
 But we're not finished just yet; we need to leverage the work we've constructed so far to actually render the `cat` in the `party`. For that, we just need to subscribe to our `catAtParty$` stream and do some DOM manipulations.
 
 ```javascript
-catAtParty$.subscribe(() => {
+catAtParty$.subscribe(([partyDropEvent, dragStartEvent]) => {
+  // some console.logs to check what we really get subscribing to catAtParty$
+  // console.log({ partyDropEvent, dragStartEvent });
+  // console.log({ partyDropEvent: event.type, dragStartEvent: event.type });
   cat.remove();
   party.appendChild(cat);
 });
 ```
+
+![result of subscribing to cat at party stream](./images/game-level-1-2.png "result of subscribing to cat at party stream")
+
+<Caption
+  text={() => (
+    <p>
+      Here you clearly see the output of our above <b>console.log</b> where we have the `drop` event and the `dragstart`
+      as payload for our subscription.
+    </p>
+  )}
+/>
 
 If you're following this point, you'll notice that although we can drag the cat perfectly, we still see the original `cat` element while carrying it. To achieve the same behavior we have in the above GIF, we want to toggle the `cat` element's opacity while being dragged. Yes, another side effect, we can actually simply create another subscription to take care of this. Let's see how it works.
 
