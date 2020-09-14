@@ -543,25 +543,22 @@ function countdown(seconds) {
 countdown(5);
 ```
 
-That's what we would get as a rough implementation of a countdown. We need to keep track of the timer identifier in a variable to ensure we clean up after running the `setInterval` provided callback the expected amount of times.
+And that's a rough implementation of a countdown. We need to keep track of the timer identifier in a variable to ensure we clean up after running the `setInterval` provided callback the expected amount of times.
 
 Now here's how you can do the same with RxJS.
 
 ```javascript
-timer(0, 1000)
-  .pipe(
-    map((t) => 5 - t),
-    take(5 + 1) // emit one more 5+1 seconds so that we get to 0
-  )
-  .subscribe({
-    next: (secondsLeft) => {
-      if (secondsLeft === 0) {
-        console.log("time's up!");
-      } else {
-        console.log(secondsLeft);
-      }
-    },
-  });
+const countdown$ = timer(0, 1000).pipe(
+  map((t) => 5 - t),
+  take(5 + 1) // 5+1 so that we get to 0
+);
+countdown$.subscribe((secondsLeft) => {
+  if (secondsLeft === 0) {
+    console.log("time's up!");
+  } else {
+    console.log(secondsLeft);
+  }
+});
 ```
 
 <small>
@@ -571,60 +568,55 @@ timer(0, 1000)
 
 Let's examine the above code 🤯. This time we're not creating a stream from an event or anything like that. Instead, we use `timer` from RxJS to generate a timer stream that emits a new value every second.
 
-Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to reverse that to display an actual countdown to the user. To reverse the numerical value on the stream, we simply use `map`. We should only give the user 5 seconds to drag the `cat` to the `party`. This translates to only pushing `5 + 1` (`+1` because we start at `0`, this way, we'll get to 5, which will display the `0` in the countdown for the user) values to the stream! That's quite simple with RxjS, just literally say that you want to `take(5 + 1)` values; once the stream emits the 6th value, it will complete automatically and stop emitting values!
+Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to reverse that to display an actual countdown to the user. To reverse the numerical value on the stream, we simply use `map`. We should only give the user 5 seconds to drag the `cat` to the `party`. This translates to only pushing `5 + 1` (`+1` because we start at `0`, this way, we'll get to 5, which will display the `0` in the countdown for the user) values to the stream! That's quite simple with RxjS, just literally say that you want to `take(5 + 1)` values; A few evident advantages compared with the classic implementation:
 
-![level4_1](./images/marbles-level-1-2.png "level4_1")
+1. **No global variables** `secondsLeft` and `intervalId`.
+2. **Less error-prone code** by relying on `take` built-in operator to limit the number of times our subscription runs.
+3. Once the stream emits the 6th value, **it will complete automatically** and stop emitting values! **We don't need to worry about cleanup logic** - with `setInterval` we need to worry about cleaning the interval with `clearInterval` so that it does not run indefinitely!
 
-<Caption text={"TODO: missed image in the middle level4_1"} />
+![diagram depicting the countdown stream](./images/marbles-level-4-1.png "diagram depicting the countdown stream")
+
+<Caption
+  text={() => (
+    <p>
+      Representation of our <b>countdown$</b> stream.
+    </p>
+  )}
+/>
 
 In the above image, the bottom timeline represents the stream; notice the pipe (**|**) at the end of the timeline indicates that the stream completes after emitting the value **0**.
 
 A crucial aspect to notice is that you'll trigger a new timer as soon as you subscribe. This is a <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals/#hot-observable-vs-cold-observable" target="_blank" title="Fundamentals of Reactive Programming, Cold Observable">Cold Observable</a> (we've covered this topic in the <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals" target="_blank" title="Fundamentals of Reactive Programming | goodguydaniel.com">the previous article</a>)! Our `countdown$` will start emitting values right away upon subscription, so we can't just `.subscribe()` We'll have to subscribe to the countdown when the user starts dragging the `cat` element. Let's see how we can implement that.
 
-Now remember we had a stream `catDragStart$`; we'll use that to trigger our countdown. **But how can we trigger a subscription to a stream from within another stream?** In my opinion, this is a hard concept to comprehend; I think the moment it really clicked for me was when I started thinking about it the following way:
+Now remember we had a stream `catDragStart$`; we'll use that to trigger our countdown. **But how can we trigger a subscription to a stream from within another stream?** In my opinion, this is a hard concept to comprehend.
 
-> I have a stream **A**, and a stream **B**. If I want to subscribe to stream **B** once stream **A** emits a value, I need to pass the flow control from **A** to **B**, meaning we'll flatten our streams to be left with a single one. Instead of having **A** and **B** we'll be left with **B** only, and **A** will in a way be "left behind", we're interested in values pushed to **B** now. The subscription to **B** is our inner subscription. If it helps, whenever you read "flattening" think of a subscription inside subscription.
-
-That's where the `switchMap` operator comes into picture. `switchMap` allows you to trigger a subscription from within a stream to a second stream and subscribe to its updates! Not clear yet? Think of it this way `switchMap` **allows you to switch to a new observable**. Ok, let's look at our countdown implementation, now that we have this information.
+Presenting the <a href="https://www.learnrxjs.io/learn-rxjs/operators/transformation/switchmap" target="_blank" title="switchMap - Learn RxJS">switchMap</a> operator. `switchMap` allows you to trigger a subscription from within a stream to a second stream. Not clear yet? Think of it this way `switchMap` **allows you to switch to a new observable**. Ok, let's look at our countdown implementation, now that we have this information.
 
 ```javascript
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
-  take(5 + 1) // emit one more 5+1 seconds so that we get to 0
+  take(5 + 1) // 5+1 so that we get to 0
 );
 const countdownRunning$ = catDragStart$.pipe(switchMap((event) => countdown$));
+
 countdownRunning$.subscribe((secondsLeft) => {
   countdown.innerText = `${secondsLeft}`;
 });
 ```
 
+![diagram to demonstrate the switchMap operator](./images/marbles-level-4-2.png "diagram to demonstrate the switchMap operator")
+
+<Caption text={() => <p>We're switching from one stream to another and subscribing to it immediately.</p>} />
+
 Notice the return value of `switchMap` is `countdown$`, this means that when a `dragstart` event is emitted in `catDragStart$` the following things will happen:
 
 1. Since we subscribed, the DOM event will flow through the pipe and hit our `switchMap` operator.
 2. We'll automatically subscribe to `countdown$` and start emitting its values leaving the `dragstart` event behind (because we don't really need it for this task).
-3. In our subscription handler, we simply do a DOM mutation to the element that displays our countdown value so that the user gets the time left displayed on the screen.
+3. In our subscription handler, we simply do a DOM mutation to the element that displays our countdown value so that the user gets the time left displayed on the screen. Here's how this looks like conceptually.
 
-Here's how this looks like conceptually:
+Once more, as soon as a `ds` (`dragstart` event in the diagram) is pushed to our `catDragStart$` stream, `switchMap` will kick in and subscribe to our `countdown$` stream, _"passing the ball"_ (moving the flow of control) to the `countdown$`. We'll start to push to our subscribers the seconds left in the countdown like if we had subscribed to the `countdown$` in the first place, but in this case **we programmatically triggered the subscription**.
 
-![level4_2](./images/marbles-level-1-2.png "level4_2")
-
-<Caption text={"TODO: missed image in the middle level4_2"} />
-
-As you can see, as soon as a `ds` (`dragstart` event) is pushed onto our `catDragStart$` stream, `switchMap` will kick in and subscribe to our `countdown$` stream, "passing the ball" (moving the flow of control) onto the countdown, meaning we'll start to push to our subscribers the seconds left in the countdown almost like if we would have subscribed to the `countdown$` in the first place.
-
-<small>
-  Note: To read more on <b>switchMap</b>{" "}
-  <a
-    href="https://www.learnrxjs.io/learn-rxjs/operators/transformation/switchmap"
-    target="_blank"
-    title="switchMap - Learn RxJS"
-  >
-    checkout learnrxjs.io
-  </a>
-  .
-</small>
-
-We can now leverage `countdownRunning$` to display an alert that the user has lost.
+We can now leverage `countdownRunning$` to display an alert.
 
 ```javascript
 countdownRunning$.pipe(filter((secondsLeft) => secondsLeft === 0)).subscribe(() => {
@@ -664,7 +656,7 @@ Meet `takeUntil`, this operator allows you to stop listening to a stream until s
 ```javascript
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
-  take(5 + 1), // emit one more 5+1 seconds so that we get to 0
+  take(5 + 1), // 5+1 so that we get to 0
   takeUntil(/*??? Something we'll figure this out later*/)
 );
 ```
@@ -683,10 +675,10 @@ Let's call this last stream `cancelCountdown$`. Here's the final implementation 
 const cancelCountdown$ = merge(catDragEnd$, catAtParty$);
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
-  take(5 + 1), // emit one more 5+1 seconds so that we get to 0
+  take(5 + 1), // 5+1 so that we get to 0
   takeUntil(cancelCountdown$)
 );
-const countdownRunning$ = catDragStart$.pipe(switchMap(() => countdown$));
+const countdownRunning$ = catDragStart$.pipe(switchMap((event) => countdown$));
 countdownRunning$.subscribe((secondsLeft) => {
   countdown.innerText = `${secondsLeft}`;
 });
