@@ -414,13 +414,17 @@ We already have two streams: `catDragStart$` and `catDragEnd$` . We need to comb
 
 Here's out two separate streams of drag events.
 
-![level3_1](./images/marbles-level-1-2.png "level3_1")
+![streams of events for dragging and dropping the cat respectively](./images/marbles-level-3-1.png "streams of events for dragging and dropping the cat respectively")
 
-<Caption text={"TODO: level3_1"} />
+<Caption
+  text={() => (
+    <p>
+      In the image, <b>ds</b> symbolizes a <b>dragstart</b> event, and <b>de</b> represents a <b>dragend</b> event.
+    </p>
+  )}
+/>
 
-In the image, `ds` symbolizes a `dragstart` event, and `de` represents a `dragend` event over time.
-
-Our GIF is an HTML element whose `display` attribute is set to `"none"'` by default. We'll want to set it to `""` (empty string) to make it visible and back to `"none"` once we decide it's time to hide it again. So basically, our side effect should look something like this:
+Our GIF is an HTML element whose `display` attribute is set to `"none"` by default. We'll want to set it to `""` (empty string) to make it visible and back to `"none"` once it's time to hide it again. Our side effect should look something like this:
 
 ```javascript
 // shouldHideGIF would be true in case we need to hide the GIF
@@ -428,25 +432,23 @@ const v = shouldHideGIF ? "none" : "";
 loading.style.setProperty("display", v);
 ```
 
-Let's try to build a stream to feed to this function a value for `display` that reflects whether the cat is being dragged or not. **Our stream should remove the necessity of the imperative logic dictated by the ternary operator, we'll create values that react to changes**.
+Let's try to build a stream to feed to this function a value for `display` that reflects whether the cat is being dragged or not. **Our stream should remove the necessity of the imperative logic dictated by the ternary operator, we'll create values that react to changes to replace the imperative code**.
 
 First, let's look back at our streams `catDragStart$` and `catDragEnd$`. When `catDragStart$` emits a value, we want to set the `display` to `""`. So this means we need to somehow transform our stream of events into a stream of empty strings. Each time a string is emitted, we shall pass that value onto the function that will set the `display` property on the `loading` element.
 
-![level3_2](./images/marbles-level-1-2.png "level3_2")
+![stream mapping dragstart events to an empty string](./images/marbles-level-3-2.png "stream mapping dragstart events to an empty string")
 
-<Caption text={"TODO: level3_2"} />
+<Caption text={"Mapping each event to ''."} />
 
-Now forget the stream with the blue marbles. After you apply an operator, you transform your stream into a "new one" (not actually a new one, same stream but different output) with a more refined output-oriented to the task you're trying to tackle! The operator is represented by the white rectangle in the middle where you see `mapTo`. You're making every pushed value to the topmost timeline flow through a function provided in the `map` operator. That function will map which value into the bottom timeline, your stream. If you subscribed to it now, you would receive empty strings instead of DOM events!
+After you apply an operator, you transform your stream into a more refined one, better suited to the task you're trying to tackle! You're making every pushed value to the topmost timeline flow through a function provided in the `map` operator. That function will map each value into the bottom timeline, your _"final"_ stream. If you subscribe to it now, you will receive empty strings instead of DOM events!
 
 The same thing should happen to `catDragEnd$`.
 
-![level3_22](./images/marbles-level-1-2.png "level3_22")
+![stream mapping dragend events to none](./images/marbles-level-3-3.png "stream mapping dragend events to none")
 
-<Caption text={"TODO: missed image in the middle level3_22"} />
+<Caption text={"Mapping each event to 'none'."} />
 
-Here we map each event to `"none"`.
-
-Now we have two streams, and we could just subscribe to each one of them and set the `"display"` value of the `loading` element!
+Now we have two streams, and we could just subscribe to each one of them and set the value of the `"display"` property for the `loading` element!
 
 ```javascript
 catDragEnd$.pipe(map((event) => "none")).subscribe((v) => loading.style.setProperty("display", v));
