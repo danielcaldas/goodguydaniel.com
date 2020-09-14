@@ -42,7 +42,7 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 
 ---
 
-This part of the series it's all about getting your hands dirty!
+This part of the series it's all about getting your hands dirty! Part 3 is a tutorial on core techniques to build an application with reactive streams using <a href="https://rxjs-dev.firebaseapp.com/" target="_blank" title="A reactive programming library for JavaScript">RxJS</a>.
 
 - [Warmup - Handle a click event with RxJS](#warmup---handle-a-click-event-with-rxjs)
 - [RxJS overview](#rxjs-overview)
@@ -53,7 +53,7 @@ This part of the series it's all about getting your hands dirty!
   - [Level 3 - Merging streams into one stream](#level-3---merging-streams-into-one-stream)
     - [Bonus for Level 3](#bonus-for-level-3)
     - [About the coding style in the solutions](#about-the-coding-style-in-the-solutions)
-  - [Level 4 - CHANGE TITLE Flatten Observables & Cancellation](#level-4---change-title-flatten-observables--cancellation)
+  - [Level 4 - Flatten observables, timers and cancellation](#level-4---flatten-observables-timers-and-cancellation)
 - [Closing Notes](#closing-notes)
 
 We're going to start with a small refresher from <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals" target="_blank" title="Fundamentals of Reactive Programming | goodguydaniel.com">the previous article</a>, we're going to start with a quick refresher of two concepts we've explored **streams** and **operators** by implementing a click event handlers with <a href="https://rxjs-dev.firebaseapp.com/" target="_blank" title="A reactive programming library for JavaScript">RxJS</a>. Next, we'll have a brief overview of RxJS, followed by the main challenge of building a small animated game that teach us how to approach building something the reactive way.
@@ -487,7 +487,7 @@ So we now just need one subscription to handle this toggling of the GIF in our g
 
 ###### Bonus for Level 3
 
-I feel overwhelmed by the tremendous amount of operators offered by RxJS, its API is considerably large. We could further simplify the above implementation with the operator `mapTo`.
+At the time of this writing, I feel overwhelmed by the tremendous amount of operators offered by RxJS, its API is considerably large. We could further simplify the above implementation with the operator `mapTo`.
 
 ```javascript
 const catDragStartDisplay$ = catDragStart$.pipe(mapTo(""));
@@ -511,7 +511,7 @@ display$.subscribe((value) => loading.style.setProperty("display", value));
 
 We could drop `catDragStartDisplay$` and `catDragEndDisplay$` by inlining them in the `merge` operator, anyways we're not subscribing to them.
 
-##### Level 4 - CHANGE TITLE Flatten Observables & Cancellation
+##### Level 4 - Flatten observables, timers and cancellation
 
 - The cat needs to make it to the party in less than 5 seconds! He only has 5 seconds of gas in his bike.
 
@@ -583,16 +583,16 @@ A crucial aspect to notice is that you'll trigger a new timer as soon as you sub
 
 Now remember we had a stream `catDragStart$`; we'll use that to trigger our countdown. **But how can we trigger a subscription to a stream from within another stream?** In my opinion, this is a hard concept to comprehend; I think the moment it really clicked for me was when I started thinking about it the following way:
 
-I have a stream `A`, and a stream `B`; if I want to trigger stream `B` once stream `A` emits a value, I need to pass the flow control from `B` to `A`, meaning my streams will flatten A and B meaning we'll get one stream, and `A` will in a way be "left behind", we're interested in values pushed to `B` now.
+> I have a stream **A**, and a stream **B**. If I want to subscribe to stream **B** once stream **A** emits a value, I need to pass the flow control from **A** to **B**, meaning we'll flatten our streams to be left with a single one. Instead of having **A** and **B** we'll be left with **B** only, and **A** will in a way be "left behind", we're interested in values pushed to **B** now. The subscription to **B** is our inner subscription. If it helps, whenever you read "flattening" think of a subscription inside subscription.
 
-That's where the `switchMap` operator comes to rescue. `switchMap` allows you to trigger a subscription from within a stream to a second stream and subscribe to its updates! Not clear yet? Think of it this way `switchMap` allows you to switch to a new observable. Ok, let's look at our countdown implementation, now that we have this information.
+That's where the `switchMap` operator comes into picture. `switchMap` allows you to trigger a subscription from within a stream to a second stream and subscribe to its updates! Not clear yet? Think of it this way `switchMap` **allows you to switch to a new observable**. Ok, let's look at our countdown implementation, now that we have this information.
 
 ```javascript
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
   take(5 + 1) // emit one more 5+1 seconds so that we get to 0
 );
-const countdownRunning$ = catDragStart$.pipe(switchMap(() => countdown$));
+const countdownRunning$ = catDragStart$.pipe(switchMap((event) => countdown$));
 countdownRunning$.subscribe((secondsLeft) => {
   countdown.innerText = `${secondsLeft}`;
 });
