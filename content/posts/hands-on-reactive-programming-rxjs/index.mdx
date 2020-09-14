@@ -20,6 +20,7 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 - [ ] Compress all the images & GIFs in the article
 - [ ] Check all the images in mobile, all good?
 - [ ] Check all the captions in the images for typos and meaning, grammarly fails to check that
+- [ ] Each first time an operator appears it must link to the docs!!
 
 * <a
     href="https://goodguydaniel.com/blog/why-reactive-programming"
@@ -51,6 +52,7 @@ This part of the series it's all about getting your hands dirty!
   - [Level 2 -Hacking race conditions with artificial delays (something to avoid)](#level-2--hacking-race-conditions-with-artificial-delays-something-to-avoid)
   - [Level 3 - Merging streams into one stream](#level-3---merging-streams-into-one-stream)
     - [Bonus for Level 3](#bonus-for-level-3)
+    - [About the coding style in the solutions](#about-the-coding-style-in-the-solutions)
   - [Level 4 - CHANGE TITLE Flatten Observables & Cancellation](#level-4---change-title-flatten-observables--cancellation)
 - [Closing Notes](#closing-notes)
 
@@ -451,35 +453,63 @@ The same thing should happen to `catDragEnd$`.
 Now we have two streams, and we could just subscribe to each one of them and set the value of the `"display"` property for the `loading` element!
 
 ```javascript
-catDragEnd$.pipe(map((event) => "none")).subscribe((v) => loading.style.setProperty("display", v));
-catDragStart$.pipe(map((event) => "")).subscribe((v) => loading.style.setProperty("display", v));
+const catDragStartDisplay$ = catDragStart$.pipe(map((event) => ""));
+const catDragEndDisplay$ = catDragEnd$.pipe(map((event) => "none"));
+
+catDragStartDisplay$.subscribe((v) => loading.style.setProperty("display", v));
+catDragEndDisplay$.subscribe((v) => loading.style.setProperty("display", v));
 ```
 
-Although this works, we could further refine our streams and **merge** them into a single one to achieve the following:
+Although this works, we could further refine our streams and **merge** them into a single one.
 
-![level3_3](./images/marbles-level-1-2.png "level3_3")
+![two streams merged into a single](./images/marbles-level-3-4.png "two streams merged into a single one")
 
-<Caption text={"TODO: missed image in the middle level3_3"} />
+<Caption
+  text={() => (
+    <p>
+      <b>A single stream becomes the source of truth</b> for the display property value in the <b>loading</b> element
+      through time.
+    </p>
+  )}
+/>
 
 Awesome! The `merge` operator gives us the power to take to streams and merge them into one so that the values of the `"display"` of the `loading` element flow through a single stream (a single source of truth). Here's how the code looks like.
 
 ```javascript
-const display$ = merge(catDragStart$.pipe(map((event) => "")), catDragEnd$.pipe(map((event) => "none")));
-display$.subscribe((v) => loading.style.setProperty("display", v));
+const catDragStartDisplay$ = catDragStart$.pipe(map((event) => ""));
+const catDragEndDisplay$ = catDragEnd$.pipe(map((event) => "none"));
+const display$ = merge(catDragStartDisplay$, catDragEndDisplay$);
+
+display$.subscribe((value) => loading.style.setProperty("display", value));
 ```
 
 So we now just need one subscription to handle this toggling of the GIF in our game.
 
 ###### Bonus for Level 3
 
-I feel too overwhelmed by the tremendous amount of operators offered by RxJS. The API is insanely large. To the point that we could further simplify the above implementation with the operator `mapTo`.
+I feel overwhelmed by the tremendous amount of operators offered by RxJS, its API is considerably large. We could further simplify the above implementation with the operator `mapTo`.
 
 ```javascript
-const display$ = merge(catDragStart$.pipe(mapTo("")), catDragEnd$.pipe(mapTo("none")));
-display$.subscribe((v) => loading.style.setProperty("display", v));
+const catDragStartDisplay$ = catDragStart$.pipe(mapTo(""));
+const catDragEndDisplay$ = catDragEnd$.pipe(mapTo("none"));
+const display$ = merge(catDragStartDisplay$, catDragEndDisplay$);
+
+display$.subscribe((value) => loading.style.setProperty("display", value));
 ```
 
 You get the same result as applying `map` but without needing to provide a function, because we're really not doing anything else rather than returning a hardcoded value on that inline function.
+
+###### About the coding style in the solutions
+
+You've might have noticed that I'm creating a new variable per each stream, this allows me to better explain the building blocks of each solution and map them to the diagrams. **Although this helps keeping the code readable, this is not mandatory, it can be overkill per times!**. Streams can be inlined. Let's look again to a small refactor of the above solution to understand what I'm referring to.
+
+```javascript
+const display$ = merge(catDragStart$.pipe(mapTo("")), catDragEnd$.pipe(mapTo("none")));
+
+display$.subscribe((value) => loading.style.setProperty("display", value));
+```
+
+We could drop `catDragStartDisplay$` and `catDragEndDisplay$` by inlining them in the `merge` operator, anyways we're not subscribing to them.
 
 ##### Level 4 - CHANGE TITLE Flatten Observables & Cancellation
 
