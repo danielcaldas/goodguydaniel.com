@@ -2,7 +2,7 @@
 title: "Functional bits"
 subtitle: "Towards a Functional Programming Style"
 date: 2020-03-30
-slug: "/blog/functional-bits-tips/"
+slug: "/blog/functional-bits-tips"
 tags:
   - Functional Programming
   - JavaScript
@@ -52,10 +52,7 @@ const meanAge = mean(
   users
     .map((user) => user.birthdate * 1000) // convert to milliseconds
     .tap((birthdates) => console.log(birthdates)) // logs array of birthdates
-    .map(
-      (birthdate) =>
-        new Date().getFullYear() - new Date(birthdate).getFullYear()
-    )
+    .map((birthdate) => new Date().getFullYear() - new Date(birthdate).getFullYear()),
 );
 
 console.log(`Users are in average ${meanAge} years old.`);
@@ -89,11 +86,7 @@ const usersEligibleForSurvey = [];
 for (const user of users) {
   const age = getAgeFromUnixTimestamp(user.birthdate);
 
-  if (
-    user.gender === "female" &&
-    age < 33 &&
-    user.location.country === "denmark"
-  ) {
+  if (user.gender === "female" && age < 33 && user.location.country === "denmark") {
     usersEligibleForSurvey.push(user);
   }
 }
@@ -105,14 +98,9 @@ for (const user of users) {
 
 ```javascript
 const isFemale = (user) => user.gender === "female";
-const isBelowAge = (age) => (user) =>
-  getAgeFromUnixTimestamp(user.birthdate) < age;
+const isBelowAge = (age) => (user) => getAgeFromUnixTimestamp(user.birthdate) < age;
 const isFromCountry = (country) => (user) => user.location.country === country;
-const isUserEligibleForSurvey = and(
-  isFemale,
-  isBelowAge(33),
-  isFromCountry("denmark")
-);
+const isUserEligibleForSurvey = and(isFemale, isBelowAge(33), isFromCountry("denmark"));
 
 const usersEligibleForSurvey = users.filter(isUserEligibleForSurvey);
 ```
@@ -145,8 +133,7 @@ function and(...fns) {
 More functional, less efficient, since it executes all the predicates.
 
 ```javascript
-const and = (...fns) => (...args) =>
-  fns.reduce((prev, fn) => prev && fn(...args));
+const and = (...fns) => (...args) => fns.reduce((prev, fn) => prev && fn(...args));
 ```
 
 <br />
@@ -231,9 +218,7 @@ First let me introduce some shared utilities to do some work on our user Object,
 ```javascript
 // returns number representable of the user age
 function getUserAge(user) {
-  return (
-    new Date().getFullYear() - new Date(user.birthdate * 1000).getFullYear()
-  );
+  return new Date().getFullYear() - new Date(user.birthdate * 1000).getFullYear();
 }
 // returns the name of the user's country (capitalized)
 function formatCountry(user) {
@@ -276,7 +261,7 @@ const formatUser = pipe(
   (user) => ({ ...user, name: getFirstAndLastName(user) }),
   (user) => ({ ...user, age: getUserAge(user) }),
   (user) => ({ ...user, country: formatCountry(user) }),
-  select("name", "age", "country")
+  select("name", "age", "country"),
 );
 const formattedUsers = users.map(formatUser);
 
@@ -284,10 +269,9 @@ console.log(formattedUsers); // data ready for the UI!
 ```
 
 <small>
-  The only small *trick* here is that I had to feed the initial{" "}
-  <code>user</code> down through the <code>pipe</code>, and we incrementally
-  append new data properties to a newly created user Object (original{" "}
-  <code>user</code> is not mutated).
+  The only small *trick* here is that I had to feed the initial <code>user</code> down through the <code>pipe</code>,
+  and we incrementally append new data properties to a newly created user Object (original <code>user</code> is not
+  mutated).
 </small>
 
 As you can see, using `pipe`, you have a clear separation of concerns in terms of what transformations run against your input, again at any point in time, you can plug in or out a new transformation function from the `pipe` with minimal effort.
@@ -295,8 +279,7 @@ As you can see, using `pipe`, you have a clear separation of concerns in terms o
 ##### Implementing `pipe`
 
 ```javascript
-const pipe = (...fns) => (...args) =>
-  fns.reduce((prev, fn) => fn(prev), ...args);
+const pipe = (...fns) => (...args) => fns.reduce((prev, fn) => fn(prev), ...args);
 ```
 
 <br />

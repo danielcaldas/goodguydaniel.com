@@ -16,13 +16,7 @@ import ShareHint from "../components/ShareHint";
 
 <ScrollToTopButton />
 
-**TODOS**
-
-- [x] Compress all the images & GIFs in the article
-- [ ] Check all the images in mobile, all good?
 - [ ] Check all the captions in the images for typos and meaning, grammarly fails to check that
-- [ ] Each first time an operator appears it must link to the docs!!
-- [ ] Reduce quality of GIFs... they are too big
 
 * <a
     href="https://goodguydaniel.com/blog/why-reactive-programming"
@@ -251,7 +245,7 @@ Alright, a few things are going on here. We're familiar with <a href="https://rx
 
 ![marbles diagram filter event target on drop event](./images/marbles-level-1-2.png "marbles diagram filter event target on drop event")
 
-<Caption text={"TODO"} />
+<Caption />
 
 In the above diagram, `e1`, `e2` and `e3` are `dragstart` events (`dragstart$` stream) that might come from anywhere in the page. `de` represents a `drop` event at the `party`. Notice how `withLatestFrom` operates by bringing together the last element on `dragstart$` which is `e3` and puts it together with the `party` element which is published onto the `dragend$` stream. Now because `e3` event target is actually the `cat` you'll get `e3` pushed onto our final stream `catAtParty$`!
 
@@ -695,7 +689,6 @@ countdownRunning$
 
 You can check out <a href="https://github.com/danielcaldas/take-the-cat-to-the-party" target="_blank" title="danielcaldas/take-the-cat-to-the-party: Learn reactive programming with RxJS the fun way">the complete implementation of this challenge here</a>.
 
-<br />
 <br />
 
 #### Closing Notes

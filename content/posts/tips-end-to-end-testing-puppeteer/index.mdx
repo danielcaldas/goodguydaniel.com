@@ -2,7 +2,7 @@
 title: "Tips for End to End Testing with Puppeteer"
 subtitle: "Getting up to speed with Puppeteer!"
 date: 2020-06-08
-slug: "/blog/tips-end-to-end-testing-puppeteer/"
+slug: "/blog/tips-end-to-end-testing-puppeteer"
 tags:
   - JavaScript
   - Software Testing
@@ -310,7 +310,7 @@ await extensionPage.waitForFunction(
   () => !!document.querySelector('*[data-testid="global-snackbar"]').innerText.includes("deleted"),
   {
     timeout: 2000,
-  }
+  },
 );
 ```
 
