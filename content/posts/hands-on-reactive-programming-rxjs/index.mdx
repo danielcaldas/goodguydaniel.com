@@ -2,7 +2,7 @@
 title: "Hands-on Reactive Programming with RxJS"
 subtitle: "Reactive Series - Part 3"
 date: 2020-09-04
-slug: "/blog/hands-on-reactive-programming-rxjs/"
+slug: "/blog/hands-on-reactive-programming-rxjs"
 tags:
   - JavaScript
   - Reactive Programming
@@ -12,6 +12,7 @@ import Accordion from "../components/Accordion";
 import Caption from "../components/Caption";
 import GIF from "../components/GIF";
 import ScrollToTopButton from "../components/ScrollToTopButton";
+import ShareHint from "../components/ShareHint";
 
 <ScrollToTopButton />
 
@@ -550,28 +551,20 @@ Now here's how you can do the same with RxJS.
 ```javascript
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
-  take(5 + 1) // 5+1 so that we get to 0
+  takeWhile((t) => t > 0)
 );
-countdown$.subscribe((secondsLeft) => {
-  if (secondsLeft === 0) {
-    console.log("time's up!");
-  } else {
-    console.log(secondsLeft);
-  }
+countdown$.subscribe({
+  next: (secondsLeft) => console.log(secondsLeft),
+  complete: () => console.log("time's up!"),
 });
 ```
 
-<small>
-  Ignore the <i>off by one</i> details of this logic (you can worry about it later), try to focus on how we're
-  manipulating the timer stream.
-</small>
-
 Let's examine the above code 🤯. This time we're not creating a stream from an event or anything like that. Instead, we use `timer` from RxJS to generate a timer stream that emits a new value every second.
 
-Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to reverse that to display an actual countdown to the user. To reverse the numerical value on the stream, we simply use `map`. We should only give the user 5 seconds to drag the `cat` to the `party`. This translates to only pushing `5 + 1` (`+1` because we start at `0`, this way, we'll get to 5, which will display the `0` in the countdown for the user) values to the stream! That's quite simple with RxjS, just literally say that you want to `take(5 + 1)` values; A few evident advantages compared with the classic implementation:
+Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to reverse that to display an actual countdown to the user. To reverse the numerical value on the stream, we simply use `map`. We should only give the user 5 seconds to drag the `cat` to the `party`. This translates to stop emitting values when we hit the mark of the `0` seconds, this is controlled by the `takeWhile` operator. A few evident advantages compared with the classic implementation:
 
 1. **No global variables** `secondsLeft` and `intervalId`.
-2. **Less error-prone code** by relying on `take` built-in operator to limit the number of times our subscription runs.
+2. **Less error-prone code** by relying on `takeWhile` built-in operator to limit the number of times our subscription runs.
 3. Once the stream emits the 6th value, **it will complete automatically** and stop emitting values! **We don't need to worry about cleanup logic** - with `setInterval` we need to worry about cleaning the interval with `clearInterval` so that it does not run indefinitely!
 
 ![diagram depicting the countdown stream](./images/marbles-level-4-1.png "diagram depicting the countdown stream")
@@ -584,18 +577,18 @@ Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to rever
   )}
 />
 
-In the above image, the bottom timeline represents the stream; notice the pipe (**|**) at the end of the timeline indicates that the stream completes after emitting the value **0**.
+In the above image, the bottom timeline represents the stream; notice the pipe (**|**) at the end of the timeline indicates that the stream completes after emitting the value **1**.
 
 A crucial aspect to notice is that you'll trigger a new timer as soon as you subscribe. This is a <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals/#hot-observable-vs-cold-observable" target="_blank" title="Fundamentals of Reactive Programming, Cold Observable">Cold Observable</a> (we've covered this topic in the <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals" target="_blank" title="Fundamentals of Reactive Programming | goodguydaniel.com">the previous article</a>)! Our `countdown$` will start emitting values right away upon subscription, so we can't just `.subscribe()` We'll have to subscribe to the countdown when the user starts dragging the `cat` element. Let's see how we can implement that.
 
 Now remember we had a stream `catDragStart$`; we'll use that to trigger our countdown. **But how can we trigger a subscription to a stream from within another stream?** In my opinion, this is a hard concept to comprehend.
 
-Presenting the <a href="https://www.learnrxjs.io/learn-rxjs/operators/transformation/switchmap" target="_blank" title="switchMap - Learn RxJS">switchMap</a> operator. `switchMap` allows you to trigger a subscription from within a stream to a second stream. Not clear yet? Think of it this way `switchMap` **allows you to switch to a new observable**. Ok, let's look at our countdown implementation, now that we have this information.
+Presenting the <a href="https://rxjs-dev.firebaseapp.com/api/operators/switchMap" target="_blank" title="RxJS - switchMap">switchMap</a> operator. `switchMap` allows you to trigger a subscription from within a stream to a second stream. Not clear yet? Think of it this way `switchMap` **allows you to switch to a new observable**. Ok, let's look at our countdown implementation, now that we have this information.
 
 ```javascript
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
-  take(5 + 1) // 5+1 so that we get to 0
+  takeWhile((t) => t >= 0)
 );
 const countdownRunning$ = catDragStart$.pipe(switchMap((event) => countdown$));
 
@@ -603,6 +596,8 @@ countdownRunning$.subscribe((secondsLeft) => {
   countdown.innerText = `${secondsLeft}`;
 });
 ```
+
+**Note**: You might have noticed that I'm using `t => t >= 0` "_greater or equal to_" in our predicate. This is just for convenience, so that we get `0` pushed onto the stream so that it gets easily rendered, finishing the countdown at `0`.
 
 ![diagram to demonstrate the switchMap operator](./images/marbles-level-4-2.png "diagram to demonstrate the switchMap operator")
 
@@ -615,6 +610,8 @@ Notice the return value of `switchMap` is `countdown$`, this means that when a `
 3. In our subscription handler, we simply do a DOM mutation to the element that displays our countdown value so that the user gets the time left displayed on the screen. Here's how this looks like conceptually.
 
 Once more, as soon as a `ds` (`dragstart` event in the diagram) is pushed to our `catDragStart$` stream, `switchMap` will kick in and subscribe to our `countdown$` stream, _"passing the ball"_ (moving the flow of control) to the `countdown$`. We'll start to push to our subscribers the seconds left in the countdown like if we had subscribed to the `countdown$` in the first place, but in this case **we programmatically triggered the subscription**.
+
+Although we're going more deep into _flattening_ Observables in this level, we've already seen this before in this article. If you're thinking about `withLatestFrom` from **Level 1**, you're right! That operator also triggers a inner subscription.
 
 We can now leverage `countdownRunning$` to display an alert.
 
@@ -656,26 +653,22 @@ Meet `takeUntil`, this operator allows you to stop listening to a stream until s
 ```javascript
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
-  take(5 + 1), // 5+1 so that we get to 0
-  takeUntil(/*??? Something we'll figure this out later*/)
+  takeWhile((t) => t >= 0),
+  takeUntil(/*? something we'll figure out later*/)
 );
 ```
 
-Now, what is that **argument** of the `takeUntil` operator? `takeUntil` receives a stream, once that **stream** emits a value, our `countdown$` will stop emitting, thus canceling the clock and giving our users a chance to retry dragging the `cat` to the `party`.
+Now, what is the **argument** of the `takeUntil` operator? `takeUntil` receives a stream, once that **stream** emits a value, our `countdown$` will stop emitting, thus canceling the clock and giving our users a chance to retry dragging the `cat` to the `party`.
 
 But we have two streams, `catDragEnd$` and `catAtParty$`, can we make it one? Yes, we can! We've already met `merge`! This operator can take multiple streams and combine into a single one, think of it as a funnel.
 
-![level4_3](./images/marbles-level-1-2.png "level4_3")
-
-<Caption text={"TODO: missed image in the middle level4_3"} />
-
-Let's call this last stream `cancelCountdown$`. Here's the final implementation of Level 4 with cancellation.
+Let's call this last stream `cancelCountdown$`. Here's the final implementation of Level 4 with cancellation. After we declare it, we can feed it as an input to our `takeUntil` operator. Here's how it looks like when putting everything together.
 
 ```javascript
 const cancelCountdown$ = merge(catDragEnd$, catAtParty$);
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
-  take(5 + 1), // 5+1 so that we get to 0
+  takeWhile((t) => t >= 0),
   takeUntil(cancelCountdown$)
 );
 const countdownRunning$ = catDragStart$.pipe(switchMap((event) => countdown$));
@@ -693,6 +686,17 @@ countdownRunning$
   });
 ```
 
+![stream representation of the countdown with cancellation](./images/marbles-level-4-3-4.png "stream representation of the countdown with cancellation")
+
+<Caption
+  text={(a) => (
+    <p>
+      In the scenario depicted in this marbles diagram, our stream gets cancelled at after the value <b>3</b>. The first{" "}
+      <b>dragend</b> event causes the <b>countdownRunning$</b> to stop emitting values!
+    </p>
+  )}
+/>
+
 You can check out <a href="https://github.com/danielcaldas/take-the-cat-to-the-party" target="_blank" title="danielcaldas/take-the-cat-to-the-party: Learn reactive programming with RxJS the fun way">the complete implementation of this challenge here</a>.
 
 <br />
@@ -700,19 +704,21 @@ You can check out <a href="https://github.com/danielcaldas/take-the-cat-to-the-p
 
 #### Closing Notes
 
-Here are the concepts you've learned by building this simple game:
+Here are the concepts you've learned by building this game:
 
 1. **Creating streams** from DOM events.
 2. **Manipulating streams** with basic operators such as `map`, `filter`.
 3. **Combining streams** with operators such as: `withLatestFrom`, `switchMap`, and `merge`.
 4. **Cancellation**, being able to stop listening to a specific event based on another. In our last level, we've used `takeUntil` to achieve this.
 
-Now go out there and try to apply these concepts to build your own applications. I would be pleased to hear from you if you've learned something throughout this blog/tutorial.
+Now go out there and try to apply these concepts to build your own applications. I would be pleased to hear from you if you've learned something here today.
 
 In the upcoming articles, I'll share with you the good and bad parts of adopting reactive programming and start using RxJS in your codebase, and at last, I'll share with you a bunch of fantastic resources to learn RxjS and reactive programming.
 
 <br />
 <br />
+
+<ShareHint path="/blog/hands-on-reactive-programming-rxjs" text="Hands-on Reactive Programming with RxJS" />
 
 ---
 
