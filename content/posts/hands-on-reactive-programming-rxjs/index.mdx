@@ -243,7 +243,7 @@ Next, let's see how we can detect that the `cat` is dropped at the `party`.
 ```javascript
 const catAtParty$ = partyDrop$.pipe(
   withLatestFrom(dragstart$),
-  filter(([dropEvent, dragStartEvent]) => dragStartEvent.target === cat)
+  filter(([dropEvent, dragStartEvent]) => dragStartEvent.target === cat),
 );
 ```
 
@@ -545,7 +545,7 @@ Now here's how you can do the same with RxJS.
 ```javascript
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
-  takeWhile((t) => t > 0)
+  takeWhile((t) => t > 0),
 );
 countdown$.subscribe({
   next: (secondsLeft) => console.log(secondsLeft),
@@ -582,7 +582,7 @@ Presenting the <a href="https://rxjs-dev.firebaseapp.com/api/operators/switchMap
 ```javascript
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
-  takeWhile((t) => t >= 0)
+  takeWhile((t) => t >= 0),
 );
 const countdownRunning$ = catDragStart$.pipe(switchMap((event) => countdown$));
 
@@ -649,7 +649,7 @@ Meet `takeUntil`, this operator allows you to stop listening to a stream until s
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
   takeWhile((t) => t >= 0),
-  takeUntil(/*? something we'll figure out later*/)
+  takeUntil(/*? something we'll figure out later*/),
 );
 ```
 
