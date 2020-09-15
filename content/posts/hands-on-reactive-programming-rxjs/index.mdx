@@ -17,6 +17,7 @@ import ShareHint from "../components/ShareHint";
 <ScrollToTopButton />
 
 - [ ] Check all the captions in the images for typos and meaning, grammarly fails to check that
+- [ ] Change the date of the article
 
 * <a
     href="https://goodguydaniel.com/blog/why-reactive-programming"
@@ -51,7 +52,7 @@ This part of the series it's all about getting your hands dirty! Part 3 is a tut
 - [Level 4 - Flatten observables, timers and cancellation](#level-4---flatten-observables-timers-and-cancellation)
 - [Closing Notes](#closing-notes)
 
-We're going to start with a small refresher from <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals" target="_blank" title="Fundamentals of Reactive Programming | goodguydaniel.com">the previous article</a>, we're going to start with a quick refresher of two concepts we've explored **streams** and **operators** by implementing a click event handlers with <a href="https://rxjs-dev.firebaseapp.com/" target="_blank" title="A reactive programming library for JavaScript">RxJS</a>. Next, we'll have a brief overview of RxJS, followed by the main challenge of building a small animated game that teach us how to approach building something the reactive way.
+We're going to start with a small refresher from <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals" target="_blank" title="Fundamentals of Reactive Programming | goodguydaniel.com">the previous article</a>, implementing a click event handler with <a href="https://rxjs-dev.firebaseapp.com/" target="_blank" title="A reactive programming library for JavaScript">RxJS</a>. Next, we'll have a brief overview of RxJS, followed by the main challenge of building a small animated game the reactive way.
 
 #### Warmup - Handle a click event with RxJS
 
@@ -220,7 +221,7 @@ const partyDrop$ = drop$.pipe(filter((event) => event.target === party));
   text={() => (
     <p>
       <b>e</b> stands for <b>event</b> and it's the value pushed to the stream at each drop event in the whole document!{" "}
-      <b>e1</b>, <b>e2</b> and <b>e3</b> have different <code>event.target</code> (target DOM elements).
+      <b>e1</b>, <b>e2</b> and <b>e3</b> have different <b>event.target</b> (target DOM elements).
     </p>
   )}
 />
@@ -266,7 +267,8 @@ catAtParty$.subscribe(([partyDropEvent, dragStartEvent]) => {
 <Caption
   text={() => (
     <p>
-      Here you clearly see the output of our above <b>console.log</b> where we have the `drop` event and the `dragstart`
+      Here you clearly see the output of our above <b>console.log</b> where we have the <b>drop</b> event and the{" "}
+      <b>dragstart</b>
       as payload for our subscription.
     </p>
   )}
