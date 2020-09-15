@@ -441,7 +441,7 @@ First, let's look back at our streams `catDragStart$` and `catDragEnd$`. When `c
 
 ![stream mapping dragstart events to an empty string](./images/marbles-level-3-2.png "stream mapping dragstart events to an empty string")
 
-<Caption text={"Mapping each event to ''."} />
+<Caption text={"Mapping each event to an empty string."} />
 
 After you apply an operator, you transform your stream into a more refined one, better suited to the task you're trying to tackle! You're making every pushed value to the topmost timeline flow through a function provided in the `map` operator. That function will map each value into the bottom timeline, your _"final"_ stream. If you subscribe to it now, you will receive empty strings instead of DOM events!
 
@@ -626,21 +626,22 @@ We have a filter to check for the second `0`; this way, we're basically ensuring
 
 Only one thing left! If you're following up until this point, you're probably wondering why the counter is not reset once you stop dragging the cat. See the following GIF to understand what I'm referring to.
 
-<GIF name="take-cat-to-party" alt="take the cat to the party game demonstration" playing={false} />
-<Caption gif={true} text={"Hmm.. Strange the counter does not reset!"} />
+<GIF name="take-cat-to-party-no-cancel" alt="counter does not stop demonstration" playing={false} />
+<Caption
+  gif={true}
+  text={
+    "Hmm.. Strange the counter does not reset once we drop the cat! It should since the 5 seconds didn't ran out while we were dragging the cat."
+  }
+/>
 
 Let's look at our `countdown$` implementation once more.
 
 ```javascript
-countdownRunning$
-  .pipe(
-    filter((secondsLeft) => secondsLeft === 0),
-    delay(100)
-  )
-  .subscribe(() => {
-    window.alert("Cat didn't make it! You lose!");
-    window.location.reload();
-  });
+const countdown$ = timer(0, 1000).pipe(
+  map((t) => 5 - t),
+  takeWhile((t) => t >= 0)
+);
+const countdownRunning$ = catDragStart$.pipe(switchMap((event) => countdown$);
 ```
 
 Now, it's pretty clear that we're not doing anything to "stop" the counter. Once we subscribe to `countdown$` with the `switchMap` operator that we just went through, there's no stopping it, it will go on until it reaches the end, and when this happens, we'll display the alert to the user. Ideally, we would stop the counter upon any of the two following events:
@@ -671,7 +672,8 @@ const countdown$ = timer(0, 1000).pipe(
   takeWhile((t) => t >= 0),
   takeUntil(cancelCountdown$)
 );
-const countdownRunning$ = catDragStart$.pipe(switchMap((event) => countdown$));
+const countdownRunning$ = catDragStart$.pipe(switchMap((event) => countdown$);
+
 countdownRunning$.subscribe((secondsLeft) => {
   countdown.innerText = `${secondsLeft}`;
 });
@@ -692,7 +694,7 @@ countdownRunning$
   text={(a) => (
     <p>
       In the scenario depicted in this marbles diagram, our stream gets cancelled at after the value <b>3</b>. The first{" "}
-      <b>dragend</b> event causes the <b>countdownRunning$</b> to stop emitting values!
+      <b>dragend</b> event causes the <b>countdownRunning$</b> to stop emitting values.
     </p>
   )}
 />
@@ -716,9 +718,10 @@ Now go out there and try to apply these concepts to build your own applications.
 In the upcoming articles, I'll share with you the good and bad parts of adopting reactive programming and start using RxJS in your codebase, and at last, I'll share with you a bunch of fantastic resources to learn RxjS and reactive programming.
 
 <br />
-<br />
-
 <ShareHint path="/blog/hands-on-reactive-programming-rxjs" text="Hands-on Reactive Programming with RxJS" />
+
+<br />
+<br />
 
 ---
 
