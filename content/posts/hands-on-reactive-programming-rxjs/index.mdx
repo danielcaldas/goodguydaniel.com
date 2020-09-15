@@ -553,9 +553,9 @@ countdown$.subscribe({
 });
 ```
 
-Let's examine the above code 🤯. This time we're not creating a stream from an event or anything like that. Instead, we use `timer` from RxJS to generate a timer stream that emits a new value every second.
+Let's examine the above code 🤯. This time we're not creating a stream from an event or anything like that. Instead, we use <a href="https://rxjs-dev.firebaseapp.com/api/index/function/timer" target="_blank" title="RxJS - mapTo">timer</a> from RxJS to generate a timer stream that emits a new value every second.
 
-Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to reverse that to display an actual countdown to the user. To reverse the numerical value on the stream, we simply use `map`. We should only give the user 5 seconds to drag the `cat` to the `party`. This translates to stop emitting values when we hit the mark of the `0` seconds, this is controlled by the `takeWhile` operator. A few evident advantages compared with the classic implementation:
+Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to reverse that to display an actual countdown to the user. To reverse the numerical value on the stream, we simply use `map`. We should only give the user 5 seconds to drag the `cat` to the `party`. This translates to stop emitting values when we hit the mark of the `0` seconds, this is controlled by the <a href="https://rxjs-dev.firebaseapp.com/api/operators/takeWhile" target="_blank" title="RxJS - takeWhile">takeWhile</a> operator. A few evident advantages compared with the classic implementation:
 
 1. **No global variables** `secondsLeft` and `intervalId`.
 2. **Less error-prone code** by relying on `takeWhile` built-in operator to limit the number of times our subscription runs.
@@ -573,7 +573,7 @@ Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to rever
 
 In the above image, the bottom timeline represents the stream; notice the pipe (**|**) at the end of the timeline indicates that the stream completes after emitting the value **1**.
 
-A crucial aspect to notice is that you'll trigger a new timer as soon as you subscribe. This is a <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals/#hot-observable-vs-cold-observable" target="_blank" title="Fundamentals of Reactive Programming, Cold Observable">Cold Observable</a> (we've covered this topic in the <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals" target="_blank" title="Fundamentals of Reactive Programming | goodguydaniel.com">the previous article</a>)! Our `countdown$` will start emitting values right away upon subscription, so we can't just `.subscribe()` We'll have to subscribe to the countdown when the user starts dragging the `cat` element. Let's see how we can implement that.
+A crucial aspect to notice is that you'll trigger a new timer as soon as you subscribe. This is a <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals/#hot-observable-vs-cold-observable" target="_blank" title="Fundamentals of Reactive Programming, Cold Observable">Cold Observable</a>. Our `countdown$` will start emitting values right away upon subscription, so we can't just `.subscribe()` We'll have to subscribe to the countdown when the user starts dragging the `cat` element.
 
 Now remember we had a stream `catDragStart$`; we'll use that to trigger our countdown. **But how can we trigger a subscription to a stream from within another stream?** In my opinion, this is a hard concept to comprehend.
 
@@ -643,17 +643,17 @@ Now, it's pretty clear that we're not doing anything to "stop" the counter. Once
 1. **When the cat arrives at the party**. Also partially done, we have a stream `catAtParty$`, once a value is pushed into this stream, you know the `cat` was dropped at the `party`.
 2. **We stop dragging the cat**. That's easy; we already have a stream `catDragEnd$`, each emitted value means we just dropped the `cat` element. You might be thinking the first point would be enough, but remember the cat can be dropped literally anywhere on the screen. We have no guarantees that it will get dropped at the party.
 
-Meet `takeUntil`, this operator allows you to stop listening to a stream until something happens! Let's look at the implementation of the `countdown$`.
+Meet <a href="https://rxjs-dev.firebaseapp.com/api/operators/takeUntil" target="_blank" title="RxJS - takeUntil">takeUntil</a>, this operator allows you to stop listening to a stream until something happens! Let's look at the implementation of the `countdown$`.
 
 ```javascript
 const countdown$ = timer(0, 1000).pipe(
   map((t) => 5 - t),
   takeWhile((t) => t >= 0),
-  takeUntil(/*? something we'll figure out later*/),
+  takeUntil(/*something we'll figure out later*/),
 );
 ```
 
-Now, what is the **argument** of the `takeUntil` operator? `takeUntil` receives a stream, once that **stream** emits a value, our `countdown$` will stop emitting, thus canceling the clock and giving our users a chance to retry dragging the `cat` to the `party`.
+Now, what is the **argument** of the `takeUntil` operator? `takeUntil` receives a stream, once that **stream** emits a value, our `countdown$` will stop emitting, thus canceling the timer and giving our users another chance to dragging the `cat` to the `party`.
 
 But we have two streams, `catDragEnd$` and `catAtParty$`, can we make it one? Yes, we can! We've already met `merge`! This operator can take multiple streams and combine into a single one, think of it as a funnel.
 
