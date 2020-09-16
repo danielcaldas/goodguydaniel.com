@@ -39,7 +39,7 @@ import ShareHint from "../components/ShareHint";
 This part of the series it's all about getting your hands dirty! Part 3 is a tutorial on core techniques to build an application with reactive streams using <a href="https://rxjs-dev.firebaseapp.com/" target="_blank" title="A reactive programming library for JavaScript">RxJS</a>.
 
 - [Warmup - Handle a click event with RxJS](#warmup---handle-a-click-event-with-rxjs)
-- [RxJS overview](#rxjs-overview)
+- [RxJS Overview](#rxjs-overview)
 - [Let's build something!](#lets-build-something)
 - [Level 1 - Combining streams of DOM events](#level-1---combining-streams-of-dom-events)
 - [Level 2 - Hacking race conditions with artificial delays](#level-2---hacking-race-conditions-with-artificial-delays)
@@ -64,17 +64,15 @@ const btn = document.getElementById("btn");
 let counter = 0;
 btn.addEventListener("click", (event) => {
   counter++;
-  console.log(`Incremented ${counter}`);
+  console.log(counter);
 });
 ```
 
-In the above code, we're merely incrementing `counter` that is global and logging its value each time we update it.
+In the above code, we're incrementing `counter` that is global and logging its value each time we update it.
 
-Usually, we don't increment globals or `console.log` directly in real-life apps, but we do have other side-effects in place (like updating something else in the UI, triggering a web request, firing an animation, etc.). With this approach, we're pretty much stuck with the event handler. You can always organize your code to split concerns, but it seems the event handler is already doing two very distinct things, and we're barely getting started.
+Usually, we don't increment globals or `console.log` directly in real-life apps, but we do have other side-effects in place (like updating something else in the UI, triggering a web request, firing an animation, etc.). You can always organize your code to split concerns, but it seems the event handler is already doing two very distinct things, and we're barely getting started.
 
-Here's how you should visualize a stream of click events.
-
-<!-- NOTE: For better screen size fitting all marble diagrams shall have 400px -->
+Let's take a look at how this looks like in the reactive world, with RxJS. Here's how you should visualize and implement a stream of click events.
 
 ![marbles diagram of a click event stream](./images/marbles-level-0-1.png "marbles diagram of a click event stream")
 
@@ -89,14 +87,12 @@ Here's how you should visualize a stream of click events.
 
 <br />
 
-Let's take a look at how this looks like in the reactive world, with RxJS.
-
 ```javascript
 let counter = 0;
 const click$ = fromEvent(btn, "click");
 click$.subscribe((event) => {
   counter++;
-  console.log(`Incremented ${counter}`);
+  console.log(counter);
 });
 ```
 
@@ -105,20 +101,22 @@ A few things to notice here:
 - <a href="https://rxjs-dev.firebaseapp.com/api/index/function/fromEvent" target="_blank" title="RxJS - fromEvent">
     fromEvent
   </a> is the tool in RxJS that will allow you to transform any DOM event into an Observable, a stream of events of a given
-  type (e.g., click).
-- `subscribe` well, without subscribing to our stream, would just be dead code. The code path that we're setting up inside our `pipe` will never be visited if you don't subscribe to it, since no values are emitted.
-- The `$` is just a common (non-standard) notation to identify streams in your code - totally optionally, no need to follow - if you're curious, you can read more about it <a href="https://medium.com/@benlesh/observables-and-finnish-notation-df8356ed1c9b" target="_blank" title="Observables and Finnish Notation. Once in a while I’m asked what I think… | by Ben Lesh | Medium">Observables and Finnish Notation</a>.
+  type (like click, drag, scroll etc.).
+- `subscribe` is a must! Without subscribing to our stream, nothing would ever happen.
+- The `$` is just a common (non-standard) notation to identify streams in your code - totally optionally, no need to follow.
 
-A cool thing here is that opposite to the click event handler, you can subscribe to the stream of clicks as many times as you want and split all kinds of different tasks into separate subscriptions that share the same event listener! In a way, things are opening up, you get a more flexible model to organize your code, compared to an event handler callback. How about that? There's a lot more flexibility compared to the classic callbacks.
+A cool thing here is that opposite to the click event handler, you can subscribe to the stream of clicks as many times as you want and split all kinds of different tasks into separate subscriptions that share the same event listener! In a way, things are opening up, you get a more flexible model to organize your code, compared to the classic event handler callback.
 
-**Anything can be a stream, remember that**. This should get you warmed up for the real challenge later in the article. Before that, let's take a look at how the overall structure of RxJS looks like.
+> Anything can be a stream, remember that, let it be the cornerstone of your reactive thinking.
 
-#### RxJS overview
+This should get you warmed up for the real challenge later in the article. Before that, there's something I want to mention about the RxJS library.
 
-I would highly recommend you later to go through the <a href="https://rxjs-dev.firebaseapp.com/guide/overviewhttps://rxjs-dev.firebaseapp.com/guide/overview" target="_blank" title="RxJS - Introduction">RxJS official docs overview</a>; it complements a few concepts I've covered in <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals" target="_blank" title="Fundamentals of Reactive Programming | goodguydaniel.com">the previous article</a>. But for now, I want to focus on two things only: **creating streams and manipulating them**. Looking at RxJS, you'll see that you can identify two big groups of "things":
+#### RxJS Overview
+
+I would highly recommend you later to go through the <a href="https://rxjs-dev.firebaseapp.com/guide/overviewhttps://rxjs-dev.firebaseapp.com/guide/overview" target="_blank" title="RxJS - Introduction">RxJS official docs overview</a>; it complements a few concepts I've covered in <a href="https://goodguydaniel.com/blog/reactive-programming-fundamentals" target="_blank" title="Fundamentals of Reactive Programming | goodguydaniel.com">the previous article</a> giving you a more mature view into the fundamentals. But for now, I want to focus on two things only: **creating streams and manipulating them**. Looking at RxJS, you'll see that you can identify two big groups of "things":
 
 - **Stream creators/producers** are tools that will allow you to take anything and make it a stream. In the previous section, for example, we used `fromEvent` to transform DOM click events into an Observable, **a stream that you can subscribe to**.
-- **Operators** are instruments that will allow you to not only hook into the stream to perform operations with the data flowing through it but also combine them, as we'll see later on.
+- **Operators** are instruments that will allow you to not only hook into the stream to perform operations with the data flowing through it but also combine them.
 
 #### Let's build something!
 
@@ -133,12 +131,12 @@ The game we're building is called **"Take the cat to the party"**, here's how it
 - There's a decoy at the bottom left corner (draggable HTML element).
 - There's a party at the right bottom corner of the page (our drop zone).
 - **We need to drop the cat at the party in less than 5 seconds to win**. Nothing should happen if the decoy is the dragged element.
-- While dragging the cat, there's an animation of the cat driving to the party and a counter appearing at the top right corner.
-- If at each drag, the cat is dragged for longer than 5 seconds you lose.
+- While dragging, there's an animation of the cat driving to the party and a counter appearing at the top right corner.
+- Per each attempt, if the cat is dragged for longer than 5 seconds you lose.
 
-We're going to split this into **4 levels**. Per each level, I'll explain the goal we're trying to achieve, show you how the implementation looks, and what it does with plenty of detail. Feel free to try and code the levels before checking the solution. You can <a href="https://github.com/danielcaldas/take-the-cat-to-the-party" target="_blank" title="danielcaldas/take-the-cat-to-the-party: Learn reactive programming with RxJS the fun way">check out this repo</a> if you're willing to give it a try. The file <a href="https://github.com/danielcaldas/take-the-cat-to-the-party/blob/master/cat-party-empty.html" target="_blank" title="danielcaldas/take-the-cat-to-the-party: Learn reactive programming with RxJS the fun way template file">cat-party-empty.html</a> contains the necessary boilerplate in a single HTML file. You can just open it in the browser and start coding.
+We're going to split this into **4 levels**. Per each level, I'll explain the goal we're trying to achieve, show you how the implementation looks like, and what it does with plenty of detail. Feel free to try and code the levels yourself before checking the suggested solution. You can <a href="https://github.com/danielcaldas/take-the-cat-to-the-party" target="_blank" title="danielcaldas/take-the-cat-to-the-party: Learn reactive programming with RxJS the fun way">check out this repo</a> if you're willing to give it a try. The file <a href="https://github.com/danielcaldas/take-the-cat-to-the-party/blob/master/cat-party-empty.html" target="_blank" title="danielcaldas/take-the-cat-to-the-party: Learn reactive programming with RxJS the fun way template file">cat-party-empty.html</a> contains the necessary boilerplate in a single HTML file. You can just open it in the browser and start coding.
 
-Before we start, let's take a look at some boilerplate code that we have set already.
+Before we start, let's take a look at some boilerplate code already in place.
 
 There are a bunch of RxJS taken from the global `window` at the top (I'm just injecting RxJS via `<script>` at the top of the HTML file). Then we have our markup appended to the element's `app` `innerHTML`. Just some boilerplate, don't bother with the detail.
 
@@ -184,11 +182,11 @@ const loading = document.getElementById("loader");
 const countdown = document.getElementById("countdown");
 ```
 
-Finally, **we introduce three streams that we'll use quite often while going through the challenge, these are the most basic building blocks of our solutions.**
+Finally, **we introduce three streams that we'll use quite often while going through the challenge. These are the most basic building blocks of our solutions.**
 
 ```javascript
 const dragstart$ = fromEvent(document, "dragstart");
-const dragEnd$ = fromEvent(document, "dragend");
+const dragend$ = fromEvent(document, "dragend");
 const drop$ = fromEvent(document, "drop");
 ```
 
@@ -199,7 +197,7 @@ const drop$ = fromEvent(document, "drop");
 
 - We should be able to take the cat to the party by dragging it.
   - Place the cat inside the party together with other cats.
-  - We also want to hide/remove the original cat element when we're dropping the cat at the party.
+  - We also want to hide the original cat element while dragging it for a better user experience.
 
 Let's follow a bottom-up approach. We'll start by building some specific streams that will allow us to assemble more complex behaviors as we move along.
 
@@ -220,7 +218,9 @@ const partyDrop$ = drop$.pipe(filter((event) => event.target === party));
   )}
 />
 
-Cool, we now have a stream that emits a `drop` event every time something is dropped in the `party`, we ensure that using the <a href="https://rxjs-dev.firebaseapp.com/api/operators/filter" target="_blank" title="RxJS - filter">filter</a> operator. I would like to pause and add further detail on this marble diagram. Notice that we read from top to bottom, meaning the last timeline is the only one that really matters, because in practice we'll just subscribe to `partyDrop$`. In this case since we won't subscribe to `drop$` directly, think of it as an auxiliary conceptual timeline which is a step towards shaping the ideal stream to tackle our task: `partyDrop$`.
+Cool, we now have a stream that emits a `drop` event every time something is dropped in the `party`, we ensure that using the <a href="https://rxjs-dev.firebaseapp.com/api/operators/filter" target="_blank" title="RxJS - filter">filter</a> operator.
+
+I would like to pause and add further detail on this marble diagram. Notice that we read from top to bottom, meaning the last timeline is the only one that really matters, it's the fine grained stream that gives us more useful values. In this case since we won't subscribe to `drop$` directly, think of it as an auxiliary conceptual timeline which is a step towards shaping the ideal stream to tackle our task: `partyDrop$`.
 
 Another relevant detail on the marbles diagram: `e1` and `e2` marbles don't make it to `partyDrop$` (bottom stream). For those events,
 `event.target` it's not `party`, this means the user did not drop the HTML element in the `party`.
@@ -236,13 +236,13 @@ const catAtParty$ = partyDrop$.pipe(
 );
 ```
 
-Alright, a few things are going on here. We're familiar with <a href="https://rxjs-dev.firebaseapp.com/api/operators/withLatestFrom" target="_blank" title="RxJS - withLatestFrom">withLatestFrom</a>, but this time, it's a bit more complex to perceive. We're looking into a stream of `dragstart` events `dragstart$` and asking it for the last value (DOM element) emitted in that stream; this is the same as saying that we want the last draggable element in the page that emitted a `dragstart` event! Next, we have `filter`. We're going to use `filter` to narrow down our stream to allow `dragstart` events to pass through only if their target element is `cat`! And that's it! We have a stream that will emit an event every time we drop the cat at the party.
+Alright, a few things are going on here. We're familiar with <a href="https://rxjs-dev.firebaseapp.com/api/operators/withLatestFrom" target="_blank" title="RxJS - withLatestFrom">withLatestFrom</a>, but this time, it's a bit more complex to perceive. We're looking into a stream of `dragstart` events `dragstart$` and asking it for the last value emitted in that stream; this is the same as saying that we want the last draggable element in the page that emitted a `dragstart` event! Next, we have `filter` again. We're going to use `filter` to narrow down our stream to allow `dragstart` events to pass through only if their target element is `cat`! And that's it! We have a stream that will emit an event every time we drop the cat at the party.
 
 ![marbles diagram filter event target on drop event](./images/marbles-level-1-2.png "marbles diagram filter event target on drop event")
 
 <Caption />
 
-In the above diagram, `e1`, `e2` and `e3` are `dragstart` events (`dragstart$` stream) that might come from anywhere in the page. `de` represents a `drop` event at the `party`. Notice how `withLatestFrom` operates by bringing together the last element on `dragstart$` which is `e3` and puts it together with the `party` element which is published onto the `dragend$` stream. Now because `e3` event target is actually the `cat` you'll get `e3` pushed onto our final stream `catAtParty$`!
+In the above diagram, `e1`, `e2` and `e3` are `dragstart` events (`dragstart$` stream) that might come from anywhere in the page. `de` represents a `drop` event at the `party`. Notice how `withLatestFrom` operates by bringing together the last element on `dragstart$` which is `e3` and with the `party` element which is published to the `dragend$` stream. Now because `e3` event target is actually the `cat` you'll get `e3` pushed to our final stream `catAtParty$`!
 
 But we're not finished just yet; we need to leverage the work we've constructed so far to actually render the `cat` in the `party`. For that, we just need to subscribe to our `catAtParty$` stream and do some DOM manipulations.
 
@@ -287,12 +287,12 @@ If you're following this point, you'll notice that although we can drag the cat 
 To achieve the same behavior we have in the above GIF, we want to toggle the `cat` element's opacity while dragging. Yes, another side effect, we can actually simply create another subscription to take care of this.
 
 ```javascript
-const catDragStart$ = dragstart$.pipe(filter((e) => e.target === cat));
-const catDragEnd$ = dragend$.pipe(filter((e) => e.target === cat));
+const catDragStart$ = dragstart$.pipe(filter((event) => event.target === cat));
+const catDragEnd$ = dragend$.pipe(filter((event) => event.target === cat));
 catDragStart$.subscribe((event) => {
   cat.style.opacity = 0;
 });
-catDragEnd$.subscribe(() => {
+catDragEnd$.subscribe((event) => {
   cat.style.opacity = 1;
 });
 ```
@@ -310,8 +310,8 @@ I want to leave a challenge for the reader. Looking at how we're setting the opa
 <Accordion summary='Solution'>
 
 ```javascript
-const catDragStart$ = dragstart$.pipe(filter((e) => e.target === cat));
-const catDragEnd$ = dragend$.pipe(filter((e) => e.target === cat));
+const catDragStart$ = dragstart$.pipe(filter((event) => event.target === cat));
+const catDragEnd$ = dragend$.pipe(filter((event) => event.target === cat));
 const opacity$ = merge(catDragStart$.pipe(mapTo(0)), catDragEnd$.pipe(mapTo(1)));
 
 opacity$.subscribe((value) => {
@@ -352,7 +352,7 @@ catAtParty$.subscribe(() => {
 
 Hmm.. strange, we did everything right but the `window.alert` triggers before we get to actually render the `cat` at the `party`, what a bummer.
 
-It seems that the DOM changes don't kick in before we trigger the alert; that's because the rendering is asynchronous, and the value on the screen only gets updated later on after we're done with executing this function. I don't want to spend much time fixing this since I don't have any mechanism to tell me whether the DOM node has been rendered successfully. I'm going to code a hack and trigger the alert inside a `setTimeout` that should buy us some time to correctly render the cat element.
+It seems that the DOM changes don't kick in before we trigger the alert; that's because the rendering is asynchronous, and the page only gets updated later on after we're done with executing this function and dismissing the alert. I don't want to spend much time fixing this since I don't have any mechanism to tell me whether the DOM node has been rendered successfully, I'm going to code a hack and trigger the alert inside a `setTimeout` that should buy us some time to correctly render the `cat` element.
 
 ```javascript
 catAtParty$.subscribe(() => {
@@ -380,7 +380,7 @@ catAtParty$.subscribe(() => {
   )}
 />
 
-It works. We can achieve a similar **hack** with RxJS without having a solution based on callbacks that keep our subscription handler clean (**but still a hack!**).
+It works. We can achieve a similar **hack** with RxJS without having a solution based on callbacks keeping our subscription handler clean (**but still a hack!**).
 
 ```javascript
 catAtParty$.pipe(delay(100)).subscribe(() => {
@@ -399,8 +399,6 @@ In our markup, there's a GIF positioned at the top right corner. We want to show
 
 We already have two streams: `catDragStart$` and `catDragEnd$` . We need to combine them to form a new stream. Let's try and draw a small diagram of what that stream should look like.
 
-Here's out two separate streams of drag events.
-
 ![streams of events for dragging and dropping the cat respectively](./images/marbles-level-3-1.png "streams of events for dragging and dropping the cat respectively")
 
 <Caption
@@ -411,7 +409,7 @@ Here's out two separate streams of drag events.
   )}
 />
 
-Our GIF is an HTML element whose `display` attribute is set to `"none"` by default. We'll want to set it to `""` (empty string) to make it visible and back to `"none"` once it's time to hide it again. Our side effect should look something like this:
+Our GIF is wrapped in an HTML element whose `display` attribute is set to `"none"` by default. We'll want to set it to `""` (empty string) to make it visible and back to `"none"` once it's time to hide it again. Our side effect should look something like this:
 
 ```javascript
 // shouldHideGIF would be true in case we need to hide the GIF
@@ -419,7 +417,7 @@ const v = shouldHideGIF ? "none" : "";
 loading.style.setProperty("display", v);
 ```
 
-Let's try to build a stream to feed to this function a value for `display` that reflects whether the cat is being dragged or not. **Our stream should remove the necessity of the imperative logic dictated by the ternary operator, we'll create values that react to changes to replace the imperative code**.
+Let's try to build a stream to feed to this function a value for `display` that reflects whether the cat is being dragged or not. Our stream should remove the necessity of the imperative logic dictated by the ternary operator, **we'll create values that react to changes to replace the imperative code**.
 
 First, let's look back at our streams `catDragStart$` and `catDragEnd$`. When `catDragStart$` emits a value, we want to set the `display` to `""`. So this means we need to somehow transform our stream of events into a stream of empty strings. Each time a string is emitted, we shall pass that value onto the function that will set the `display` property on the `loading` element.
 
@@ -427,7 +425,7 @@ First, let's look back at our streams `catDragStart$` and `catDragEnd$`. When `c
 
 <Caption text={"Mapping each event to an empty string."} />
 
-After you apply an operator, you transform your stream into a more refined one, better suited to the task you're trying to tackle! You're making every pushed value to the topmost timeline flow through a function provided in the `map` operator. That function will map each value into the bottom timeline, your _"final"_ stream. If you subscribe to it now, you will receive empty strings instead of DOM events!
+After you apply an operator, you transform your stream into a more refined one, ideally better suited to the task you're trying to tackle! You're making every pushed value to the topmost timeline flow through a function provided in the `map` operator. That function will map each value into the bottom timeline, your _"final"_ stream. If you subscribe to it now, you will receive empty strings instead of DOM events!
 
 The same thing should happen to `catDragEnd$`.
 
@@ -441,8 +439,8 @@ Now we have two streams, and we could just subscribe to each one of them and set
 const catDragStartDisplay$ = catDragStart$.pipe(map((event) => ""));
 const catDragEndDisplay$ = catDragEnd$.pipe(map((event) => "none"));
 
-catDragStartDisplay$.subscribe((v) => loading.style.setProperty("display", v));
-catDragEndDisplay$.subscribe((v) => loading.style.setProperty("display", v));
+catDragStartDisplay$.subscribe((value) => loading.style.setProperty("display", value));
+catDragEndDisplay$.subscribe((value) => loading.style.setProperty("display", value));
 ```
 
 Although this works, we could further refine our streams and **merge** them into a single one.
@@ -458,7 +456,7 @@ Although this works, we could further refine our streams and **merge** them into
   )}
 />
 
-Awesome! The <a href="https://rxjs-dev.firebaseapp.com/api/operators/merge" target="_blank" title="RxJS - merge">merge</a> operator gives us the power to take to streams and merge them into one so that the values of the `"display"` of the `loading` element flow through a single stream (a single source of truth). Here's how the code looks like.
+Awesome! The <a href="https://rxjs-dev.firebaseapp.com/api/operators/merge" target="_blank" title="RxJS - merge">merge</a> operator gives us the power to take to streams and merge them into one so that the values of the `"display"` flow through a single stream (a single source of truth). Here's how the code looks like.
 
 ```javascript
 const catDragStartDisplay$ = catDragStart$.pipe(map((event) => ""));
@@ -468,11 +466,11 @@ const display$ = merge(catDragStartDisplay$, catDragEndDisplay$);
 display$.subscribe((value) => loading.style.setProperty("display", value));
 ```
 
-So we now just need one subscription to handle this toggling of the GIF in our game.
+One subscription to handle the toggling of showing/hiding the GIF.
 
 ###### Bonus for Level 3
 
-At the time of this writing, I feel overwhelmed by the tremendous amount of operators offered by RxJS, its API is considerably large. We could further simplify the above implementation with the operator <a href="https://rxjs-dev.firebaseapp.com/api/operators/mapTo" target="_blank" title="RxJS - mapTo">mapTo</a>.
+I feel overwhelmed by the tremendous amount of operators offered by RxJS, its API is considerably large. We could further simplify the above implementation with the operator <a href="https://rxjs-dev.firebaseapp.com/api/operators/mapTo" target="_blank" title="RxJS - mapTo">mapTo</a>.
 
 ```javascript
 const catDragStartDisplay$ = catDragStart$.pipe(mapTo(""));
@@ -494,7 +492,7 @@ const display$ = merge(catDragStart$.pipe(mapTo("")), catDragEnd$.pipe(mapTo("no
 display$.subscribe((value) => loading.style.setProperty("display", value));
 ```
 
-We could drop `catDragStartDisplay$` and `catDragEndDisplay$` by inlining them in the `merge` operator, anyways we're not subscribing to them.
+We could drop `catDragStartDisplay$` and `catDragEndDisplay$` by inlining them in the `merge` operator.
 
 #### Level 4 - Flatten observables, timers and cancellation
 
