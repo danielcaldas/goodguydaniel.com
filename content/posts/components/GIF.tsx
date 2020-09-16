@@ -12,6 +12,11 @@ import tweakSlowMo from "../tips-end-to-end-testing-puppeteer/images/slowmo.gif"
 import tweakDelay from "../how-to-simulate-delay-http-request/images/tweak-delay.gif";
 import streamBasicFourValues from "../reactive-programming-fundamentals/images/stream-basic-four-values.gif";
 import mapFilterStream from "../reactive-programming-fundamentals/images/map-filter-stream.gif";
+import takeCatToParty from "../hands-on-reactive-programming-rxjs/images/take-cat-to-party.gif";
+import takeCatToPartyNoCancel from "../hands-on-reactive-programming-rxjs/images/take-cat-to-party-no-cancel.gif";
+import gameLevel1OpacityBefore from "../hands-on-reactive-programming-rxjs/images/game-level-1-opacity-before.gif";
+import gameLevel1OpacityAfter from "../hands-on-reactive-programming-rxjs/images/game-level-1-opacity-after.gif";
+import gameLevel2NoCat from "../hands-on-reactive-programming-rxjs/images/game-level-2-no-cat.gif";
 import gifStyles from "./GIF.module.css";
 
 // https://github.com/benwiley4000/react-gif-player#options
@@ -53,6 +58,16 @@ function getFromRegistry(name) {
       return streamBasicFourValues;
     case "map-filter-stream":
       return mapFilterStream;
+    case "take-cat-to-party":
+      return takeCatToParty;
+    case "take-cat-to-party-no-cancel":
+      return takeCatToPartyNoCancel;
+    case "game-level-1-opacity-before":
+      return gameLevel1OpacityBefore;
+    case "game-level-1-opacity-after":
+      return gameLevel1OpacityAfter;
+    case "game-level-2-no-cat":
+      return gameLevel2NoCat;
     default:
       return "";
   }

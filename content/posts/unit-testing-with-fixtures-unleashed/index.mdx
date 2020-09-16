@@ -1,7 +1,7 @@
 ---
 title: "Unit testing with fixtures unleashed"
 date: 2019-10-15
-slug: "/blog/unit-testing-with-fixtures-unleashed/"
+slug: "/blog/unit-testing-with-fixtures-unleashed"
 tags:
   - JavaScript
   - Software Testing
@@ -170,15 +170,8 @@ describe("backgroundColorReplacer", () => {
 
 Now the function supports an `opacity` option, and there are a few more test cases. Eventually some nesting and branching in the `describe`/`it` _madness_ starts to stack up on an overwhelmingly large file. The developer has a tough time to go through the test cases and find the right spot for the scenario he/she just fixed. On top of that, any addition to that file seems to break a few other unit tests that aren't in any way related to the new test case he/she is trying to introduce.
 
-<GIF
-  name="time-to-stop"
-  alt="filthy frank, pink guy it is time to stop meme"
-  playing={true}
-/>
-<Caption
-  source="https://tenor.com/view/its-time-to-stop-stop-clock-time-gif-5001372"
-  gif={true}
-/>
+<GIF name="time-to-stop" alt="filthy frank, pink guy it is time to stop meme" playing={true} />
+<Caption source="https://tenor.com/view/its-time-to-stop-stop-clock-time-gif-5001372" gif={true} />
 
 ### Rethinking the tests architecture
 
@@ -317,10 +310,7 @@ const backgroundColorReplacer = require("../../replacer");
 describe("backgroundColorReplacer", () => {
   it("not replace color if no match", () => {
     try {
-      const {
-        target,
-        options,
-      } = require(`../not-replace-color-if-no-match.js`);
+      const { target, options } = require(`../not-replace-color-if-no-match.js`);
       expect(backgroundColorReplacer(target, options)).toMatchSnapshot();
     } catch (error) {
       expect(error).toMatchSnapshot();
@@ -432,10 +422,9 @@ Not a known project, but the babel plugin where I first implemented such archite
 Do you see any similarities between all the listed projects? I do! We could say that they are all compilers, in their own ways. They often have a **vast spectrum of inputs and narrow APIs, often exposed via a `compile` function**.
 
 <small>
-  <b>tip</b>: to have a big picture of how these projects run fixtures, go to
-  their repository and perform a search for "fixtures/" and you'll see *glue*
-  code somewhat related to the one demonstrated in this article; it might be a
-  bit harder to follow due to the dimension of these projects
+  <b>tip</b>: to have a big picture of how these projects run fixtures, go to their repository and perform a search for
+  "fixtures/" and you'll see *glue* code somewhat related to the one demonstrated in this article; it might be a bit
+  harder to follow due to the dimension of these projects
 </small>
 .
 
@@ -467,8 +456,7 @@ What do you think about having a fixture based testing architecture? Do you have
     >
       Jest
     </a>{" "}
-    JavaScript library, this does not mean that what you find here might not be
-    ported into other JavaScript libraries or into other programming languages
-    and ecosystems.
+    JavaScript library, this does not mean that what you find here might not be ported into other JavaScript libraries
+    or into other programming languages and ecosystems.
   </i>
 </small>

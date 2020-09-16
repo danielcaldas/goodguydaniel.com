@@ -1,7 +1,7 @@
 ---
 title: "Debugging Javascript with VS Code"
 date: 2019-02-17
-slug: "/blog/debugging-javascript-with-vscode/"
+slug: "/blog/debugging-javascript-with-vscode"
 tags:
   - JavaScript
   - Productivity
@@ -110,9 +110,7 @@ To bring all this convenience into your favorite IDE, you need to perform the fo
    const ENV = window.ENV;
 
    const middleware =
-     ENV.NAME === "production"
-       ? applyMiddleware(promise())
-       : applyMiddleware(promise(), createLogger());
+     ENV.NAME === "production" ? applyMiddleware(promise()) : applyMiddleware(promise(), createLogger());
 
    const composeEnhancers = composeWithDevTools({
      realtime: true,

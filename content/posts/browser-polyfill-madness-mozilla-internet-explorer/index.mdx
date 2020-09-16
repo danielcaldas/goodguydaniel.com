@@ -1,7 +1,7 @@
 ---
 title: "Browser polyfill madness, Mozilla and IE"
 date: 2019-07-20
-slug: "/blog/browser-polyfill-madness-mozilla-internet-explorer/"
+slug: "/blog/browser-polyfill-madness-mozilla-internet-explorer"
 tags:
   - JavaScript
 ---
@@ -39,9 +39,7 @@ I ran to the polyfill section, I copied out the recommended <a href="https://dev
 Number.isSafeInteger =
   Number.isSafeInteger ||
   function (value) {
-    return (
-      Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER
-    );
+    return Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
   };
 ```
 
@@ -51,11 +49,7 @@ Not that simple, it turns out that <a href="https://developer.mozilla.org/en-US/
 Number.isInteger =
   Number.isInteger ||
   function (value) {
-    return (
-      typeof value === "number" &&
-      isFinite(value) &&
-      Math.floor(value) === value
-    );
+    return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
   };
 ```
 
@@ -81,9 +75,7 @@ You maybe think that's it, he finished with _polyfilling_ madness. I thought the
 Number.isSafeInteger =
   Number.isSafeInteger ||
   function (value) {
-    return (
-      Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER
-    );
+    return Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
   };
 ```
 

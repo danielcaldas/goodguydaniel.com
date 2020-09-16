@@ -1,7 +1,7 @@
 ---
 title: "JSconf EU 2018"
 date: 2018-08-12
-slug: "/blog/about-js-conf-eu-berlin-2018/"
+slug: "/blog/about-js-conf-eu-berlin-2018"
 tags:
   - Conferences
   - JavaScript
@@ -19,10 +19,7 @@ As promised in the post on [CSSconf EU 2018](https://goodguydaniel.com/blog/abou
 
 ![jsconf eu 2018 venue picture](./images/jsconf-eu-2018.jpg "jsconf eu 2018 venue")
 
-<Caption
-  source="http://ulfbueschleb.com/project/jsconf-eu/"
-  text="JSConf venue"
-/>
+<Caption source="http://ulfbueschleb.com/project/jsconf-eu/" text="JSConf venue" />
 
 #### What will you find here
 
@@ -75,10 +72,7 @@ According to this presentation _long/ulong_ types where proposed back there (199
 
 ![binary floating point number representation](./images/binary-number-representation.png "binary floating point number representation")
 
-<Caption
-  source="https://www.youtube.com/watch?v=RiU5OzMZ7z8"
-  text="IEEE 754 64-bit floats"
-/>
+<Caption source="https://www.youtube.com/watch?v=RiU5OzMZ7z8" text="IEEE 754 64-bit floats" />
 
 So the 2^53 maximum number (900719925474099**2**) looks like this when in the binary floating point representation:
 
@@ -560,27 +554,16 @@ There was a proposal to add `flatten` and `flatMap` to the Array prototype. Is w
 
 #### (Q) What are some of the awesome features coming up next?
 
-- <a
-    href="https://github.com/tc39/proposal-optional-chaining"
-    target="_blank"
-    title="tc39/proposal-optional-chaining"
-  >
+- <a href="https://github.com/tc39/proposal-optional-chaining" target="_blank" title="tc39/proposal-optional-chaining">
     Optional chaining
   </a>
-- <a
-    href="https://github.com/tc39/proposal-pattern-matching"
-    target="_blank"
-    title="tc39/proposal-pattern-matching"
-  >
+- <a href="https://github.com/tc39/proposal-pattern-matching" target="_blank" title="tc39/proposal-pattern-matching">
     Pattern matching
   </a>
 - <a href="#proposal-private-fields" title="Class features">
     Class features (private and public class fields)
   </a>
-- <a
-    href="#d1t2"
-    title="Native BigInts in JavaScript: A Case Study in TC39 - Daniel Ehrenberg - JSConf EU 2018"
-  >
+- <a href="#d1t2" title="Native BigInts in JavaScript: A Case Study in TC39 - Daniel Ehrenberg - JSConf EU 2018">
     BigInts
   </a>
 
@@ -596,11 +579,7 @@ Good idea, but very complex. 😎
 
 [<span id="d2t3">(3)</span>](#day-2) A vital part of the Javascript runtimes are engines. <a href="https://github.com/v8/v8" target="_blank" title="The official mirror of the V8 Git repository">V8</a> is the Javascript engine for Chrome, Electron and Node.js. In the next talk we'll look into fundamental parts that are common to V8 and all other major Javascript engines:
 
-- <a
-    href="https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey"
-    target="_blank"
-    title="SpiderMonkey"
-  >
+- <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey" target="_blank" title="SpiderMonkey">
     SpiderMonkey
   </a> powers Firefox.
 - <a
@@ -710,9 +689,7 @@ function fetchSomeRainbows(nRainbows) {
   return Promise.resolve("here u go");
 }
 
-fetchSomeRainbows().catch((rainbowError) =>
-  console.log("unable to fetch rainbows")
-);
+fetchSomeRainbows().catch((rainbowError) => console.log("unable to fetch rainbows"));
 
 // this will output: "Error: some error message"
 // instead of "unable to fetch rainbows"
