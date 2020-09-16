@@ -498,15 +498,12 @@ We could drop `catDragStartDisplay$` and `catDragEndDisplay$` by inlining them i
 
 - The cat needs to make it to the party in less than 5 seconds! He only has 5 seconds of gas in his bike.
 
-Now that we know a bit about creating and manipulating streams, it's time for our last challenge.
+We need to code a new path in our game, the one where the user loses the cat isn't dragged to the party within 5 seconds. This looks like a countdown, with a few actions tied to it:
 
-We need to code a new path in our game, where the user loses if he/she can't get the cat to the party within 5 seconds. This looks like a countdown, with a few actions tied to it:
+1. The countdown must be **interrupted** if the player manages to win within 5 seconds.
+2. In case the countdown ends, and the cat was not dropped anywhere, we need to display a "_game over_" message.
 
-1. The countdown must be **interrupted** if the player manages to win within 5 seconds (we'll learn cancellation here. It's a piece of cake with streams and RxJS!).
-2. In case the countdown ends, we need to display a message to the user informing it that he/she loses.
-
-As in the previous levels, let's build this incrementally, starting to develop individual streams to later combine them into more high-level tasks.
-First, let's build a countdown. To emphasize how RxJS shines here, let's first see how we would make a countdown with native JavaScript APIs.
+As in the previous levels, let's build this incrementally. First, let's build a countdown. To emphasize how RxJS shines here, let's first see how we would make a countdown with native JavaScript APIs.
 
 ```javascript
 function countdown(seconds) {
@@ -526,7 +523,7 @@ function countdown(seconds) {
 countdown(5);
 ```
 
-And that's a rough implementation of a countdown. We need to keep track of the timer identifier in a variable to ensure we clean up after running the `setInterval` provided callback the expected amount of times.
+That's a rough implementation of a countdown. We need to keep track of the timer identifier in a variable to ensure we clean up after running the `setInterval` provided callback the expected amount of times.
 
 Now here's how you can do the same with RxJS.
 
@@ -541,12 +538,12 @@ countdown$.subscribe({
 });
 ```
 
-Let's examine the above code 🤯. This time we're not creating a stream from an event or anything like that. Instead, we use <a href="https://rxjs-dev.firebaseapp.com/api/index/function/timer" target="_blank" title="RxJS - mapTo">timer</a> from RxJS to generate a timer stream that emits a new value every second.
+Let's examine the above code 🤯. This time we're not creating a stream from an event or anything like that. Instead, we use <a href="https://rxjs-dev.firebaseapp.com/api/index/function/timer" target="_blank" title="RxJS - mapTo">timer</a> from RxJS to generate a timer stream that emits a new numeric value every second.
 
-Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to reverse that to display an actual countdown to the user. To reverse the numerical value on the stream, we simply use `map`. We should only give the user 5 seconds to drag the `cat` to the `party`. This translates to stop emitting values when we hit the mark of the `0` seconds, this is controlled by the <a href="https://rxjs-dev.firebaseapp.com/api/operators/takeWhile" target="_blank" title="RxJS - takeWhile">takeWhile</a> operator. A few evident advantages compared with the classic implementation:
+Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to reverse that to display an actual countdown. To reverse the numerical value on the stream, we simply use `map`. We should only give the user 5 seconds to drag the `cat` to the `party`. This translates to stop emitting values when we hit the mark of the `0` seconds, this is controlled by the <a href="https://rxjs-dev.firebaseapp.com/api/operators/takeWhile" target="_blank" title="RxJS - takeWhile">takeWhile</a> operator. A few evident advantages compared with the classic implementation:
 
 1. **No global variables** `secondsLeft` and `intervalId`.
-2. **Less error-prone code** by relying on `takeWhile` built-in operator to limit the number of times our subscription runs.
+2. **Less error-prone code** by relying on `takeWhile` and other built-in operators to be the rail guards of our business logic.
 3. Once the stream emits the 6th value, **it will complete automatically** and stop emitting values! **We don't need to worry about cleanup logic** - with `setInterval` we need to worry about cleaning the interval with `clearInterval` so that it does not run indefinitely!
 
 ![diagram depicting the countdown stream](./images/marbles-level-4-1.png "diagram depicting the countdown stream")
@@ -573,7 +570,7 @@ countdownRunning$.subscribe((secondsLeft) => {
 });
 ```
 
-**Note**: You might have noticed that I'm using `t => t >= 0` "_greater or equal to_" in our predicate. This is just for convenience, so that we get `0` pushed onto the stream so that it gets easily rendered, finishing the countdown at `0`.
+**Note**: You might have noticed that I'm using `t => t >= 0` "_greater or equal to_" in our predicate. This is just for convenience, so that we get `0` pushed onto the stream to easily rendered it, finishing the countdown at `0`.
 
 ![diagram to demonstrate the switchMap operator](./images/marbles-level-4-2.png "diagram to demonstrate the switchMap operator")
 
@@ -583,7 +580,7 @@ Notice the return value of `switchMap` is `countdown$`, this means that when a `
 
 1. Since we subscribed, the DOM event will flow through the pipe and hit our `switchMap` operator.
 2. We'll automatically subscribe to `countdown$` and start emitting its values leaving the `dragstart` event behind (because we don't really need it for this task).
-3. In our subscription handler, we simply do a DOM mutation to the element that displays our countdown value so that the user gets the time left displayed on the screen. Here's how this looks like conceptually.
+3. In our subscription handler, we simply do a DOM mutation to the element that displays our countdown value so that the user gets the time left displayed on the screen.
 
 Once more, as soon as a `ds` (`dragstart` event in the diagram) is pushed to our `catDragStart$` stream, `switchMap` will kick in and subscribe to our `countdown$` stream, _"passing the ball"_ (moving the flow of control) to the `countdown$`. We'll start to push to our subscribers the seconds left in the countdown like if we had subscribed to the `countdown$` in the first place, but in this case **we programmatically triggered the subscription**.
 
@@ -620,12 +617,12 @@ const countdown$ = timer(0, 1000).pipe(
 const countdownRunning$ = catDragStart$.pipe(switchMap((event) => countdown$);
 ```
 
-Now, it's pretty clear that we're not doing anything to "stop" the counter. Once we subscribe to `countdown$` with the `switchMap` operator that we just went through, there's no stopping it, it will go on until it reaches the end, and when this happens, we'll display the alert to the user. Ideally, we would stop the counter upon any of the two following events:
+Now, it's pretty clear that we're not doing anything to "stop" the counter. Once we subscribe to `countdown$` with the `switchMap` operator, there's no stopping it, it will go on until it reaches the end, and when this happens, we'll display the alert to the user. Ideally, we would stop the counter upon any of the two following events:
 
 1. **When the cat arrives at the party**. Also partially done, we have a stream `catAtParty$`, once a value is pushed into this stream, you know the `cat` was dropped at the `party`.
-2. **We stop dragging the cat**. That's easy; we already have a stream `catDragEnd$`, each emitted value means we just dropped the `cat` element. You might be thinking the first point would be enough, but remember the cat can be dropped literally anywhere on the screen. We have no guarantees that it will get dropped at the party.
+2. **We stop dragging the cat**. We already have a stream `catDragEnd$`, each emitted value means we just dropped the `cat` element. You might be thinking the first point would be enough, but remember the cat can be dropped literally anywhere on the screen. We have no guarantees that it will get dropped at the party.
 
-Meet <a href="https://rxjs-dev.firebaseapp.com/api/operators/takeUntil" target="_blank" title="RxJS - takeUntil">takeUntil</a>, this operator allows you to stop listening to a stream until something happens! Let's look at the implementation of the `countdown$`.
+Meet <a href="https://rxjs-dev.firebaseapp.com/api/operators/takeUntil" target="_blank" title="RxJS - takeUntil">takeUntil</a>, this operator allows you to listen to a stream until something happens! Let's look at the implementation of the `countdown$`.
 
 ```javascript
 const countdown$ = timer(0, 1000).pipe(
@@ -639,7 +636,7 @@ Now, what is the **argument** of the `takeUntil` operator? `takeUntil` receives 
 
 But we have two streams, `catDragEnd$` and `catAtParty$`, can we make it one? Yes, we can! We've already met `merge`! This operator can take multiple streams and combine into a single one, think of it as a funnel.
 
-Let's call this last stream `cancelCountdown$`. Here's the final implementation of Level 4 with cancellation. After we declare it, we can feed it as an input to our `takeUntil` operator. Here's how it looks like when putting everything together.
+Let's call this last stream `cancelCountdown$`. After we declare it, we can feed it as an input to our `takeUntil` operator. Here's the final implementation of Level 4 with cancellation.
 
 ```javascript
 const cancelCountdown$ = merge(catDragEnd$, catAtParty$);
@@ -669,8 +666,8 @@ countdownRunning$
 <Caption
   text={(a) => (
     <p>
-      Our stream gets cancelled after the value <b>3</b> is published. The first <b>dragend</b> event causes the{" "}
-      <b>countdownRunning$</b> to stop emitting values.
+      In this diagram, our stream gets cancelled after the value <b>3</b> is published. The first <b>dragend</b> event
+      causes the <b>countdownRunning$</b> to stop emitting values.
     </p>
   )}
 />
@@ -686,7 +683,7 @@ Here are the concepts you've learned by building this game:
 1. **Creating streams** from DOM events.
 2. **Manipulating streams** with basic operators such as `map`, `filter`.
 3. **Combining streams** with operators such as: `withLatestFrom`, `switchMap`, and `merge`.
-4. **Cancellation**, being able to stop listening to a specific event based on another. In our last level, we've used `takeUntil` to achieve this.
+4. **Cancellation**, being able to stop listening to a specific stream based on another. In our last level, we used `takeUntil` to achieve this.
 
 Now go out there and try to apply these concepts to build your own applications. I would be pleased to hear from you if you've learned something here today.
 
