@@ -84,13 +84,12 @@ Here's how you should visualize a stream of click events.
 <Caption
   text={() => (
     <p>
-      <b>e</b> stands for <b>event</b> and its the value that is pushed to the stream at each click, just like you would
-      have a payload <b>event</b> in the typical <b>onClick</b> callback
+      <b>e</b> stands for <b>event</b> and it's the value pushed to the stream at each click in the button element, just
+      like you would have an <b>event</b> argument in the typical <b>onClick</b> callback (event handler) at each click.
     </p>
   )}
 />
 
-<br />
 <br />
 
 Let's take a look at how this looks like in the reactive world, with RxJS.
@@ -131,16 +130,14 @@ Now we've had our refresher, we can jump into building a small animated game wit
 The game we're building is called **"Take the cat to the party"**, here's how it goes down.
 
 <GIF name="take-cat-to-party" alt="take the cat to the party game demonstration" playing={false} />
-<Caption
-  gif={true}
-  text={"The game consists in dropping a picture of a cat into a picture of a party with cats, within 5 seconds."}
-/>
+<Caption gif={true} />
 
 - There's a cat in a motorbike in your top left corner (draggable HTML element).
 - There's a decoy at the bottom left corner (draggable HTML element).
 - There's a party at the right bottom corner of the page (our drop zone).
-- We need to drop the cat at the party in less than 5 seconds to win. Nothing should happen if the decoy is the dragged element.
+- **We need to drop the cat at the party in less than 5 seconds to win**. Nothing should happen if the decoy is the dragged element.
 - While dragging the cat, there's an animation of the cat driving to the party and a counter appearing at the top right corner.
+- If at each drag, the cat is dragged for longer than 5 seconds you lose.
 
 We're going to split this into **4 levels**. Per each level, I'll explain the goal we're trying to achieve, show you how the implementation looks, and what it does with plenty of detail. Feel free to try and code the levels before checking the solution. You can <a href="https://github.com/danielcaldas/take-the-cat-to-the-party" target="_blank" title="danielcaldas/take-the-cat-to-the-party: Learn reactive programming with RxJS the fun way">check out this repo</a> if you're willing to give it a try. The file <a href="https://github.com/danielcaldas/take-the-cat-to-the-party/blob/master/cat-party-empty.html" target="_blank" title="danielcaldas/take-the-cat-to-the-party: Learn reactive programming with RxJS the fun way template file">cat-party-empty.html</a> contains the necessary boilerplate in a single HTML file. You can just open it in the browser and start coding.
 
@@ -267,9 +264,8 @@ catAtParty$.subscribe(([partyDropEvent, dragStartEvent]) => {
 <Caption
   text={() => (
     <p>
-      Here you clearly see the output of our above <b>console.log</b> where we have the <b>drop</b> event and the{" "}
-      <b>dragstart</b>
-      as payload for our subscription.
+      The <b>console.log</b> reveals the <b>drop</b> and <b>dragstart</b> events as payload for our subscription. We
+      also log the <b>event.type</b> of each individual event.
     </p>
   )}
 />
@@ -277,14 +273,16 @@ catAtParty$.subscribe(([partyDropEvent, dragStartEvent]) => {
 If you're following this point, you'll notice that although we can drag the cat perfectly, we still see the original `cat` element while carrying it.
 
 <GIF name="game-level-1-opacity-before" alt="dragging the cat without manipulating the opacity value" playing={false} />
-<Caption gif={true} text={"We still see the original cat element while dragging it."} />
+<Caption gif={true} text={"We see the original cat element while dragging it."} />
+
+<br />
 
 <GIF name="game-level-1-opacity-after" alt="dragging the cat with opacity manipulation" playing={false} />
 <Caption
   gif={true}
   text={() => (
     <p>
-      Setting the cat's element opacity to <b>0</b> yields a more natural user experiences.
+      Setting the cat's element opacity to <b>0</b> yields a more natural user experience.
     </p>
   )}
 />
@@ -350,8 +348,7 @@ catAtParty$.subscribe(() => {
   gif={true}
   text={() => (
     <p>
-      <b>window.alert</b> is triggered when we drop the cat at the <b>party</b>, but the <b>cat</b> is not rendered at
-      the <b>party</b>!
+      <b>window.alert</b> is triggered when we drop the cat at the <b>party</b>, but the <b>cat</b> is not rendered!
     </p>
   )}
 />
@@ -458,8 +455,8 @@ Although this works, we could further refine our streams and **merge** them into
 <Caption
   text={() => (
     <p>
-      <b>A single stream becomes the source of truth</b> for the display property value in the <b>loading</b> element
-      through time.
+      <b>A single stream becomes the source of truth</b> for the <i>display</i> property value of the <b>loading</b>{" "}
+      element throughout time.
     </p>
   )}
 />
@@ -559,13 +556,7 @@ Now a timer emits values in ascending order (0, 1, 3, etc.). We'll want to rever
 
 ![diagram depicting the countdown stream](./images/marbles-level-4-1.png "diagram depicting the countdown stream")
 
-<Caption
-  text={() => (
-    <p>
-      Representation of our <b>countdown$</b> stream.
-    </p>
-  )}
-/>
+<Caption />
 
 In the above image, the bottom timeline represents the stream; notice the pipe (**|**) at the end of the timeline indicates that the stream completes after emitting the value **1**.
 
@@ -620,7 +611,7 @@ Only one thing left! If you're following up until this point, you're probably wo
 <Caption
   gif={true}
   text={
-    "Hmm.. Strange the counter does not reset once we drop the cat! It should since the 5 seconds didn't ran out while we were dragging the cat."
+    "Hmm.. Strange the counter does not reset once we drop the cat! It should, since the 5 seconds didn't ran out while we were dragging the cat."
   }
 />
 
@@ -683,8 +674,8 @@ countdownRunning$
 <Caption
   text={(a) => (
     <p>
-      In the scenario depicted in this marbles diagram, our stream gets cancelled at after the value <b>3</b>. The first{" "}
-      <b>dragend</b> event causes the <b>countdownRunning$</b> to stop emitting values.
+      Our stream gets cancelled after the value <b>3</b> is published. The first <b>dragend</b> event causes the{" "}
+      <b>countdownRunning$</b> to stop emitting values.
     </p>
   )}
 />
