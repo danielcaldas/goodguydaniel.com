@@ -24,9 +24,9 @@ export const query = graphql`
       filter: {
         slug: {
           in: [
-            "/blog/series-reactive-programming-rxjs"
             "/blog/unit-testing-with-fixtures-unleashed"
             "/blog/functional-bits-tips"
+            "/blog/series-reactive-programming-rxjs"
           ]
         }
       }
