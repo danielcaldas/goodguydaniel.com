@@ -23,7 +23,7 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 - The rules of hooks are somewhat reflections of the constraints of this React API.
 - Example final full code [here](#example-full-code).
 
-!["forbidden seagul bending the rules"](./images/forbidden-seagull.png)
+!["forbidden seagull bending the rules"](./images/forbidden-seagull.png)
 
 <Caption source={"https://www.flickr.com/photos/sameli/1898511953"} />
 
@@ -72,7 +72,21 @@ If you pick React hooks API, you should structure the code accordingly not to en
 
 !["code review cartoon"](./images/wtfs-per-minute-code-review.png)
 
-<Caption source={"https://me.me/i/the-ouy-vcile-41-wtf-cocle-review-wtf-review-bad-20268515"} />
+<Caption
+  source={"https://www.osnews.com/story/19266/wtfsm/"}
+  text={() => (
+    <p>
+      "<i>Are we debugging in a panic, poring over code that we thought worked?</i>" <br /> -{" "}
+      <a
+        href="https://www.amazon.com/gp/product/0132350882/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0132350882&linkCode=as2&tag=goodguydaniel-20&linkId=7d43375b6b0cd381f5ce0e61779b6fc5"
+        target="_blank"
+        title="Clean Code: A Handbook of Agile Software Craftsmanship"
+      >
+        Clean Code by Robert C. Martin
+      </a>
+    </p>
+  )}
+/>
 
 As always, I think there's nothing better than an example to explain a concept, let's look into one.
 
@@ -157,7 +171,7 @@ And that's it! `RandomNumberWrapper` blindly proxies whatever data comes from `u
 
 I hope you found this pattern helpful! If you're curious to read more on the subject, I advise checking this excellent blog post entitled "[How to Break the Rules of React Hooks](https://inventingwithmonster.io/20190207-break-the-rules-of-react-hooks/ "How to break the rules of React Hooks | Inventing With Monster")".
 
-After working some time with [reactivity blocks in Svelte](https://en.wikipedia.org/wiki/Observer_pattern "Reactivity/Statements - Svelte Tutorial"). It feels like the conceptual and productivity jump in terms of evolution.
+After working some time with <a href="https://svelte.dev/docs#3_$_marks_a_statement_as_reactive" target="_blank" title="API Docs Svelte">reactivity blocks in Svelte</a>, React hooks feel like making fire with sticks and stones compared to making fire with a lighter.
 
 ##### Example Full Code
 

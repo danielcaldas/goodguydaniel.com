@@ -4,6 +4,7 @@ date: 2019-10-15
 slug: "/blog/unit-testing-with-fixtures-unleashed"
 tags:
   - JavaScript
+  - Productivity
   - Software Testing
 ---
 
@@ -13,7 +14,7 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 
 <ScrollToTopButton />
 
-From project to project, I've seen applications structured in many different ways, but most of the time, no matter how different the software was, the testing techniques and structures were almost always the same. In this article, I want to share with you an experienced-based journey on how we can differently structure our tests; **I'm calling it a fixture based architecture** (or fixture based testing setup).
+From project to project, I've seen applications structured in many different ways, but most of the time, no matter how different the software was, the testing techniques and structures were almost always the same. In this article, I want to share with you an experienced-based journey on how we can differently structure our tests; **I'm calling it a fixture based architecture**.
 
 ### About the unit tests we write
 
@@ -347,7 +348,7 @@ The output or running the above test is just a simple Jest report.
 
 <Caption />
 
-In the above implementation we have created a generic mechanism that resembles the <a href="https://addyosmani.com/resources/essentialjsdesignpatterns/book/#commandpatternjavascript" target="_blank" title="Learning JavaScript Design Patterns">Command Pattern</a> (<a href="https://www.amazon.com/gp/product/B008VJSPZE/ref=as_li_tl?ie=UTF8&tag=goodguydaniel-20&camp=1789&creative=9325&linkCode=as2&creativeASIN=B008VJSPZE&linkId=206ece1eb69ef4d857cd753290c995ce" target="_blank" title="Learning JavaScript Design Patterns">original reference</a>) where the _spec_ name itself is the _command_ we wish to execute.
+In the above implementation we have created a generic mechanism that resembles the _Command Pattern_ (<a href="https://www.amazon.com/gp/product/B008VJSPZE/ref=as_li_tl?ie=UTF8&tag=goodguydaniel-20&camp=1789&creative=9325&linkCode=as2&creativeASIN=B008VJSPZE&linkId=206ece1eb69ef4d857cd753290c995ce" target="_blank" title="Learning JavaScript Design Patterns">reference from "Learning JavaScript Design Patterns" by Addy Osmani</a>) where the _spec_ name itself is the _command_ we wish to execute.
 
 My goal here is to give you the idea that, in some projects, you might be able to drop a lot of boilerplate by wisely choosing your testing architecture; The pattern you go for it's just a tool for you to organize your thoughts, **it doesn't mean that** if you don't choose the right architecture you are doomed to a poorly tested codebase, you can still certainly achieve that, it just won't be as easy.
 
@@ -379,8 +380,8 @@ As you can see from the above snippet, we _glue_ and chain everything together i
 <Caption gif={true} />
 
 I found such a setup to be the ideal driver for you to advocate for <a href="https://en.wikipedia.org/wiki/Test-driven_development" target="_blank" title="Test-driven development - Wikipedia">Test Driven Development (TDD)</a> within your team. Creating fixtures to replicate tricky edge cases
-becomes trivial leading you to create the fixture that breaks your implementation in the first place, followed by fixing whatever's wrong with the actual implementation.
-But I don't want to elaborate on TDD, for that I would rather point you good resources such as <a href="https://www.amazon.com/gp/product/0321146530/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0321146530&linkCode=as2&tag=goodguydaniel-20&linkId=5a7f5dcbff56444b471f750f0dcb0e02" target="_blank" title="Test Driven Development: By Example">Test Driven Development: By Example</a>
+becomes trivial leading you to create the fixture that breaks your implementation in the first place, followed by fixing whatever is wrong with the actual implementation.
+But I don't want to elaborate on TDD, for that I would rather point you good resources such as <a href="https://www.amazon.com/gp/product/0321146530/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0321146530&linkCode=as2&tag=goodguydaniel-20&linkId=5a7f5dcbff56444b471f750f0dcb0e02" target="_blank" title="Test Driven Development: By Example">Test Driven Development: By Example, by Kent Beck</a>.
 
 <br />
 

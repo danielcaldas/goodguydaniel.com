@@ -23,7 +23,11 @@ export const query = graphql`
     pinned: allPost(
       filter: {
         slug: {
-          in: ["/blog/tips-end-to-end-testing-puppeteer", "/blog/tips-jest-unit-testing", "/blog/functional-bits-tips"]
+          in: [
+            "/blog/unit-testing-with-fixtures-unleashed"
+            "/blog/functional-bits-tips"
+            "/blog/series-reactive-programming-rxjs"
+          ]
         }
       }
     ) {

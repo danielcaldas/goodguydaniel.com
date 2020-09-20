@@ -12,7 +12,6 @@ import Accordion from "../components/Accordion";
 import Caption from "../components/Caption";
 import GIF from "../components/GIF";
 import ScrollToTopButton from "../components/ScrollToTopButton";
-import ShareHint from "../components/ShareHint";
 
 <ScrollToTopButton />
 
@@ -105,7 +104,9 @@ A few things to notice here:
 - `subscribe` is a must! Without subscribing to our stream, nothing would ever happen.
 - The `$` is just a common (non-standard) notation to identify streams in your code - totally optionally, no need to follow.
 
-A cool thing here is that opposite to the click event handler, you can subscribe to the stream of clicks as many times as you want and split all kinds of different tasks into separate subscriptions that share the same event listener! In a way, things are opening up, you get a more flexible model to organize your code, compared to the classic event handler callback.
+Opposite to the click event handler, you can subscribe to the stream of clicks as many times as you want and split all kinds of different tasks into separate subscriptions that **share the same event listener**! **Attaching event handlers to the DOM is costly** especially due to the event attaching phase that happens at page load (`onload` or `DOMContentReady` events) a busy period for modern web applications - <i>paraphrased from <a href="https://www.amazon.com/gp/product/059680279X/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=059680279X&linkCode=as2&tag=goodguydaniel-20&linkId=97fc0695cd6fe086b455fd44997507cf" target="_blank" title="High Performance JavaScript, book by Nicholas C. Zakas">"High Performance JavaScript", book by Nicholas C. Zakas</a></i>.
+
+In a way, things are opening up, you get a more flexible model to organize your code, compared to the classic event handler callback.
 
 > Anything can be a stream, remember that, let it be the cornerstone of your reactive thinking.
 
@@ -688,9 +689,6 @@ Here are the concepts you've learned by building this game:
 Now go out there and try to apply these concepts to build your own applications. I would be pleased to hear from you if you've learned something here today.
 
 In the upcoming articles, I'll share with you the good and bad parts of adopting reactive programming and start using RxJS in your codebase, and at last, I'll share with you a bunch of fantastic resources to learn RxjS and reactive programming.
-
-<br />
-<ShareHint path="/blog/hands-on-reactive-programming-rxjs" text="Hands-on Reactive Programming with RxJS" />
 
 <br />
 <br />

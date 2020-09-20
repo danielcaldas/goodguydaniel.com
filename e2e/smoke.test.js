@@ -34,18 +34,17 @@ describe("smoke tests", () => {
     expect(headings).toEqual(["Featured Posts", "Latest Posts", "Podcasts"]);
 
     const projects = [
-      ["react-d3-graph | ", "https://www.github.com/danielcaldas/react-d3-graph"],
-      ["babel-plugin-cloudinary | ", "https://github.com/trivago/babel-plugin-cloudinary"],
-      ["tweak · browser extension", "https://tweak-extension.com/"],
+      ["react-d3-graph", "https://www.github.com/danielcaldas/react-d3-graph"],
+      ["tweak browser extension", "https://tweak-extension.com/"],
     ];
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
       const a = await page.$(`#prj-${i}`);
       const text = await a.evaluate((e) => e.innerText);
       const href = await a.evaluate((e) => e.href);
 
-      expect(text).toEqual(projects[i][0]);
-      expect(href).toEqual(projects[i][1]);
+      expect(text).toEqual(expect.stringContaining(projects[i][0]));
+      expect(href).toEqual(expect.stringContaining(projects[i][1]));
     }
   });
 
