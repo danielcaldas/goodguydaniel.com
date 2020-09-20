@@ -1,11 +1,11 @@
 /** @jsx jsx */
-import { jsx, Heading } from "theme-ui";
+import { jsx, Heading, Link } from "theme-ui";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import React, { FC } from "react";
 import Layout from "@lekoarts/gatsby-theme-minimal-blog/src/components/layout";
 import ItemTags from "@lekoarts/gatsby-theme-minimal-blog/src/components/item-tags";
 import SEO from "@lekoarts/gatsby-theme-minimal-blog/src/components/seo";
-import { DiscussionEmbed } from "disqus-react";
+import useSiteMetadata from "@lekoarts/gatsby-theme-minimal-blog/src/hooks/use-site-metadata";
 
 type PostProps = {
   data: {
@@ -39,10 +39,31 @@ type PostProps = {
 
 const px = [`32px`, `16px`, `8px`, `4px`];
 const shadow = px.map((v) => `rgba(0, 0, 0, 0.15) 0px ${v} ${v} 0px`);
-const DISQUS_SHORTNAME = process.env.GATSBY_DISQUS_SHORTNAME;
+const TWITTER_HANDLER = "_danielcaldas";
+
+function renderTwitterShareHint(siteUrl: string, path: string, text: string): string {
+  const fullUrl = `${siteUrl}${path}`;
+  const url = `http://twitter.com/share?text=${text}&url=${fullUrl}&via=${TWITTER_HANDLER}`;
+
+  return (
+    <p
+      sx={{
+        mt: 3,
+        fontSize: [1, 1, 2],
+      }}
+    >
+      If you liked this article, consider sharing (
+      <Link href={url} rel="noreferrer" target="_blank" title="tweeting">
+        <span style={{ textDecoration: "underline" }}>tweeting</span>
+      </Link>
+      ) it to your followers.
+    </p>
+  );
+}
 
 const Post = ({ data: { post } }: PostProps): FC => {
-  const isSSR = typeof window === "undefined";
+  const { siteUrl } = useSiteMetadata();
+  const shareHint = renderTwitterShareHint(siteUrl, post.slug, post.title);
 
   return (
     <Layout>
@@ -82,21 +103,8 @@ const Post = ({ data: { post } }: PostProps): FC => {
         }}
       >
         <MDXRenderer>{post.body}</MDXRenderer>
+        {shareHint}
       </section>
-      {!isSSR && DISQUS_SHORTNAME && (
-        <>
-          <React.Suspense fallback={<div></div>}>
-            <DiscussionEmbed
-              shortname={DISQUS_SHORTNAME}
-              config={{
-                url: `${window.location.origin}${window.location.pathname}`,
-                identifier: `${window.location.origin}${window.location.pathname}`,
-                title: post.title,
-              }}
-            />
-          </React.Suspense>
-        </>
-      )}
     </Layout>
   );
 };
