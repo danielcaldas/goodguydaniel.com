@@ -1,4 +1,5 @@
 import React, { useMemo, useState, FC } from "react";
+import { useColorMode } from "theme-ui";
 import exampleFinalResult from "../call-react-hooks-inside-conditions/images/example-final-result.gif";
 import travolta from "../about-css-conf-eu-berlin-2018/images/2.gif";
 import cssVariablesDemo from "../about-css-conf-eu-berlin-2018/images/css-custom-properties.gif";
@@ -17,7 +18,7 @@ import takeCatToPartyNoCancel from "../hands-on-reactive-programming-rxjs/images
 import gameLevel1OpacityBefore from "../hands-on-reactive-programming-rxjs/images/game-level-1-opacity-before.gif";
 import gameLevel1OpacityAfter from "../hands-on-reactive-programming-rxjs/images/game-level-1-opacity-after.gif";
 import gameLevel2NoCat from "../hands-on-reactive-programming-rxjs/images/game-level-2-no-cat.gif";
-import gifStyles from "./GIF.module.css";
+import styles from "./GIF.module.css";
 
 // https://github.com/benwiley4000/react-gif-player#options
 const Player = React.lazy(() => import("react-gif-player"));
@@ -77,14 +78,16 @@ function GIF({ alt = "", height = "100%", name, playing = false, width = "100%" 
   const isSSR = typeof window === "undefined";
   const [isPlaying, setPlaying] = useState(playing);
   const src = useMemo(() => getFromRegistry(name), [name]);
+  const [colorMode] = useColorMode();
+  const isDark = colorMode === `dark`;
 
   return (
     <>
       {!isSSR && (
         <React.Suspense fallback={<div />}>
-          <div className={gifStyles.gifPlayerContainer}>
-            <div className={gifStyles.gifPlayer}>
-              {!isPlaying && <div className={gifStyles.gifPlayButton}></div>}
+          <div className={isDark ? styles.gifPlayerContainer : styles.gifPlayerContainerDark}>
+            <div className={styles.gifPlayer}>
+              {!isPlaying && <div className={styles.gifPlayButton}></div>}
               {
                 <Player
                   width={width}
