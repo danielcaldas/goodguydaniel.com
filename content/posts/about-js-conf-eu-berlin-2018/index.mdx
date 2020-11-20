@@ -447,8 +447,7 @@ Also, the lack of adoption of push has made some vendors think in removing push 
 
 ##### Cache digest (CACHE_DIGEST)
 
-Fix the racing condition between push and browser cache. The browser sends information about what content has in cache so that server can decided what to push! You can check the _CACHE_DIGEST_ specification <a href="http://httpwg.org/http-extensions/cache-digest.html" target="_blank" title="Cache Digests for HTTP/2
-">here</a>.
+Fix the racing condition between push and browser cache. The browser sends information about what content has in cache so that server can decided what to push! You can check the _CACHE_DIGEST_ specification <a href="https://tools.ietf.org/html/draft-kazuho-h2-cache-digest-00" target="_blank" title="draft of Cache Digests for HTTP2">here</a>.
 
 ##### 103 Early Hints
 
@@ -649,7 +648,7 @@ But! This isn't always the case it turns out that for cases where you have alrea
 
 <Caption source="https://www.youtube.com/watch?v=5nmpokoRaZI" />
 
-Then the main motivation for engines to have shapes is <a href="https://github.com/v8/v8/wiki/Design-Elements#fast-property-access" target="_blank" title="v8 design elements fast property access">inline cache (IC)</a>. This mechanism stores information about where to find properties within an object so that we can optimize the property look up. Basically for a given retrieved property it stores the offset where the property was found inside the shape, that way you can skip the fetch of the property metainformation to get the offset, you just access it right away!
+Then the main motivation for engines to have shapes is <a href="https://mathiasbynens.be/notes/shapes-ics#ics" target="_blank" title="JavaScript engine fundamentals: Shapes and Inline Caches by Mathias Bynens">inline cache (IC)</a>. This mechanism stores information about where to find properties within an object so that we can optimize the property look up. Basically for a given retrieved property it stores the offset where the property was found inside the shape, that way you can skip the fetch of the property metainformation to get the offset, you just access it right away!
 
 ![inline cache illustration](./images/engines-shapes-4.png "inline cache illustration")
 
