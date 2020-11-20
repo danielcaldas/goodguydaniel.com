@@ -1,5 +1,4 @@
 import React, { useMemo, useState, FC } from "react";
-import { useColorMode } from "theme-ui";
 import exampleFinalResult from "../call-react-hooks-inside-conditions/images/example-final-result.gif";
 import travolta from "../about-css-conf-eu-berlin-2018/images/2.gif";
 import cssVariablesDemo from "../about-css-conf-eu-berlin-2018/images/css-custom-properties.gif";
@@ -78,14 +77,12 @@ function GIF({ alt = "", height = "100%", name, playing = false, width = "100%" 
   const isSSR = typeof window === "undefined";
   const [isPlaying, setPlaying] = useState(playing);
   const src = useMemo(() => getFromRegistry(name), [name]);
-  const [colorMode] = useColorMode();
-  const isDark = colorMode === `dark`;
 
   return (
     <>
       {!isSSR && (
         <React.Suspense fallback={<div />}>
-          <div className={isDark ? styles.gifPlayerContainer : styles.gifPlayerContainerDark}>
+          <div className={styles.gifPlayerContainer}>
             <div className={styles.gifPlayer}>
               {!isPlaying && <div className={styles.gifPlayButton}></div>}
               {
