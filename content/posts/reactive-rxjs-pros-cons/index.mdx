@@ -1,0 +1,494 @@
+---
+title: "Reactive Programming: The Good and the Bad"
+subtitle: "Reactive Series - Part 4"
+date: 2020-12-01
+slug: "/blog/reactive-rxjs-pros-cons"
+tags:
+  - JavaScript
+  - Reactive Programming
+---
+
+import Accordion from "../components/Accordion";
+import Caption from "../components/Caption";
+import GIF from "../components/GIF";
+import ScrollToTopButton from "../components/ScrollToTopButton";
+
+<ScrollToTopButton />
+
+- <a
+    href="https://goodguydaniel.com/blog/why-reactive-programming"
+    target="_blank"
+    title="Why You Should Consider Reactive Programming | goodguydaniel.com"
+  >
+    Part 1 - Why You Should Consider Reactive Programming
+  </a>
+- <a
+    href="https://goodguydaniel.com/blog/reactive-programming-fundamentals"
+    target="_blank"
+    title="Fundamentals of Reactive Programming | goodguydaniel.com"
+  >
+    Part 2 - Fundamentals of Reactive Programming
+  </a>
+- <a
+    href="https://goodguydaniel.com/blog/hands-on-reactive-programming-rxjs"
+    target="_blank"
+    title="Hands-on Reactive Programming with RxJS | goodguydaniel.com"
+  >
+    Part 3 - Hands-on Reactive Programming with RxJS
+  </a>
+- **Part 4 - Reactive Programming: The Good and the Bad**
+- 🔜 Part 5 - List of Awesome RxJS and Reactive Programming Resources
+
+---
+
+After seeing reactive streams in action with RxJS, I would now like to expand <a href="https://goodguydaniel.com/blog/why-reactive-programming" target="_blank" title="Why You Should Consider Reactive Programming | goodguydaniel.com">"Part 1 - Why you should consider Reactive Programming"</a> by debating some of the gains & pains of reactive streams and RxJS.
+As of now, we've covered some fundamental aspects of reactive programming, and we've seen some code as well!
+In this part of the series, I'll be compacting some of the benefits I felt while using reactive programming and some of the major pain points of adopting it. Since we've used RxJS, I'll make occasional mentions of this reactive library's ups and downs.
+
+- [The good](#the-good)
+  - [Your code becomes inheritably lazy](#your-code-becomes-inheritably-lazy)
+  - [Your code is likely to be more concise](#your-code-is-likely-to-be-more-concise)
+  - [You're likely to write less code](#youre-likely-to-write-less-code)
+  - [Effortless cancellation](#effortless-cancellation)
+  - [Easier to deal with backpressure](#easier-to-deal-with-backpressure)
+  - [Converging towards a single style of coding](#converging-towards-a-single-style-of-coding)
+  - [Complicated things made easy](#complicated-things-made-easy)
+  - [Maintainability](#maintainability)
+- [The bad](#the-bad)
+  - [Learning curve](#learning-curve)
+  - [Debugging does not get any easier](#debugging-does-not-get-any-easier)
+  - [Human creativity](#human-creativity)
+  - [With great power](#with-great-power)
+  - [Error handling](#error-handling)
+- [From callbacks to async/await](#from-callbacks-to-asyncawait)
+
+#### The good
+
+Let's explore some beneficial aspects of adopting reactive programming and RxJS now that we have looked at <a href="https://goodguydaniel.com/blog/hands-on-reactive-programming-rxjs" target="_blank" title="Hands-on Reactive Programming with RxJS | goodguydaniel.com">how to approach a problem and model it with streams</a>.
+
+##### Your code becomes inheritably lazy
+
+Working with streams means nothing happens until you subscribe to them, which is terrific! Because any code path now has a "free of charge" stop & play capability! Without any effort, your computations become lazy by default executing when needed - <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" title="Promise - JavaScript | MDN">Promises</a> are eager. They start running as soon as you construct them. It's common to wrap a Promise with a function to make it lazy.
+
+##### Your code is likely to be more concise
+
+As we've seen in the <a href="https://goodguydaniel.com/blog/hands-on-reactive-programming-rxjs" target="_blank" title="Hands-on Reactive Programming with RxJS | goodguydaniel.com">hands-on</a> part of this series, you'll likely have to model events and think about what parties are interested in consuming such events. You'll spend less time focusing on the implementation details. You'll rather spend your time drawing a mental map of the events' interdependency that define your business logic. In my experience, this often results in more compact implementations, making it more accessible to capture the big picture of the internal flows in your application.
+
+##### You're likely to write less code
+
+It only makes sense that if you have an ecosystem, such as RxJS, in your arsenal, you'll spend less time implementing behaviors that are already built-in in some operator (e.g., <a href="https://www.learnrxjs.io/learn-rxjs/operators/filtering/debounce" target="_blank" title="debounce - Learn RxJS">debouncing</a>, <a href="https://www.learnrxjs.io/learn-rxjs/operators/filtering/throttle" target="_blank" title="throttle - Learn RxJS">throttling</a>, etc.). Just like you'll spend less time mutating the DOM directly when you use a UI framework such as React or Vue, you'll think more about how your UI looks like and what data binds to what parts of your UI.
+
+##### Effortless cancellation
+
+In my opinion, an overlooked easy win of coding with streams and RxJS is how easy it becomes to implement cancellation. What kind of behavior does cancellation concern, you ask? Let's see an example.
+
+<GIF name="rxjs-free-cancellation" alt="cancellation of http request on hover items in a list" />
+<Caption gif={true} />
+
+In the above GIF, we have a list of items. Hovering on each item in the list triggers an ajax request to fetch some data from the server. The problem of eagerly (compared with clicking the item, for instance) triggering the requests upon mouse hovering is that you can potentially fetch the data for all the items but ending up not displaying any of the data to the end-user. To avoid that, we cancel an item's request when the user's mouse leaves it.
+
+<small>
+  (<b>Note</b>: oh, btw on the above GIF, I'm not calling a real API, I'm just using the{" "}
+  <a href="https://tweak-extension.com" target="_blank" title="tweak browser extension mock API simulator">
+    tweak browser extension
+  </a>{" "}
+  to mock the HTTP requests seamlessly)
+</small>
+
+<br />
+
+Here's the snippet of the above pattern, implemented with <a href="https://rxjs-dev.firebaseapp.com/api/operators/switchMap" target="_blank" title="RxJS - switchMap">switchMap</a> and <a href="https://rxjs-dev.firebaseapp.com/api/operators/takeUntil" target="_blank" title="RxJS - takeUntil">takeUntil</a>.
+
+```javascript
+const listEl = document.getElementById("list");
+const resEl = document.getElementById("res");
+const fetchById = (id) => ajax(`https://some-service.com/api/items/${id}`).pipe(map((r) => r.response));
+const mouseOutItem$ = fromEvent(listEl, "mouseout");
+const mouseOverItem$ = fromEvent(listEl, "mouseover")
+  .pipe(
+    switchMap((event) => {
+      const id = event.target.id;
+      resEl.innerHTML = `loading item ${id}...`;
+      console.log(`Fetching data for item ${id}...`);
+      return fetchById(id);
+    }),
+    map((response) => {
+      resEl.innerHTML = JSON.stringify(response, null, 2);
+      console.log(`Done fetching data for item ${response.item.id}!`);
+    }),
+    takeUntil(
+      mouseOutItem$.pipe(
+        tap(() => {
+          console.log(`❌ Cancelled fetch data for item ${event.target.id}!`);
+          resEl.innerHTML = "...";
+        }),
+      ),
+    ),
+    repeat(),
+  )
+  .subscribe();
+```
+
+<br />
+
+<Accordion summary='Expand to see example full code'>
+
+```javascript
+<!DOCTYPE html>
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.5.5/rxjs.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.5.5/rxjs.umd.js.map"></script>
+  <style>
+    li {
+      padding: 4px;
+      border: 1px dashed green;
+      color: black;
+    }
+
+    li:hover {
+      background-color: lightblue;
+      color: blueviolet;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script>
+    const {
+      delay,
+      filter,
+      map,
+      mapTo,
+      switchMap,
+      takeUntil,
+      takeWhile,
+      tap,
+      withLatestFrom,
+      repeat,
+    } = window.rxjs.operators;
+    const {
+      fromEvent,
+      merge,
+      timer,
+    } = window.rxjs;
+    const ajax = window.rxjs.ajax.ajax;
+
+    // preventing the default event on dragover
+    // so that we're allowed to drop an element
+    fromEvent(document, "dragover")
+      .pipe(tap(event => event.preventDefault()))
+      .subscribe();
+
+    // all the game markup goes here
+    document.getElementById("app").innerHTML = `
+      <h2>Hover on the items to fetch some async data</h2>
+      <ul id="list">
+        <li id="item-1">item 1 (mouse over to fetch data)</li>
+        <li id="item-2">item 2 (mouse over to fetch data)</li>
+        <li id="item-3">item 3 (mouse over to fetch data)</li>
+        <li id="item-4">item 4 (mouse over to fetch data)</li>
+      </ul>
+      <h3>Item detail</h3>
+      <pre id="res">...</pre>
+    `;
+
+    const listEl = document.getElementById('list');
+    const resEl = document.getElementById('res');
+    const fetchById = id => ajax(`https://some-service.com/api/items/${id}`).pipe(
+      map(r => r.response),
+    );
+    const mouseOutItem$ = fromEvent(listEl, 'mouseout');
+    const mouseOverItem$ = fromEvent(listEl, 'mouseover').pipe(
+      switchMap(event => {
+        const id = event.target.id;
+        resEl.innerHTML = `loading item ${id}...`;
+        console.log(`Fetching data for item ${id}...`);
+        return fetchById(id);
+      }),
+      map(response => {
+        resEl.innerHTML = JSON.stringify(response, null, 2);
+        console.log(`Done fetching data for item ${response.item.id}!`);
+      }),
+      takeUntil(mouseOutItem$.pipe(tap(() => {
+        console.log(`❌ Cancelled fetch data for item ${event.target.id}!`);
+        resEl.innerHTML = '...';
+      }))),
+      repeat(),
+    ).subscribe();
+  </script>
+</body>
+```
+
+</Accordion>
+
+<br />
+<br />
+
+##### Easier to deal with backpressure
+
+> "Backpressure is when the progress of turning that input to output is resisted in some way. In most cases that resistance is computational speed", from <a href="https://medium.com/@jayphelps/backpressure-explained-the-flow-of-data-through-software-2350b3e77ce7" target="_blank" title="Backpressure explained — the resisted flow of data through software | by Jay Phelps | Medium">"Backpressure explained — the resisted flow of data through software"</a>
+
+Did it ever happen that your `addEventListener` handle is just executing too many times? For instance, while running an event handler for the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/scroll_event" target="_blank" title="Document: scroll event - Web APIs | MDN">scroll event</a>? It's common to use a debounce strategy to run your event handler only after X time has passed since the last scroll event. Again, with built-in operators such as debounce in RxJS, you can quickly relieve the load in your consumer functions (event handlers). The operator single-handedly takes care of debouncing emissions for you!
+
+##### Converging towards a single style of coding
+
+I've covered this in greater detail during <a href="https://goodguydaniel.com/blog/why-reactive-programming" target="_blank" title="Why You Should Consider Reactive Programming | goodguydaniel.com">"Part 1 - Why you should consider Reactive Programming"</a> the gist is that working with streams when done right, might make callbacks, Promises, and async/await nearly obsolete. I say nearly because you' might still use Promises under the hood, but your code now can look the same whether you're tackling synchronous or asynchronous tasks.
+
+##### Complicated things made easy
+
+I want to reinforce that you can leverage reactive libraries such as RxJS to solve complex problems with little effort. If you haven't watched the talk <a href="https://www.youtube.com/watch?v=B-nFj2o03i8" target="_blank" title="Complex features made easy with RxJS - YouTube">"Complex features made easy with RxJS"</a> by <a href="https://twitter.com/BenLesh" target="_blank" title="Ben Lesh (@BenLesh) / Twitter">Ben Lesh</a>, I would highly recommend it. In the first 10 minutes, you'll see how easy it becomes to tackle some of the following problems with the help of RxJS:
+
+- Basic drag & drop implementation <a href="https://youtu.be/B-nFj2o03i8?t=351" target="_blank" title="Complex features made easy with RxJS - YouTube">[5:54]</a>
+- Avoid double submission through a button that involves an asynchronous Ajax call <a href="https://youtu.be/B-nFj2o03i8?t=424" target="_blank" title="Complex features made easy with RxJS - YouTube">[7:04]</a>
+- Throttle autosuggestion field that involves fetching data with a given search term <a href="https://youtu.be/B-nFj2o03i8?t=444" target="_blank" title="Complex features made easy with RxJS - YouTube">[7:24]</a>
+
+If you aim to solve one of the problems mentioned in the above list, you can avoid reinventing the wheel by following the reactive patterns demonstrated in the video.
+
+##### Maintainability
+
+There are two aspects of maintainability that I would point out. First, you'll write less code; there's a lot of heavy lifting that RxJS can do for you; if you leverage that, you'll undoubtedly ending writing less code. The second is that a combination of streams with powerful operators solve complex problems in a very declarative manner. Code will look concise and straightforward; instead of verbose branching and imperative logic, you'll have a few combinations of operators that will do all the magic for you.
+However, with RxJS and streams, maintainability is a double-edged sword. We're going to cover that in the next part of this article.
+
+#### The bad
+
+Let's look at the not so bright side.
+
+##### Learning curve
+
+Any modern JavaScript codebase uses a cocktail of libraries. RxJS (or whatever library you would adopt) would be just one more thing you'll have to teach newcomers. But don't take this as a light decision. You're not only introducing a new library in the codebase, but you're also introducing a new paradigm. I feel there's quite a learning curve towards mastering reactive programming and RxJS. Not only you're exposed to an entirely new ecosystem with new APIs, but you also need the time to process this different paradigm of programming with streams. As we've experienced in previous articles, it can be quite different from a traditional writing code style (compared with imperative programming, for example).
+
+Depending on how broadly you'll embrace this paradigm, you might need to ship new tooling for unit testing and master additional concepts such as <a href="https://rxmarbles.com/" target="_blank" title="RxMarbles: Interactive diagrams of Rx Observables">marble diagrams</a> - which helps you properly model and assert data streams. However, it might require you and your team to learn another tricky **DSL** (**d**omain-**s**pecific **l**anguage) to deal with these diagrams.
+
+Some might argue that the "learning curve" is a "one-time cost". As it turns out, in the software industry, software engineers tend to move a lot (due to the high demand for the skill these days), and they might be sticking around in the same company for an average of 2 to 3 years before embracing a new challenge. The bustling job market makes me believe that it is not wise to think of the "learning curve" as a one time cost because soon, your freshly trained engineer with RxJS skills might say goodbye.
+
+##### Debugging does not get any easier
+
+Just the same way, you can split your code into several functions, and those functions call other functions which, without some structure, might end up in spaghetti code. Likewise, you can end up entangled in a spaghetti of streams and not know which way to turn. I think simple functions are usually more straightforward to debug, given that they are composed sequentially. You're reading a function; that function might call other N functions and so forth. Well, with streams, it might not be that candid because there's no such thing as a stream invoking another stream. Instead, you'll have a stream plugging with other streams in mixed ways depending on the operators that join them. It might feel overweighing at some point to find your way around some particular flow (hopefully, you won't' reach that point because your code is clear and concise).
+
+Another aspect that you might run into while debugging streams is that such an amount of abstractions and compact implementation will let no space for you to plug into a stream and debug it or inspect it the same way you debug a function. Things tend to be on a higher level of abstraction - which is beneficial because it will free up your mind on some implementation details. Hence when it comes to the point you need to dig further down, understanding what's going on at the very core of your flow, you might need to <a href="https://www.learnrxjs.io/learn-rxjs/operators/utility/do" target="_blank" title="tap / do - Learn RxJS">tap</a> into streams here and there to figure out what's the issue. Although old this article, it might be one of the best walkthroughs of the problem I'm trying to surface here. It will give you a solid strategy to debug streams (even if you're looking at that particular code for the first time) - _tip for reading it: mentally replace `do` per `tap`_.
+
+##### Human creativity
+
+**Kiss**: **K**eep **i**t **S**imple, **S**tupid, not easy with reactive streams and RxJS tough. I'll tell from personal experience that it will come the day you'll look at your code, and although it's just fine, you'll feel this **voice inside your head: "Are you sure there's nothing else much fancier in the RxJS API that would allow you to write less two lines of code?" - fight that voice!** Creative solutions with RxJS might often result in dreadful consequences for your product and team. But yet, RxJS has such a unique and evolving ecosystem that will feel tempting with time to start to chime in some new operators just for the sake of adding more operators. Fight that in code reviews - this is the place you can understand why your colleague is shipping that new exotic operator and challenge simpler alternatives already in use. I guess this is general advice. I wouldn't apply it to reactive programming only. If you don't have a code review process, ¯\\\_(ツ)\_/¯.
+
+##### With great power
+
+##### Error handling
+
+---
+
+---
+
+---
+
+---
+
+---
+
+---
+
+In the first part of my <a href="https://goodguydaniel.com/blog/series-reactive-programming-rxjs/" target="_blank" title="Reactive Series | goodguydaniel.com">series on Reactive Programming</a>, I
+want to answer why you should consider Reactive Programming. My answer to this question is heavily based on my experience working on
+building complex user experiences that often deal with asynchronicity in the browser. I won't cover much on how Reactive
+Programming, would help your platforms scale by providing out of the box solutions to
+handle <a href="https://medium.com/@jayphelps/backpressure-explained-the-flow-of-data-through-software-2350b3e77ce7" target="_blank" title="Backpressure explained — the resisted flow of data through software | by Jay Phelps | Medium">backpressure</a>. Still, I
+believe that the principles throughout this series can be extended to other ecosystems/platforms/programming languages.
+
+#### From callbacks to async/await
+
+At first, <a href="https://en.wikipedia.org/wiki/Callback_(computer_programming)" target="_blank" title="Callback (computer programming) - Wikipedia">callbacks</a> were the primary
+way for us to handle asynchronicity in JavaScript. Callbacks allow us to write code that is not yet ready to be executed because its parameters depend
+on the execution of some task(s) that will be complete in the future. Fastly we began to gain acquaintance
+with the <a href="http://callbackhell.com/" target="_blank" title="Callback Hell">callback hell</a>.
+
+```javascript
+doSomething(param1, param2, function(err, paramx) {
+  doMore(paramx, function(err, result) {
+    insertRow(result function(err) {
+      yetAnotherOperation(someparameter, function(s) {
+        somethingElse(function(x) {
+          // ...
+        });
+      });
+    });
+  });
+});
+```
+
+Somewhere down the road, jQuery 1.5 introduced <a href="https://api.jquery.com/category/deferred-object/" target="_blank" title="Deferred Object | jQuery API Documentation">Deferred Objects</a> to
+manipulate callback queues and provide an alternative to manage asynchronicity. By this time, the concept of <a href="https://en.wikipedia.org/wiki/Futures_and_promises" target="_blank" title="Futures and promises - Wikipedia">Futures and Promises</a> was
+not new to computer science.
+
+It was not until <a href="https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_-_ECMAScript_2015" target="_blank" title="ECMAScript - Wikipedia">ECMAScript 2015</a> - The 6th edition, initially
+known as ECMAScript 6 (ES6) - that we got <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" title="Promise - JavaScript | MDN">Promises</a> as
+a standard built-in object in the language. Before landing in ES6, Promises had already disrupted the JavaScript
+ecosystem. Libraries such as <a href="http://bluebirdjs.com/docs/getting-started.html" target="_blank" title="Getting Started | bluebird">bluebird</a>, which
+has been around since 2013, have made it possible for JavaScript programmers to handle asynchronous code with Promises.
+But why Promises were such a game-changer? Mainly because they provide a higher abstraction on top of the callback pattern. With
+Promises, you get a reference to an object that holds the resolution/failure of some future value. That reference
+is chainable. You can easily return a Promise from a function and proceed with your program flow on the callee instead of propagating
+the chain of events down through the callback hell. Great!
+
+```javascript
+function something() {
+  return doSomething(param1, param2);
+}
+
+function main() {
+  something().then((err, paramx) => {
+    // do stuff
+  });
+}
+```
+
+Again a new anti-pattern is born. We tend to attach to names emotionally, so the "hell" is back, but this
+time, instead of callback hell, we have the Promise hell.
+
+```javascript
+function something() {
+  return doSomething(param1, param2);
+}
+
+function main() {
+  something().then((err, paramx) => {
+    doMore(paramx).then((err, result) => {
+      insertRow(result).then((err) => {
+        // ...
+      });
+    });
+  });
+}
+```
+
+The thing with Promises is that they're also tempting to nest, resulting in extremely verbose code.
+
+In the <a href="https://en.wikipedia.org/wiki/ECMAScript#7th_Edition_-_ECMAScript_2016" target="_blank" title="ECMAScript - Wikipedia">7th and 8th editions of ECMAScript</a>, we
+are given the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function" target="_blank" title="async function - JavaScript | MDN">async function</a>, a new
+mechanism to battle the complex challenge that is asynchronicity. This time we have an even higher order of abstraction, where inside an
+async function, you can handle asynchronicity and making it look exactly like synchronous code. It seems a very promising
+breakthrough, and the community goes all in. Although **async functions are just syntactic sugar on top of Promises, they bring us**
+**enormous advantages**:
+
+- By replacing Promises with async functions, we no longer end up in the scenario where there are endless `.then` chains
+  spread throughout the codebase.
+- Generally, the code is cleaner. The flow of functions is more natural to read, even when it performs async work. The only
+  difference we notice is the presence of the async keyword.
+- Triggering things conditionally becomes way more straightforward. Say two asynchronous tasks are co-dependent. To execute
+  the request `B`, we depend on data provided by request `A`. We can simply `await` on `A`, and with an `if` statement
+  checks, the data returned from `A` to decide whether we need to trigger request `B`.
+- Error handling seems to improve since one can use try/catch block to handle errors on rejected Promises, while
+  with Promises, one needs to chain a catch and provide a callback to handle the error.
+
+After broad usage of async/await, the community started again, **raising some cons on the construct**:
+
+- **Poorly explained syntax errors** (e.g., missing an `await` keyword).
+- It **promotes a less functional style** of coding, something that the JavaScript community has gained increasing excitement
+  over the past few years.
+- It **opens the door to the design of less performant solutions** because it's just easy to drop an await to get something working
+  quickly but block the execution of other steps of the functions that, with a bit more effort, could be done in parallel. Other
+  anti-patterns such as iterating over a collection while performing an `async/await` task for each element, but this is
+  something one could quickly point out during code review.
+- The **transpiled output of async/await code is just something not pleasant to look at**, much less to debug. Transpiled, because
+  if you're still supporting Internet Explorer, you're probably bundling polyfills for async/await.
+- The way synchronous code bridges over to async functions it's something yet confusing for me. It's something that it's not
+  transparent. I found my self often jumping to the signature of the function I'm invoking to check whether it performs some asynchronous
+  task or not. How could I lose track of something like that reading through some large codebase? Perhaps it's my fault I'm just
+  not doing it right.
+
+I want to reinforce that we came to a long road since callbacks, and the enhancements are noticeable, but after some time, mentions
+to the **"async/await hell"** started to surface across the web.
+
+```javascript
+(async () => {
+  const pizzaData = await getPizzaData(); // async call
+  const drinkData = await getDrinkData(); // async call
+  const chosenPizza = choosePizza(); // sync call
+  const chosenDrink = chooseDrink(); // sync call
+  await addPizzaToCart(chosenPizza); // async call
+  await addDrinkToCart(chosenDrink); // async call
+  orderItems(); // async call
+})();
+```
+
+<small>
+  <i>
+    example from:{" "}
+    <a
+      href="https://medium.com/free-code-camp/avoiding-the-async-await-hell-c77a0fb71c4c"
+      target="_blank"
+      title="How to escape async/await hell. async/await freed us from callback… | by Aditya Agarwal | freeCodeCamp.org | Medium"
+    >
+      "How to escape async/await hell"
+    </a>
+  </i>
+</small>
+
+Generally speaking, something I learned over time, is that if a solution has many corner cases, requiring you to look into the
+documentation (e.g., error handling in async/await VS Promises), it means that:
+
+- The solution's not intuitive enough.
+- By not being intuitive, it's not evolving in the same line of reasoning of the coder's mind.
+
+**But what if everything is asynchronous? What if synchronous and asynchronous code looks the same?** I believe this is the best way
+to shape our mindsets into producing highly readable and performant code. How would we achieve that? **Observables, Reactive Programming**.
+
+But Reactive Programming is **not only about** tackling the complicated job of handling **asynchronicity**. There are other amazing advantages
+that this paradigm facilitates:
+
+- **A mental framework** to use your <a href="https://en.wikipedia.org/wiki/Event-driven_programming" target="_blank" title="Event-driven programming - Wikipedia">event-driven programming</a> skills in
+  a **more data-oriented**. Event-driven programming is only about programming user/system actions (e.g., mouse clicks), what if you could apply
+  this same model not only to events but also to data (e.g., changing data X triggers a change to data Y).
+- **Functional Programming & Immutability** - it's all about generating values to respond to a change. Changes trigger
+  the creation of new values, naturally promoting <a href="https://en.wikipedia.org/wiki/Immutable_object" target="_blank" title="Immutable object - Wikipedia">immutability</a>.
+- **Single Code Styling** - you'll be exposed to a **higher abstraction level** of cofing where handling tasks with Promises
+  or other asynchronous mechanisms can look like any other code that does not involve asynchronicity.
+- **State Management** - by following the reactive way, state updates tend to be sequential, we'll often find a solution that will help
+  us eliminate some annoying global variables hanging around our code. This will become clear once we jump into our small application
+  that I'll present later on in this series.
+- **Performance** - from <a href="https://jaxenter.com/the-fight-for-performance-157515.html" target="_blank" title="The fight for performance – Is reactive programming the right approach? - JAXenter">"The fight for performance – Is reactive programming the right approach?"</a>, there's a
+  discussion around how Reactive Programming can overcome some potential bottlenecks caused by native threads in
+  Java. In <a href="http://lup.lub.lu.se/luur/download?func=downloadFile&recordOId=8932146&fileOId=8932147" target="_blank" title="Reactive programming and its effect on performance and the development process, Gustav Hochbergs">this master's thesis</a>, the
+  author boards on a journey to compare a real application's performance when migrated over to an approach based on Reactive Programming
+  libraries. In short, it seems that there are no conclusive results in regards to CPU or memory usage when comparing a synchronous
+  approach with a Reactive approach, but one thing stands out. The reactive approach seems to keep a good throughput under high load, where
+  there's the need for processing data in super short time intervals (5ms), here is where the Reactive approach shines the most.
+
+There's one thing I need to mention, though, which is what most of the above sources where I've been reading about Reactive Programming
+have in common. Although we've seen Reactive Programming taking the higher ground in several aspects compared to traditional paradigms, its
+complexity seems to be one of the main barriers to its adoption. Reactive **implementations are said to have a higher maintenance cost compared**
+**to a conventional programming style**. I can't argue this, the learning curve is steep, but once you pass that the rewards are noteworthy and
+things that in other times you would think of impossible or had to implement become so much easier.
+
+If you feel like taking a shot at Reactive Programming, I'll gladly guide you through it!
+
+<br />
+
+---
+
+- <a
+    href="https://goodguydaniel.com/blog/why-reactive-programming"
+    target="_blank"
+    title="Why You Should Consider Reactive Programming | goodguydaniel.com"
+  >
+    Part 1 - Why You Should Consider Reactive Programming
+  </a>
+- <a
+    href="https://goodguydaniel.com/blog/reactive-programming-fundamentals"
+    target="_blank"
+    title="Fundamentals of Reactive Programming | goodguydaniel.com"
+  >
+    Part 2 - Fundamentals of Reactive Programming
+  </a>
+- <a
+    href="https://goodguydaniel.com/blog/hands-on-reactive-programming-rxjs"
+    target="_blank"
+    title="Hands-on Reactive Programming with RxJS | goodguydaniel.com"
+  >
+    Part 3 - Hands-on Reactive Programming with RxJS
+  </a>
+- **Part 4 - Reactive Programming: The Good and the Bad**
+- 🔜 Part 5 - List of Awesome RxJS and Reactive Programming Resources

@@ -17,6 +17,7 @@ import takeCatToPartyNoCancel from "../hands-on-reactive-programming-rxjs/images
 import gameLevel1OpacityBefore from "../hands-on-reactive-programming-rxjs/images/game-level-1-opacity-before.gif";
 import gameLevel1OpacityAfter from "../hands-on-reactive-programming-rxjs/images/game-level-1-opacity-after.gif";
 import gameLevel2NoCat from "../hands-on-reactive-programming-rxjs/images/game-level-2-no-cat.gif";
+import rxjsFreeCancellation from "../reactive-rxjs-pros-cons/images/rxjs-free-cancellation.gif";
 import styles from "./GIF.module.css";
 
 // https://github.com/benwiley4000/react-gif-player#options
@@ -68,6 +69,8 @@ function getFromRegistry(name) {
       return gameLevel1OpacityAfter;
     case "game-level-2-no-cat":
       return gameLevel2NoCat;
+    case "rxjs-free-cancellation":
+      return rxjsFreeCancellation;
     default:
       return "";
   }
