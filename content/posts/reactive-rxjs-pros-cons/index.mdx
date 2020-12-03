@@ -341,7 +341,7 @@ map(response => {
 }),
 ```
 
-As you can see, you'll have to stick with the <a href="https://www.learnrxjs.io/learn-rxjs/operators/error_handling/catch" target="_blank" title="catch / catchError - Learn RxJS">catchError operator</a>. As a beginner, I would tend to wrap stuff around with try/catch, but things work slightly differently with streams. Observable is our primitive here, remember?
+For a more natural integration, you'll have to stick with the <a href="https://www.learnrxjs.io/learn-rxjs/operators/error_handling/catch" target="_blank" title="catch / catchError - Learn RxJS">catchError operator</a>. As a beginner, I would tend to wrap stuff around with try/catch, but things work slightly differently with streams. Observable is our primitive here, remember?
 Something mentioned as a <a href="https://medium.com/@benlesh/on-the-subject-of-subjects-in-rxjs-2b08b7198b93#.pcmlgg1mx" target="_blank" title="On The Subject Of Subjects (in RxJS) | by Ben Lesh | Medium"><i>"gotcha"</i> of RxJS</a> **is the fact that an RxJS Observable does not "trap" errors**; when an error bubbles to the end of the observer chain, when unhandled, the error, it will be re-thrown.
 
 #### Closing notes
