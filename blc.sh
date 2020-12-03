@@ -5,8 +5,6 @@ blc -r http://localhost:9000/\
     --exclude http://localhost:9000/aboutme\
     --exclude http://localhost:9000/rss.xml\
     --exclude https://marketplace.visualstudio.com/items?itemName=jingkaizhao.vscode-redux-devtools\
-    --exclude https://github.com/philipwalton\
     --exclude https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome\
     --exclude https://addons.mozilla.org/en-US/firefox/addon/tweak-extension/\
-    --exclude https://github.com/Microsoft/ChakraCore\
-    --exclude https://github.com/GoogleChromeLabs/jsvu\
+    --exlcude https://github.com/*\
