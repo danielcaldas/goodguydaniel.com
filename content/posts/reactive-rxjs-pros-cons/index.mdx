@@ -306,7 +306,6 @@ switchMap(event => {
     const id = event.target.id;
     resEl.innerHTML = `loading item ${id}...`;
     console.log(`Fetching data for item ${id}...`);
-
     return fetchById(id);
   } catch (error) {
     // that's not how this works with streams...
@@ -323,6 +322,7 @@ switchMap(event => {
   const id = event.target.id;
   resEl.innerHTML = `loading item ${id}...`;
   console.log(`Fetching data for item ${id}...`);
+  return fetchById(id);
 }),
 catchError(error => {
   if (error) {
