@@ -3,6 +3,7 @@
 <url> <loc>https://goodguydaniel.com/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://goodguydaniel.com/blog/open-source-dilemma</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/reactive-rxjs-pros-cons</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/hands-on-reactive-programming-rxjs</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/reactive-programming-fundamentals</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -35,6 +36,7 @@
 <url> <loc>https://goodguydaniel.com/tags/git</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/java-script</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/job-search</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://goodguydaniel.com/tags/open-source</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/productivity</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/react</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/reactive-programming</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
