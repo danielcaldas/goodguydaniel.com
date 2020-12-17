@@ -28,4 +28,3 @@ jobs:
       - run: npm run build
       - run: npm start -- --silent &
       - run: npm run e2e
-      - run: npm run blc

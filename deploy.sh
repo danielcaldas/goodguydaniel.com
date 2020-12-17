@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -n "U sure you're good to deploy (YES!/n)? "
+echo -n "First things first, make sure you ran the blc script. Now, are you sure you're good to deploy (YES!/n)? "
 read answer
 
 if [ "$answer" == "YES!" ] ;then
