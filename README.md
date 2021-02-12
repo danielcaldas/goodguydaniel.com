@@ -9,3 +9,11 @@
 ```
 npm run dev
 ```
+
+### Utils
+
+#### Auto-generate links in browser
+
+```js
+copy(`<a href="${window.location.href}" target="_blank" title="${document.title}">${document.title}</a>`);
+```
