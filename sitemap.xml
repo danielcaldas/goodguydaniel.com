@@ -3,6 +3,7 @@
 <url> <loc>https://goodguydaniel.com/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://goodguydaniel.com/blog/developers-bad-at-testing-own-code</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/awesome-reactive</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/open-source-dilemma</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/reactive-rxjs-pros-cons</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
