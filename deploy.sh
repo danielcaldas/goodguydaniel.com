@@ -4,7 +4,7 @@ echo -n "First things first, make sure you ran the blc script. Now, are you sure
 read answer
 
 if [ "$answer" == "YES!" ] ;then
-    npm run clean && gatsby build && gh-pages -d public -b master
+    npm run clean && ./node_modules/.bin/gatsby build && ./node_modules/.bin/gh-pages -d public -b master
 else
     echo "Alright, bye bye."
 fi
