@@ -18,6 +18,7 @@ type PostProps = {
         slug: string;
       }[];
       description?: string;
+      canonicalUrl?: string;
       body: string;
       excerpt: string;
       timeToRead?: number;
@@ -70,6 +71,7 @@ const Post = ({ data: { post } }: PostProps): FC => {
       <SEO
         title={post.title}
         description={post.description ? post.description : post.excerpt}
+        canonicalUrl={post.canonicalUrl}
         image={post.banner ? post.banner.childImageSharp.resize.src : undefined}
         pathname={post.slug}
       />

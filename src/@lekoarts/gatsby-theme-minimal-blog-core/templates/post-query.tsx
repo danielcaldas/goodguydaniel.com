@@ -4,7 +4,7 @@ import PostComponent from "@lekoarts/gatsby-theme-minimal-blog/src/components/po
 export default PostComponent;
 
 export const query = graphql`
-  query($slug: String!, $formatString: String!) {
+  query ($slug: String!, $formatString: String!) {
     post(slug: { eq: $slug }) {
       slug
       title
@@ -14,6 +14,7 @@ export const query = graphql`
         slug
       }
       description
+      canonicalUrl
       body
       excerpt
       timeToRead
