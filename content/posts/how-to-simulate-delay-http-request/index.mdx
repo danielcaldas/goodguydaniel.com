@@ -26,7 +26,7 @@ use the tweak test application to delay an HTTP request that triggers a click
 in a UI element. There's a loading animation in place with a timer, so we can
 see the difference when actually delaying the HTTP request.
 
-#### 1. Install the tweak chrome extension
+#### 1. Install the tweak browser extension
 
 Jump over to the Chrome store and <a href="https://chrome.google.com/webstore/detail/tweak/feahianecghpnipmhphmfgmpdodhcapi" target="_blank" title="tweak mock HTTP requests on chrome store">install the tweak browser extension</a>. Also <a href="https://addons.mozilla.org/en-US/firefox/addon/tweak-extension/" target="_blank" title="tweak mock HTTP requests on firefox addons">available on Firefox</a>.
 
@@ -44,7 +44,7 @@ Here's how we set up the request to be delayed.
    - The **HTTP method**.
    - Optionally grab the request payload (a.k.a. request body) when dealing with _POST_, _PUT_, or _PATCH_ requests.
    - The **HTTP response payload** (optionally, you can change it).
-4. In the **tweak Chrome extension, click on the plus button** to add a new configuration.
+4. In the **tweak browser extension, click on the plus button** to add a new configuration.
 5. **Fill in the configuration** with the information you collected.
    - Request URL.
    - Select your HTTP method from the dropdown.
@@ -68,9 +68,9 @@ Here's how we set up the request to be delayed.
 
 #### 3. Trigger the request and see the delay in action
 
-Now that you've enabled the Chrome extension, you need to trigger that HTTP request that you want to delay (e.g., refresh the page if the request fires at page load, click on some UI element if the request is dispatched based on some user interaction).
+Now that you've enabled the browser extension, you need to trigger that HTTP request that you want to delay (e.g., refresh the page if the request fires at page load, click on some UI element if the request is dispatched based on some user interaction).
 
-<GIF name="tweak-delay" />
+<GIF name="tweak-delay" playing={false} />
 
 <Caption
   text={() => (
