@@ -58,10 +58,6 @@ module.exports = {
             name: "LinkedIn",
             url: "https://www.linkedin.com/in/daniel-caldas/",
           },
-          {
-            name: "Email",
-            url: "mailto:caldasjdaniel@gmail.com",
-          },
         ],
         feed: true,
         feedTitle: "goodguydaniel.com",
