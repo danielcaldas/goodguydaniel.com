@@ -34,8 +34,8 @@ describe("smoke tests", () => {
     expect(headings).toEqual(["Featured Posts", "Latest Posts", "Podcasts"]);
 
     const projects = [
-      ["react-d3-graph", "https://www.github.com/danielcaldas/react-d3-graph"],
       ["tweak browser extension", "https://tweak-extension.com/"],
+      ["react-d3-graph", "https://www.github.com/danielcaldas/react-d3-graph"],
     ];
 
     for (let i = 0; i < 2; i++) {
