@@ -24,9 +24,9 @@ export const query = graphql`
       filter: {
         slug: {
           in: [
-            "/blog/tips-end-to-end-testing-puppeteer"
             "/blog/how-to-simulate-delay-http-request"
-            "/blog/best-http-request-mock-tool"
+            "/blog/reactive-programming-fundamentals"
+            "/blog/functional-bits-tips"
           ]
         }
       }
