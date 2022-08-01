@@ -44,7 +44,7 @@ const TWITTER_HANDLER = "_danielcaldas";
 
 function renderTwitterShareHint(siteUrl: string, path: string, text: string): string {
   const fullUrl = `${siteUrl}${path}`;
-  const url = `http://twitter.com/share?text=${text}&url=${fullUrl}&via=${TWITTER_HANDLER}`;
+  const url = `https://twitter.com/share?text=${text}&url=${fullUrl}&via=${TWITTER_HANDLER}`;
 
   return (
     <p
