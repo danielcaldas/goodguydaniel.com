@@ -39,13 +39,13 @@ type HomePageProps = {
 const PODCASTS = [
   {
     date: "24.03.2020",
-    href: "https://devchat.tv/my-javascript-story/mjs-142-daniel-caldas/",
+    href: "https://topenddevs.com/podcasts/my-javascript-story/episodes/mjs-142-daniel-caldas",
     text: "Devchat.tv - My JavaScript Story Ep. 142",
     title: "MJS 142: Daniel Caldas",
   },
   {
     date: "10.12.2019",
-    href: "https://dev.to/jsjabber/jsj-411-unit-testing-jest-with-daniel-caldas",
+    href: "https://topenddevs.com/podcasts/javascript-jabber/episodes/jsj-411-unit-testing-jest-with-daniel-caldas",
     text: "JavaScript Jabber Ep. 411: Unit Testing Jest with Daniel Caldas",
     title: "JSJ 411: Unit Testing Jest with Daniel Caldas - DEV",
   },

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 blc -r http://localhost:9000/\
-  --exclude http://twitter.com*\
+  --exclude https://twitter.com*\
   --exclude https://codepen.io/*\
   --exclude https://www.linkedin.com/in/daniel-caldas/\
   --exclude https://www.rxjs-fruits.com/subscribe\
