@@ -3,6 +3,7 @@
 <url> <loc>https://goodguydaniel.com/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://goodguydaniel.com/blog/how-to-fix-github-password-authentication</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/guide-to-custom-react-hooks-with-mutationobserver</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/how-to-svelte-rxjs</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/blog/how-to-copy-file-android</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -38,10 +39,10 @@
 <url> <loc>https://goodguydaniel.com/tags/css</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/conferences</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/functional-programming</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://goodguydaniel.com/tags/git</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/java-script</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/job-search</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/open-source</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://goodguydaniel.com/tags/ops</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/productivity</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/react</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://goodguydaniel.com/tags/reactive-programming</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
