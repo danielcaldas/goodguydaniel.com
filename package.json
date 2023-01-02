@@ -14,11 +14,11 @@
     "start": "http-server ./public/ -p 9000 -c-1"
   },
   "dependencies": {
-    "@lekoarts/gatsby-theme-minimal-blog": "^2.7.6",
-    "gatsby": "^2.25.0",
+    "@lekoarts/gatsby-theme-minimal-blog": "^6.0.3",
+    "gatsby": "^5.3.3",
     "gatsby-plugin-anchor-links": "^1.1.1",
     "gatsby-plugin-google-analytics": "^2.1.4",
-    "gatsby-plugin-manifest": "^2.2.3",
+    "gatsby-plugin-manifest": "^5.3.1",
     "gatsby-plugin-offline": "^2.2.4",
     "gatsby-plugin-sitemap": "^2.2.19",
     "gatsby-remark-autolink-headers": "^2.3.3",
