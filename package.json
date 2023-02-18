@@ -14,15 +14,15 @@
     "start": "http-server ./public/ -p 9000 -c-1"
   },
   "dependencies": {
-    "@lekoarts/gatsby-theme-minimal-blog": "^2.7.6",
-    "gatsby": "^2.25.0",
+    "@lekoarts/gatsby-theme-minimal-blog": "^6.1.0",
+    "gatsby": "^5.6.1",
     "gatsby-plugin-anchor-links": "^1.1.1",
     "gatsby-plugin-google-analytics": "^2.1.4",
-    "gatsby-plugin-manifest": "^2.2.3",
+    "gatsby-plugin-manifest": "^5.6.0",
     "gatsby-plugin-offline": "^2.2.4",
     "gatsby-plugin-sitemap": "^2.2.19",
     "gatsby-remark-autolink-headers": "^2.3.3",
-    "gatsby-transformer-remark": "^2.8.13",
+    "gatsby-transformer-remark": "^6.6.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-gif-player": "^0.4.2"
